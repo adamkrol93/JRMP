@@ -8,14 +8,14 @@
     </plugin-info>
 
     <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="jira-issues-history"/>
+    <resource type="i18n" name="i18n" location="jira-risk-management"/>
     
     <!-- add our web resources -->
-    <web-resource key="jira-issues-history-resources" name="jira-issues-history Web Resources">
+    <web-resource key="jira-risk-management-resources" name="jira risks management Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         
-        <resource type="download" name="jira-issues-history.css" location="/css/jira-issues-history.css"/>
-        <resource type="download" name="jira-issues-history.js" location="/js/jira-issues-history.js"/>
+        <resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>
+        <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
         <resource type="download" name="images/" location="/images"/>
 
         <context>jira-issues-history</context>
