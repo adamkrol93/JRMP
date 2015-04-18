@@ -1,4 +1,4 @@
-<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2" >
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
@@ -8,18 +8,33 @@
     </plugin-info>
 
     <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="jira-risk-management"/>
-    
+    <resource type="i18n" name="i18n" location="net.amg.jira.plugins.jira-risk-management.translate"/>
+
+    <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadget.xml"/>
+
+
+    <resource type="download" name="i18n/ALL_ALL.xml" location="i18n/ALL_ALL.xml">
+        <param name="content-type" value="text/xml; charset=UTF-8"/>
+    </resource>
+    <resource type="download" name="i18n/pl_PL.xml" location="i18n/pl_PL.xml">
+        <param name="content-type" value="text/xml; charset=UTF-8"/>
+    </resource>
+
+    <rest key="jira-risk-management-gadget-rest-resources" path="/jira-risk-management" version="1.0">
+        <description>Provides the REST resource for the project list.</description>
+    </rest>
+
+
     <!-- add our web resources -->
     <web-resource key="jira-risk-management-resources" name="jira risks management Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        
         <resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>
         <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
         <resource type="download" name="images/" location="/images"/>
 
-        <context>jira-issues-history</context>
+        <context>jira-risk-management</context>
     </web-resource>
+
     
     <!-- publish our component -->
     <component key="myPluginComponent" class="net.amg.jira.plugins.MyPluginComponentImpl" public="true">
