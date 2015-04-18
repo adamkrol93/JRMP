@@ -1,0 +1,4 @@
+<messagebundle>
+    <msg name="risk.management.gadget.title">JIRA Zarządzanie Ryzykiem Gadget</msg>
+    <msg name="risk.management.gadget.description">Gadżet wyświetla macierz ryzyk występujących w projekcie</msg>
+</messagebundle>

@@ -1,0 +1,4 @@
+<messagebundle>
+    <msg name="risk.management.gadget.title">JIRA Risk Management Gadget</msg>
+    <msg name="risk.management.gadget.description">Gadget displays project risk matrix</msg>
+</messagebundle>
