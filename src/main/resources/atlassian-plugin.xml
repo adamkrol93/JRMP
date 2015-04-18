@@ -10,13 +10,13 @@
     <!-- add our i18n resource -->
     <resource type="i18n" name="i18n" location="net.amg.jira.plugins.jira-risk-management.translate"/>
 
-    <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadget.xml"/>
+    <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadgets/risk-management-gadget/gadget.xml"/>
 
 
-    <resource type="download" name="i18n/ALL_ALL.xml" location="i18n/ALL_ALL.xml">
+    <resource type="download" name="i18n/ALL_ALL.xml" location="gadgets/risk-management-gadget/i18n/ALL_ALL.xml">
         <param name="content-type" value="text/xml; charset=UTF-8"/>
     </resource>
-    <resource type="download" name="i18n/pl_PL.xml" location="i18n/pl_PL.xml">
+    <resource type="download" name="i18n/pl_PL.xml" location="gadgets/risk-management-gadget/i18n/pl_PL.xml">
         <param name="content-type" value="text/xml; charset=UTF-8"/>
     </resource>
 
