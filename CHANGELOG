@@ -1,3 +1,4 @@
 - merge with initial (e6445f5d)
 - initial commit project template
 - PIP-55 po kilku godzinach konfigurowania, tłumaczenia wydają sie działać
+- PIP-53 dodany REST plugin
