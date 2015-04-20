@@ -18,8 +18,30 @@
         <Locale country="PL" lang="pl" messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
 
     </ModulePrefs>
+
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
     <UserPref name="Project" datatype="hidden" required="true"/>
+
+    <UserPref name="template" display_name="Gadget Template:" default_value="Risk Management Matrix" datatype="enum">
+        <EnumValue value="Risk Management Matrix"/>
+    </UserPref>
+
+    <UserPref name="filter" display_name="Projekt lub zapisany filtr" default_value="Szukaj" datatype="enum">
+        <EnumValue value="Szukaj"/>
+    </UserPref>
+
+    <UserPref name="date" display_name="Relative Date:" default_value="Today" datatype="enum">
+        <EnumValue value="Today"/>
+    </UserPref>
+
+    <UserPref name="title" display_name="Title" default_value=""/>
+
+    <UserPref name="refreshInterval" display_name="Interwał odświeżania:" default_value="Nigdy" datatype="enum">
+        <EnumValue value="Nigdy"/>
+        <EnumValue value="Co godzinę"/>
+    </UserPref>
+
+
     <Content type="html" >
         #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
         #includeResources()
