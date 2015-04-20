@@ -20,7 +20,9 @@
     </ModulePrefs>
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
     <UserPref name="Project" datatype="hidden" required="true"/>
-    <Content type="html">
+    <Content type="html" >
+        #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
+        #includeResources()
         <![CDATA[
             __MSG_risk.management.gadget.title_
         ]]>
