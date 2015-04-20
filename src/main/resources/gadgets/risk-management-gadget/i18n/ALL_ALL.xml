@@ -1,4 +1,33 @@
 <messagebundle>
     <msg name="risk.management.gadget.title">JIRA Risk Management Gadget</msg>
     <msg name="risk.management.gadget.description">Gadget displays project risk matrix</msg>
+    <!--Template field -->
+    <msg name="risk.management.gadget.template.label">Gadget template</msg>
+    <msg name="risk.management.gadget.template.description">Select a template</msg>
+    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">RiskManegementMatrix</msg>
+    <!--Filter field -->
+    <msg name="risk.management.gadget.filter.label">Project or saved filter</msg>
+    <msg name="risk.management.gadget.filter.default">Search</msg>
+    <!--Relative date field -->
+    <msg name="risk.management.gadget.relativeDate.label">Relative Date:</msg>
+    <msg name="risk.management.gadget.relativeDate.description">Select a relative date</msg>
+    <msg name="risk.management.gadget.relativeDate.option.today">Today</msg>
+    <msg name="risk.management.gadget.relativeDate.option.yesterday">Yesterday</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneWeekAgo">1 week ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.twoWeeksAgo">2 weeks ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneMonthAgo">1 month ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.threeMonthsAgo">3 months ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.sixMonthsAgo">6 months ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">1 year ago</msg>
+    <!--Title field-->
+    <msg name="risk.management.gadget.userTitle.label">Title</msg>
+    <msg name="risk.management.gadget.userTitle.description">An optional title (E.g describing your configuration)</msg>
+    <!--Refresh interval field-->
+    <msg name="risk.management.gadget.refreshInterval.label">Refresh interval</msg>
+    <msg name="risk.management.gadget.refreshInterval.description">Interval between gadget's updating</msg>
+    <msg name="risk.management.gadget.refreshInterval.option.never">Never</msg>
+    <msg name="risk.management.gadget.refreshInterval.option.fifteenMinutes">15 minutes</msg>
+    <msg name="risk.management.gadget.refreshInterval.option.thirtyMinutes">30 minutes</msg>
+    <msg name="risk.management.gadget.refreshInterval.option.oneHour">1 hour</msg>
+    <msg name="risk.management.gadget.refreshInterval.option.twoHours">2 hours</msg>
 </messagebundle>
