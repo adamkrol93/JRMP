@@ -93,82 +93,37 @@ AMG.jrmp.init = function (args) {
                 }
             }
         },
-        view: {
-            enableReload: true,
-            onResizeReload: true,
-            template: function (args) {
-                var gadget = this;
-                var mainDiv = AJS.$("<div/>");
-                mainDiv.append(
-                    AJS.$("<h1/>").text(args.user["fullName"])
-                );
-                mainDiv.append(
-                    //PROBLEM
-                    AJS.$("<h1/>").text(gadget.getMsg("risk.management.gadget.title"))
-                );
-                var issueList = AJS.$("<ul/>");
-                AJS.$(args.issuesData.issues).each(function () {
-                    issueList.append(
-                        AJS.$("<li/>").append(
-                            AJS.$("<a/>").attr({
-                                target: "_parent",
-                                title: gadgets.util.escapeString(this.key),
-                                href: gadget.getBaseUrl() + "/browse/" + this.key
-                            }).text(this.id + " " + this.key + " status:" + this.statusName)
-                        )
-                    );
-                });
-                mainDiv.append(issueList);
-                mainDiv.append(
-                    //PROBLEM
-                    AJS.$("<h1/>").text(gadget.getMsg("risk.management.gadget.title") + " " + gadget.getPref("Project"))
-                );
-                var requestedIssueList = AJS.$("<ul/>");
-                AJS.$(args.requestedIssuesData.issues).each(function () {
-                    requestedIssueList.append(
-                        AJS.$("<li/>").append(
-                            AJS.$("<a/>").attr({
-                                target: "_parent",
-                                title: gadgets.util.escapeString(this.key),
-                                href: gadget.getBaseUrl() + "/browse/" + this.key
-                            }).text(this.id + " " + this.key + " status:" + this.statusName)
-                        )
-                    );
-                });
-                mainDiv.append(requestedIssueList);
-                gadget.getView().html(mainDiv);
-            },
-            args: [
-                {
-                    key: "user",
-                    ajaxOptions: function () {
-                        return {
-                            url: "/rest/gadget/1.0/currentUser"
-                        };
-                    }
-                },
-                {
-                    key: "issuesData",
-                    ajaxOptions: function () {
-                        return {
-                            url: "/rest/RESTRiskManagementResource/1.0/issues.json"
-                        };
-                    }
-                },
-                {
-                    key: "requestedIssuesData",
-                    ajaxOptions: function () {
-                        return {
-                            url: "/rest/RESTRiskManagementResource/1.0/issues/byProjectName/" + encodeURI(gadget.getPref("Project")),
-                            error: function (msg) {
-                                //Tutaj trzeba dać konkretną informację
-                                gadget.showMessage("error", gadget.getMsg("risk.management.gadget.title"), true, true);
-                            }
-                        };
-                    }
+        args: [
+            {
+                key: "user",
+                ajaxOptions: function () {
+                    return {
+                        url: "/rest/gadget/1.0/currentUser"
+                    };
                 }
-            ]
+            },
+            {
+                key: "issuesData",
+                ajaxOptions: function () {
+                    return {
+                        url: "/rest/RESTRiskManagementResource/1.0/issues.json"
+                    };
+                }
+            },
+            {
+                key: "requestedIssuesData",
+                ajaxOptions: function () {
+                    return {
+                        url: "/rest/RESTRiskManagementResource/1.0/issues/byProjectName/" + encodeURI(gadget.getPref("Project")),
+                        error: function (msg) {
+                            //Tutaj trzeba dać konkretną informację
+                            gadget.showMessage("error", gadget.getMsg("risk.management.gadget.title"), true, true);
+                        }
+                    };
+                }
+            }
+        ]
 
-        }
-    });
+
+});
 }
