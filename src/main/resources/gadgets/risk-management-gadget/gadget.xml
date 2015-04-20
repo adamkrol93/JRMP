@@ -22,30 +22,31 @@
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
     <UserPref name="Project" datatype="hidden" required="true"/>
 
-    <UserPref name="Template" display_name="Gadget Template:" default_value="Risk Management Matrix" datatype="enum">
-        <EnumValue value="Risk Management Matrix"/>
-    </UserPref>
+    <UserPref name="Template" datatype="hidden"/>
 
-    <UserPref name="Filter" display_name="Projekt lub zapisany filtr">
-    </UserPref>
+    <UserPref name="Filter" datatype="hidden"/>
 
-    <UserPref name="Date" display_name="Relative Date:" default_value="Today" datatype="enum">
-        <EnumValue value="Today"/>
-    </UserPref>
+    <UserPref name="Date" datatype="hidden"/>
 
-    <UserPref name="Title" display_name="Title" default_value=""/>
+    <UserPref name="Title" default_value="" datatype="hidden"/>
 
-    <UserPref name="RefreshInterval" display_name="Interwał odświeżania:" default_value="Nigdy" datatype="enum">
-        <EnumValue value="Nigdy"/>
-        <EnumValue value="Co godzinę"/>
-    </UserPref>
+    <UserPref name="RefreshInterval" datatype="hidden"/>
 
 
     <Content type="html" >
+        #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
         #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
         #includeResources()
         <![CDATA[
-            __MSG_risk.management.gadget.title_
+            <script type="text/javascript">
+                var args = {};
+                args.baseUrl = " __MSG_risk.management.gadget.title_"
+                try {
+                   gadgets.util.registerOnLoadHandler(AMG.jrmp.init(args));
+                } catch (e) {
+                    console.log("Unable to initialize gadget.",e);
+                }
+            </script>
         ]]>
     </Content>
 </Module>

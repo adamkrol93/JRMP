@@ -8,10 +8,10 @@ AMG.jrmp.init = function (args) {
                 var gadget = this;
                 return {
                     theme: "long-label",
-                    //TODO: To jest tylko test pól trzeba je ogarnąć
                     fields: [
                         {
                             userpref: "Template",
+                            //class: "numField",
                             value: gadget.getPref("Template"),
                             label: gadget.getMsg("risk.management.gadget.template.label"),
                             description: gadget.getMsg("risk.management.gadget.template.description"),
@@ -19,6 +19,7 @@ AMG.jrmp.init = function (args) {
                         },
                         {
                             userpref: "Filter",
+                            //class: "numField",
                             value: gadget.getPref("Filter"),
                             label: gadget.getMsg("risk.management.gadget.filter.label"),
                             description: gadget.getMsg("risk.management.gadget.filter.default"),
@@ -58,6 +59,7 @@ AMG.jrmp.init = function (args) {
                         },
                         {
                             userpref: "Title",
+                           // class: "numField",
                             value: gadget.getPref("Title"),
                             label: gadget.getMsg("risk.management.gadget.userTitle.label"),
                             description: gadget.getMsg("risk.management.gadget.userTitle.description"),
@@ -95,32 +97,7 @@ AMG.jrmp.init = function (args) {
         },
         args: [
             {
-                key: "user",
-                ajaxOptions: function () {
-                    return {
-                        url: "/rest/gadget/1.0/currentUser"
-                    };
-                }
-            },
-            {
-                key: "issuesData",
-                ajaxOptions: function () {
-                    return {
-                        url: "/rest/RESTRiskManagementResource/1.0/issues.json"
-                    };
-                }
-            },
-            {
-                key: "requestedIssuesData",
-                ajaxOptions: function () {
-                    return {
-                        url: "/rest/RESTRiskManagementResource/1.0/issues/byProjectName/" + encodeURI(gadget.getPref("Project")),
-                        error: function (msg) {
-                            //Tutaj trzeba dać konkretną informację
-                            gadget.showMessage("error", gadget.getMsg("risk.management.gadget.title"), true, true);
-                        }
-                    };
-                }
+
             }
         ]
 
