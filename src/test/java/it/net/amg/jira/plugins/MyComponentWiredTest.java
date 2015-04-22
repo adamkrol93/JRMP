@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AtlassianPluginsTestRunner.class)
 public class MyComponentWiredTest
 {
-   private final ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
     private final MyPluginComponent myPluginComponent;
 
     public MyComponentWiredTest(ApplicationProperties applicationProperties,MyPluginComponent myPluginComponent)

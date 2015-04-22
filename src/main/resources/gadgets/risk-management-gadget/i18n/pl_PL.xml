@@ -23,11 +23,16 @@
     <msg name="risk.management.gadget.userTitle.label">Tytuł</msg>
     <msg name="risk.management.gadget.userTitle.description">Opcjonalny tytuł (np. opisujący Twoją konfigurację)</msg>
     <!--Refresh interval field-->
-    <msg name="risk.management.gadget.refreshInterval.label">Interwał odświeżanial</msg>
-    <msg name="risk.management.gadget.refreshInterval.description">Jak często chcesz, by ten gadżet się aktualizował</msg>
-    <msg name="risk.management.gadget.refreshInterval.option.never">Nigdy</msg>
-    <msg name="risk.management.gadget.refreshInterval.option.fifteenMinutes">Co 15 minut</msg>
-    <msg name="risk.management.gadget.refreshInterval.option.thirtyMinutes">Co 30 minut</msg>
-    <msg name="risk.management.gadget.refreshInterval.option.oneHour">Co godzinę</msg>
-    <msg name="risk.management.gadget.refreshInterval.option.twoHours">Co 2 godziny</msg>
+    <msg name="gadget.common.refresh.label">Interwał odświeżania</msg>
+    <msg name="gadget.common.refresh.description">Jak często chcesz odświeżać gadget</msg>
+    <msg name="gadget.common.refresh.never">Nigdy</msg>
+    <msg name="gadget.common.refresh.minute">Co 15 minut</msg>
+    <msg name="gadget.common.refresh.minutes">Co 30 minut</msg>
+    <msg name="gadget.common.refresh.hour">Co godzinę</msg>
+    <msg name="gadget.common.refresh.hours">Co 2 godziny</msg>
+    <!--Utils-->
+    <msg name="gadget.common.configure">Edytuj</msg>
+    <msg name="gadget.common.reload">Odśwież</msg>
+    <msg name="gadget.common.save">Zapisz</msg>
+    <msg name="gadget.common.cancel">Anuluj</msg>
 </messagebundle>

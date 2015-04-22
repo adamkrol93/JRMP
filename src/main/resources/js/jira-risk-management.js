@@ -1,32 +1,86 @@
 jQuery.namespace("AMG.jrmp");
 AMG.jrmp.init = function (args) {
     AJS.log("Startuję");
-    AJS.log(args.baseUrl);
-    var base=args.baseUrl;
+    var base = args.baseUrl;
     var gadget = AJS.Gadget({
             baseUrl: base,
             useOauth: "/rest/gadget/1.0/currentUser",
-            config:{
-                descriptor:function(args){
-                    return{
-                        action: args.projects,
+            config: {
+                descriptor: function () {
+                    return {
                         theme: "long-label",
-                        fields:[{userpref: "Template",
-                            "class": "numField",
-                            value: gadget.getPref("Template"),
-                            label: gadget.getMsg("risk.management.gadget.template.label"),
-                            description: gadget.getMsg("risk.management.gadget.template.description"),
-                            type: "text"},
-                            AJS.gadget.fields.nowConfigured(),
-                            AJS.log("Koniec konfigurowania")
+                        fields: [
+                            {
+                                userpref: "Template",
+                                "class": "numField",
+                                value: this.getPref("Template"),
+                                label: this.getMsg("risk.management.gadget.template.label"),
+                                description: this.getMsg("risk.management.gadget.template.description"),
+                                type: "select",
+                                options:[
+                                    {
+                                       label: this.getMsg("risk.management.gadget.template.option.RiskManegementMatrix")
+                                    }
+                                ]
+                            },
+                            {
+                                userpref: "Filter",
+                                value: this.getPref("Filter"),
+                                label: this.getMsg("risk.management.gadget.filter.label"),
+                                description: this.getMsg("risk.management.gadget.filter.default"),
+                                type: "text"
+                            },
+                            {
+                                userpref: "Date",
+                                value: this.getPref("Date"),
+                                label: this.getMsg("risk.management.gadget.relativeDate.label"),
+                                description: this.getMsg("risk.management.gadget.relativeDate.description"),
+                                type: "select",
+                                options:[
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.today")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.yesterday")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.oneWeekAgo")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.twoWeeksAgo")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.oneMonthAgo")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.threeMonthsAgo")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.sixMonthsAgo")
+                                    },
+                                    {
+                                        label:this.getMsg("risk.management.gadget.relativeDate.option.oneYearAgo")
+                                    }
+                                ]
+                            },
+                            {
+                                userpref: "Title",
+                                "class": "numField",
+                                value: this.getPref("Title"),
+                                label: this.getMsg("risk.management.gadget.userTitle.label"),
+                                description: this.getMsg("risk.management.gadget.userTitle.description"),
+                                type: "text"
+                            },
+                            AJS.gadget.fields.nowConfigured()
                         ]
+
                     }
-                },
-                args:[{}]
+
+                }
 
             },
-           // AJS.log("Przechodzę do view")
-            
+            // AJS.log("Przechodzę do view")
+
             view: {
                 enableReload: true,
                 onResizeAdjustHeight: true,
@@ -64,15 +118,7 @@ AMG.jrmp.init = function (args) {
                     }
                 },
                 args: [{
-                    key: "favFilters",
-                    ajaxOptions: function () {
-                        return {
-                            url: "/rest/gadget/1.0/favfilters",
-                            data: {
-                                showCounts: this.getPref("showCounts")
-                            }
-                        };
-                    }
+
                 }]
             }
         })
