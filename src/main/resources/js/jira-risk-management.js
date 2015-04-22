@@ -1,106 +1,81 @@
 jQuery.namespace("AMG.jrmp");
 AMG.jrmp.init = function (args) {
+    AJS.log("Startuję");
+    AJS.log(args.baseUrl);
+    var base=args.baseUrl;
     var gadget = AJS.Gadget({
-        baseUrl: args.baseUrl,
-        useOauth: "/rest/gadget/1.0/currentUser",
-        config: {
-            descriptor: function (args) {
-                var gadget = this;
-                return {
-                    theme: "long-label",
-                    fields: [
-                        {
-                            userpref: "Template",
-                            //class: "numField",
+            baseUrl: base,
+            useOauth: "/rest/gadget/1.0/currentUser",
+            config:{
+                descriptor:function(args){
+                    return{
+                        action: args.projects,
+                        theme: "long-label",
+                        fields:[{userpref: "Template",
+                            "class": "numField",
                             value: gadget.getPref("Template"),
                             label: gadget.getMsg("risk.management.gadget.template.label"),
                             description: gadget.getMsg("risk.management.gadget.template.description"),
-                            type: "text"
-                        },
-                        {
-                            userpref: "Filter",
-                            //class: "numField",
-                            value: gadget.getPref("Filter"),
-                            label: gadget.getMsg("risk.management.gadget.filter.label"),
-                            description: gadget.getMsg("risk.management.gadget.filter.default"),
-                            type: "text"
-                        },
-                        {
-                            userpref: "Date",
-                            label: gadget.getMsg("risk.management.gadget.relativeDate.label"),
-                            description: gadget.getMsg("risk.management.gadget.relativeDate.description"),
-                            type: "select",
-                            options: [
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.today")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.yesterday")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.oneWeekAgo")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.twoWeeksAgo")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.oneMonthAgo")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.threeMonthsAgo")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.sixMonthsAgo")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.relativeDate.option.oneYearAgo")
-                                }
-                            ]
-                        },
-                        {
-                            userpref: "Title",
-                           // class: "numField",
-                            value: gadget.getPref("Title"),
-                            label: gadget.getMsg("risk.management.gadget.userTitle.label"),
-                            description: gadget.getMsg("risk.management.gadget.userTitle.description"),
-                            type: "text"
-                        },
-                        {
-                            userpref: "RefreshInterval",
-                            label: gadget.getMsg("risk.management.gadget.refreshInterval.label"),
-                            description: gadget.getMsg("risk.management.gadget.refreshInterval.description"),
-                            type: "select",
-                            options: [
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.refreshInterval.option.never")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.refreshInterval.option.fifteenMinutes")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.refreshInterval.option.thirtyMinutes")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.refreshInterval.option.oneHour")
-                                },
-                                {
-                                    label: gadget.getMsg("risk.management.gadget.refreshInterval.option.twoHours")
-                                }
+                            type: "text"},
+                            AJS.gadget.fields.nowConfigured(),
+                            AJS.log("Koniec konfigurowania")
+                        ]
+                    }
+                },
+                args:[{}]
 
-                            ]
-                        },
-                        AJS.gadget.fields.nowConfigured()
-                    ]
+            },
+           // AJS.log("Przechodzę do view")
+            
+            view: {
+                enableReload: true,
+                onResizeAdjustHeight: true,
+                template: function (args) {
+                    var gadget = this;
+                    var filters = args.favFilters.filters;
 
-                }
+                    if (!filters) {
+                        gadget.getView().removeClass("loading").html("<p>__MSG_gadget.favourite.filters.no.favourites__</p>");
+                    } else {
+                        var list = AJS.$("<ul/>").attr("id", "filter-list");
+
+                        AJS.$(filters).each(function () {
+                            list.append(
+                                AJS.$("<li/>").append(
+                                    AJS.$("<div/>").addClass("filter-name").append(
+                                        AJS.$("<a/>").attr({
+                                            target: "_parent",
+                                            title: gadgets.util.escapeString(this.description),
+                                            href: "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value
+                                        }).text(this.label)
+                                    )
+                                ).append(
+                                    AJS.$("<div/>").addClass("filter-count").text(this.count)
+                                ).click(function () {
+                                        if (window.parent) {
+                                            window.parent.location = "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value;
+                                        } else {
+                                            window.location = "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value;
+                                        }
+                                    })
+                            );
+                        });
+                        gadget.getView().html(list);
+                    }
+                },
+                args: [{
+                    key: "favFilters",
+                    ajaxOptions: function () {
+                        return {
+                            url: "/rest/gadget/1.0/favfilters",
+                            data: {
+                                showCounts: this.getPref("showCounts")
+                            }
+                        };
+                    }
+                }]
             }
-        },
-        args: [
-            {
-
-            }
-        ]
-
-
-});
+        })
+        ;
+    AJS.log("Pomyślnie skończyłem");
 }

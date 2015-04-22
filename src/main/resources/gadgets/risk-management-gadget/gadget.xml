@@ -4,18 +4,23 @@
                  description="__MSG_risk.management.gadget.description__">
         <Optional feature="gadget-directory">
             <Param name="categories">
-                AMG
-                JIRA
+                WALLBOARD
             </Param>
         </Optional>
-        <Optional feature="atlassian.util" />
-        <Optional feature="auth-refresh" />
-        <Require feature="views" />
+       <!-- <Optional feature="atlassian.util"/>
+        <Optional feature="auth-refresh"/>
+        <Require feature="views"/>
         <Require feature="settitle"/>
-        <Require feature="oauthpopup" />
+        <Require feature="oauthpopup"/>-->
+        <!---->
+        <Require feature="dynamic-height"/>
+        <Require feature="setprefs"/>
+        <Require feature="views"/>
+        <Require feature="oauthpopup"/>
         #oauth
         <Locale messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/ALL_ALL.xml"/>
-        <Locale country="PL" lang="pl" messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
+        <Locale country="PL" lang="pl"
+                messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
 
     </ModulePrefs>
 
@@ -33,18 +38,18 @@
     <UserPref name="RefreshInterval" datatype="hidden"/>
 
 
-    <Content type="html" >
+    <Content type="html">
+        <![CDATA[
         #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
         #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
         #includeResources()
-        <![CDATA[
             <script type="text/javascript">
-                var args = {};
-                args.baseUrl = " __MSG_risk.management.gadget.title_"
                 try {
-                   gadgets.util.registerOnLoadHandler(AMG.jrmp.init(args));
+                var args = {};
+                args.baseUrl = "__ATLASSIAN_BASE_URL__";
+                   AMG.jrmp.init(args);
                 } catch (e) {
-                    console.log("Unable to initialize gadget.",e);
+                    AJS.log("Unable to initialize gadget."+e.stack);
                 }
             </script>
         ]]>
