@@ -1,4 +1,38 @@
 <messagebundle>
     <msg name="risk.management.gadget.title">JIRA Risk Management Gadget</msg>
     <msg name="risk.management.gadget.description">Gadget displays project risk matrix</msg>
+    <!--Template field -->
+    <msg name="risk.management.gadget.template.label">Gadget template</msg>
+    <msg name="risk.management.gadget.template.description">Select a template</msg>
+    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">RiskManegementMatrix</msg>
+    <!--Filter field -->
+    <msg name="risk.management.gadget.filter.label">Project or saved filter</msg>
+    <msg name="risk.management.gadget.filter.default">Search</msg>
+    <!--Relative date field -->
+    <msg name="risk.management.gadget.relativeDate.label">Relative Date:</msg>
+    <msg name="risk.management.gadget.relativeDate.description">Select a relative date</msg>
+    <msg name="risk.management.gadget.relativeDate.option.today">Today</msg>
+    <msg name="risk.management.gadget.relativeDate.option.yesterday">Yesterday</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneWeekAgo">1 week ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.twoWeeksAgo">2 weeks ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneMonthAgo">1 month ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.threeMonthsAgo">3 months ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.sixMonthsAgo">6 months ago</msg>
+    <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">1 year ago</msg>
+    <!--Title field-->
+    <msg name="risk.management.gadget.userTitle.label">Title</msg>
+    <msg name="risk.management.gadget.userTitle.description">An optional title (E.g describing your configuration)</msg>
+    <!--Refresh interval field-->
+    <msg name="gadget.common.refresh.label">Refresh Interval</msg>
+    <msg name="gadget.common.refresh.description">How often you would like this gadget to update</msg>
+    <msg name="gadget.common.refresh.never">Never</msg>
+    <msg name="gadget.common.refresh.minute">Every 15 Minutes</msg>
+    <msg name="gadget.common.refresh.minutes">Every 30 Minutes</msg>
+    <msg name="gadget.common.refresh.hour">Every 1 Hour</msg>
+    <msg name="gadget.common.refresh.hours">Every 2 Hours</msg>
+    <!--Utils-->
+    <msg name="gadget.common.configure">Edit</msg>
+    <msg name="gadget.common.reload">Refresh</msg>
+    <msg name="gadget.common.save">Save</msg>
+    <msg name="gadget.common.cancel">Cancel</msg>
 </messagebundle>

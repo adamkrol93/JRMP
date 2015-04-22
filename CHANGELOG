@@ -2,3 +2,6 @@
 - initial commit project template
 - PIP-55 po kilku godzinach konfigurowania, tłumaczenia wydają sie działać
 - PIP-53 dodany REST plugin
+- PIP-54 Dodanie w gadget.xml odniesienia do pliku .js
+- PIP-54 Dodanie pól panelu konfiguracyjnego w gadget.xml
+- PIP-54 Poprawienie błędów wynikających z pliku gadget.xml, które uniemożliwiały wyświetlenie elementów

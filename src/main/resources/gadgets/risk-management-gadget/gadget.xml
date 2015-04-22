@@ -4,8 +4,7 @@
                  description="__MSG_risk.management.gadget.description__">
         <Optional feature="gadget-directory">
             <Param name="categories">
-                AMG
-                JIRA
+                WALLBOARD
             </Param>
         </Optional>
         <Optional feature="atlassian.util" />
@@ -13,6 +12,9 @@
         <Require feature="views" />
         <Require feature="settitle"/>
         <Require feature="oauthpopup" />
+        <Require feature="setprefs" />
+        <Require feature="views" />
+        <Require feature="dynamic-height" />
         #oauth
         <Locale messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/ALL_ALL.xml"/>
         <Locale country="PL" lang="pl" messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
@@ -20,9 +22,31 @@
     </ModulePrefs>
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
     <UserPref name="Project" datatype="hidden" required="true"/>
+
+    <UserPref name="baseUrl" datatype="hidden" default_value="__ATLASSIAN_BASE_URL__"/>
+    <UserPref name="isConfigured" datatype="hidden" default_value="false"/>
+    <UserPref name="refresh" datatype="hidden" default_value="false"/>
+
+
+    <UserPref name="Template" datatype="hidden"/>
+    <UserPref name="Filter" datatype="hidden"/>
+    <UserPref name="Date" datatype="hidden" />
+    <UserPref name="Title"  datatype="hidden"/>
+    <UserPref name="RefreshInterval" datatype="hidden"/>
     <Content type="html">
         <![CDATA[
-            __MSG_risk.management.gadget.title_
+        #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
+        #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
+        #includeResources()
+            <script type="text/javascript">
+                var args = {};
+                args.baseUrl = "__ATLASSIAN_BASE_URL__";
+                try {
+                   AMG.jrmp.init(args);
+                } catch (e) {
+                    AJS.log("Unable to initialize gadget."+e.stack);
+                }
+            </script>
         ]]>
     </Content>
 </Module>
