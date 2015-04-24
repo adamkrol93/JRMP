@@ -36,6 +36,8 @@
     <Content type="html">
         <![CDATA[
         #requireResource("com.atlassian.gadgets.publisher:ajs-gadgets")
+        #requireResource("com.atlassian.jira.gadgets:common")
+        #requireResource("com.atlassian.auiplugin:ajs")
         #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
         #includeResources()
             <script type="text/javascript">
