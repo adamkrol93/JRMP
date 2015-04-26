@@ -21,7 +21,6 @@
 
     </ModulePrefs>
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
-    <UserPref name="Project" datatype="hidden" required="true"/>
 
     <UserPref name="baseUrl" datatype="hidden" default_value="__ATLASSIAN_BASE_URL__"/>
     <UserPref name="isConfigured" datatype="hidden" default_value="false"/>

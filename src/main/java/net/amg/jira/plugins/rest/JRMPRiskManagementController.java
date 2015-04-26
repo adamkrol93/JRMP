@@ -2,11 +2,21 @@ package net.amg.jira.plugins.rest;
 
 import com.atlassian.jira.bc.JiraServiceContextImpl;
 import com.atlassian.jira.bc.filter.SearchRequestService;
+import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.issue.search.SearchRequest;
+import com.atlassian.jira.jql.builder.JqlClauseBuilder;
+import com.atlassian.jira.jql.builder.JqlQueryBuilder;
+import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.user.ApplicationUser;
 import com.atlassian.jira.user.util.UserUtil;
+import com.atlassian.jira.util.MessageSet;
+import com.atlassian.jira.util.collect.CollectionBuilder;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
+import com.atlassian.query.Query;
+import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.sal.api.user.UserManager;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,56 +45,72 @@ public class JRMPRiskManagementController {
 
     private UserUtil userUtil;
 
+    private I18nResolver i18nResolver;
+
+    private SearchService searchService;
+
+    private JiraAuthenticationContext authenticationContext;
+
     public JRMPRiskManagementController(SearchRequestService searchRequestService,UserManager userManager,
-                                        UserUtil userUtil) {
+                                        UserUtil userUtil, I18nResolver i18nResolver, SearchService searchService,
+                                        JiraAuthenticationContext jiraAuthenticationContext) {
         this.userManager = userManager;
         this.searchRequestService = searchRequestService;
         this.userUtil = userUtil;
+        this.i18nResolver = i18nResolver;
+        this.searchService = searchService;
+        this.authenticationContext = jiraAuthenticationContext;
     }
 
     @Path("/validate")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @AnonymousAllowed
-    public Response doValidation(@QueryParam("Filter") String filter,
-                                 @QueryParam("Date") String relativeDate,
-                                 @QueryParam("Title") String title,
-                                 @QueryParam("refresh") Integer refreshRate,
-                                 @Context HttpServletRequest request) {
+    public Response doValidation(@Context HttpServletRequest request) {
         ErrorCollection errorCollection = new ErrorCollection();
         errorCollection.setParameters(request.getParameterMap());
-
+        String filter = request.getParameter(GadgetFieldEnum.FILTER.toString());
+        String relativeDate = request.getParameter(GadgetFieldEnum.DATE.toString());
+        String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
+        String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         Gson gson = new Gson();
-        logger.info("----------------->Witam w Walidacji");
         ApplicationUser user = userUtil.getUserByName(userManager.getRemoteUsername(request));
         if(user == null)
         {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
-        if(filter==null || "".equals(filter))
+        if(StringUtils.isBlank(filter))
         {
 
-            errorCollection.addError("filter","filter is empty");
+            errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
+        }else{
+            Query query = getQuery(filter.split("-")[1]);
+
+            if(query != null)
+            {
+                MessageSet messageSet = searchService.validateQuery(user.getDirectoryUser(),query);
+                if(messageSet.hasAnyErrors())
+                {
+                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                }
+            }else{
+                errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+            }
         }
 
-        if(relativeDate == null || "".equals(relativeDate))
+        if(StringUtils.isBlank(relativeDate))
         {
-            errorCollection.addError("Date", "Date is empty");
+            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.empty_date"));
         }
 
-        if(title == null || "".equals(title))
+        if(StringUtils.isBlank(title))
         {
-            errorCollection.addError("Title", "Title is empty");
+            errorCollection.addError(GadgetFieldEnum.TITLE.toString(), i18nResolver.getText("risk.management.validation.error.empty_title"));
         }
 
-        if(refreshRate == null || refreshRate == 0)
+        if(StringUtils.isBlank(refreshRate))
         {
-                errorCollection.addError("refresh", "RefreshRate is empty");
-        }
-
-        if(searchRequestService == null || searchRequestService.getFilter(new JiraServiceContextImpl(user),Long.valueOf(filter)) == null)
-        {
-            errorCollection.addError("filter","filter id is wrong",filter);
+                errorCollection.addError(GadgetFieldEnum.REFRESH.toString(), i18nResolver.getText("risk.management.validation.error.empty_refresh"));
         }
 
 
@@ -92,5 +118,10 @@ public class JRMPRiskManagementController {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errorCollection)).build();
         }
         return Response.status(Response.Status.OK).build();
+    }
+
+    private Query getQuery(String filter) {
+        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().savedFilter(filter);
+        return subjectBuilder.buildQuery();
     }
 }

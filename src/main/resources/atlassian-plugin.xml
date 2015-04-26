@@ -37,6 +37,8 @@
   <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
   <component-import key="userUtil" interface="com.atlassian.jira.user.util.UserUtil"/>
   <component-import key="searchRequestService" interface="com.atlassian.jira.bc.filter.SearchRequestService"/>
+  <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
+  <component-import key="searchService" interface="com.atlassian.jira.bc.issue.search.SearchService"/>
   <rest name="REST Risk Management Resource" i18n-name-key="rest-risk-management-resource.name" key="rest-risk-management-resource" path="/restcontroller" version="1.0">
     <description key="rest-risk-management-resource.description">The REST Risk Management Resource Plugin</description>
   </rest>
