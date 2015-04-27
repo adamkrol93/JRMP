@@ -19,6 +19,11 @@
     <msg name="risk.management.gadget.relativeDate.option.threeMonthsAgo">3 miesiące temu</msg>
     <msg name="risk.management.gadget.relativeDate.option.sixMonthsAgo">6 miesięcy temu</msg>
     <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">Rok temu</msg>
+    <msg name="risk.management.validation.error.empty_filter">Nie wybrano filtru</msg>
+    <msg name="risk.management.validation.error.empty_date">Data nie może być pusta</msg>
+    <msg name="risk.management.validation.error.empty_title">Tytuł nie może być pusty</msg>
+    <msg name="risk.management.validation.error.empty_refresh">Interwał odświeżania nie może być pusty</msg>
+    <msg name="risk.management.validation.error.filter_is_incorrect">Wybrany filtr jest nie poprawny</msg>
     <!--Title field-->
     <msg name="risk.management.gadget.userTitle.label">Tytuł</msg>
     <msg name="risk.management.gadget.userTitle.description">Opcjonalny tytuł (np. opisujący Twoją konfigurację)</msg>
@@ -35,4 +40,9 @@
     <msg name="gadget.common.reload">Odśwież</msg>
     <msg name="gadget.common.save">Zapisz</msg>
     <msg name="gadget.common.cancel">Anuluj</msg>
+    <msg name="gadget.common.advanced.search">Wyszukiwanie zaawansowane</msg>
+    <msg name="gadget.common.filterid.none.selected">Nie wybrano filtra</msg>
+    <msg name="gadget.common.quick.find">Wyszukaj filtr</msg>
+    <msg name="gadget.common.error.500">Wystąpił wyjątek podczas komunikacji</msg>
+    <msg name="gadget.common.error.400">Formularz zawiera błędy</msg>
 </messagebundle>

@@ -19,6 +19,11 @@
     <msg name="risk.management.gadget.relativeDate.option.threeMonthsAgo">3 months ago</msg>
     <msg name="risk.management.gadget.relativeDate.option.sixMonthsAgo">6 months ago</msg>
     <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">1 year ago</msg>
+    <msg name="risk.management.validation.error.empty_filter">Filter is empty</msg>
+    <msg name="risk.management.validation.error.empty_date">Date cannot be empty</msg>
+    <msg name="risk.management.validation.error.empty_title">Title cannot be empty</msg>
+    <msg name="risk.management.validation.error.empty_refresh">Refresh interval cannot be empty</msg>
+    <msg name="risk.management.validation.error.filter_is_incorrect">Selected Filter is incorrect</msg>
     <!--Title field-->
     <msg name="risk.management.gadget.userTitle.label">Title</msg>
     <msg name="risk.management.gadget.userTitle.description">An optional title (E.g describing your configuration)</msg>
@@ -35,4 +40,9 @@
     <msg name="gadget.common.reload">Refresh</msg>
     <msg name="gadget.common.save">Save</msg>
     <msg name="gadget.common.cancel">Cancel</msg>
+    <msg name="gadget.common.advanced.search">Advanced Search</msg>
+    <msg name="gadget.common.filterid.none.selected">No filter selected</msg>
+    <msg name="gadget.common.quick.find">Search for filter</msg>
+    <msg name="gadget.common.error.500">Weird exception has just occurred</msg>
+    <msg name="gadget.common.error.400">Form contains errors</msg>
 </messagebundle>
