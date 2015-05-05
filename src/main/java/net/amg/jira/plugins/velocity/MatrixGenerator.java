@@ -56,18 +56,17 @@ public class MatrixGenerator{
 		    	}
 	    	}
 	    }
-	    Template t = null;
+	    
 	    try {
 	    	Velocity.init();
 	    } catch (Exception e){
 	    	logger.error("Cannot init velocity: " + e.getMessage());
 	    }
 
-            //String templateStr = "LOL";
 	    VelocityContext velocityContext = new VelocityContext();
 	    velocityContext.put("matrixSize", size);
 	    velocityContext.put("projectName", "PŁ Implementacje Przemysłowe");//TODO hard-coded project name
-	    velocityContext.put("projectURL", "https://confluence.amg.net.pl/pages/viewpage.action?pageId=244875576");//TODO hard-coded project URL
+	    velocityContext.put("projectURL", "https://confluence.amg.net.ple/pages/viewpage.action?pageId=244875576");//TODO hard-coded project URL
 	    velocityContext.put("redTasks", redTasks);
 	    velocityContext.put("greenTasks", greenTasks);
 	    velocityContext.put("yellowTasks", yellowTasks);
@@ -78,8 +77,13 @@ public class MatrixGenerator{
 	    velocityContext.put("updatedTask", "PIP-9"); //TODO hard-coded
 	    velocityContext.put("matrix", listOfRows);
 
+	    Template t = null;
 	    try{	    
-                t = Velocity.getTemplate("templates/matrixTemplate.vm");
+                //t = Velocity.getTemplate("templates/matrixTemplate.vm");
+                //t = Velocity.getTemplate("matrixTemplate.vm");
+                //t = Velocity.getTemplate("resources/templates/matrixTemplate.vm");
+                //t = Velocity.getTemplate("src/main/resources/templates/matrixTemplate.vm");
+		t = Velocity.getTemplate("./src/main/resources/templates/matrixTemplate.vm");
             } catch (Exception e){
 	        logger.error("Cannot load template: " + e.getMessage());
             }
