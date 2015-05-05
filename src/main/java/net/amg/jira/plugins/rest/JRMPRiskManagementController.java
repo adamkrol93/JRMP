@@ -1,5 +1,6 @@
 package net.amg.jira.plugins.rest;
 
+import net.amg.jira.plugins.velocity.MatrixGenerator;
 import com.atlassian.jira.bc.JiraServiceContextImpl;
 import com.atlassian.jira.bc.filter.SearchRequestService;
 import com.atlassian.jira.bc.issue.search.SearchService;
@@ -118,6 +119,15 @@ public class JRMPRiskManagementController {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errorCollection)).build();
         }
         return Response.status(Response.Status.OK).build();
+    }
+    
+    @Path("/matrix")
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    @AnonymousAllowed
+    public Response doValidation(@QueryParam("size") int size) {
+        MatrixGenerator matrixGenerator = new MatrixGenerator();
+        return Response.ok(matrixGenerator.generateMatrix(size), MediaType.TEXT_HTML).build();
     }
 
     private Query getQuery(String filter) {
