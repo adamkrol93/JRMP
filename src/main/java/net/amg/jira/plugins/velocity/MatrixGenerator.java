@@ -79,7 +79,7 @@ public class MatrixGenerator{
 	    velocityContext.put("matrix", listOfRows);
 
 	    try{	    
-                t = Velocity.getTemplate("matrixTemplate.vm");
+                t = Velocity.getTemplate("templates/matrixTemplate.vm");
             } catch (Exception e){
 	        logger.error("Cannot load template: " + e.getMessage());
             }
