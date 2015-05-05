@@ -6,3 +6,4 @@
 - PIP-54 Dodanie pól panelu konfiguracyjnego w gadget.xml
 - PIP-54 Poprawienie błędów wynikających z pliku gadget.xml, które uniemożliwiały wyświetlenie elementów
 - PIP-85 Skonfigurowany RESTowy walidator
+- PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu

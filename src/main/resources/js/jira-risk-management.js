@@ -1,6 +1,5 @@
 jQuery.namespace("AMG.jrmp");
 AMG.jrmp.init = function (args) {
-    AJS.log("Startuję");
     var base = args.baseUrl;
     var gadget = AJS.Gadget({
             baseUrl: base,
@@ -22,6 +21,7 @@ AMG.jrmp.init = function (args) {
                     }
 
                     return {
+                        onResizeReload: true,
                         onResizeAdjustHeight: true,
                         action: "/rest/jira-risk-management/1.0/controller/validate",
                         theme: (function() { return gadgets.window.getViewportDimensions().width < 500 ? "top-label" : "long-label"; })(),
@@ -100,14 +100,12 @@ AMG.jrmp.init = function (args) {
                 }
 
             },
-            // AJS.log("Przechodzę do view")
-
             view: {
                 enableReload: true,
                 onResizeAdjustHeight: true,
                 template: function (args) {
                     var gadget = this;
-                    var filters = args.favFilters.filters;
+                    var filters;// = args.favFilters.filters;
 
                     if (!filters) {
                         gadget.getView().removeClass("loading").html("<p>__MSG_gadget.favourite.filters.no.favourites__</p>");
@@ -144,5 +142,4 @@ AMG.jrmp.init = function (args) {
             }
         })
         ;
-    AJS.log("Pomyślnie skończyłem");
-}
+};
