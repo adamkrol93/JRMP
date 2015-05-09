@@ -1,31 +1,24 @@
 package net.amg.jira.plugins.rest;
 
-import net.amg.jira.plugins.velocity.MatrixGenerator;
-import com.atlassian.jira.bc.JiraServiceContextImpl;
-import com.atlassian.jira.bc.filter.SearchRequestService;
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.issue.search.SearchRequest;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
-import com.atlassian.jira.user.ApplicationUser;
-import com.atlassian.jira.user.util.UserUtil;
 import com.atlassian.jira.util.MessageSet;
-import com.atlassian.jira.util.collect.CollectionBuilder;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
-import com.atlassian.sal.api.user.UserManager;
 import com.google.gson.Gson;
+import net.amg.jira.plugins.velocity.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -108,14 +101,18 @@ public class JRMPRiskManagementController {
         }
         return Response.status(Response.Status.OK).build();
     }
-    
+
     @Path("/matrix")
     @GET
     @Produces({MediaType.TEXT_HTML})
     @AnonymousAllowed
-    public Response getMatrix(@QueryParam("size") int size) {
-        MatrixGenerator matrixGenerator = new MatrixGenerator();
-        return Response.ok(matrixGenerator.generateMatrix(size), MediaType.TEXT_HTML).build();
+    public Response doValidation(@DefaultValue("0") @QueryParam("size")  int size) {
+        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver);
+        try {
+            return Response.ok(matrixGenerator.generateMatrix(size), MediaType.TEXT_HTML).build();
+        } catch(Exception e){
+            return Response.noContent().build();
+        }
     }
 
     private Query getQueryFilter(String filter) {
@@ -128,4 +125,5 @@ public class JRMPRiskManagementController {
         JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().project(project);
         return subjectBuilder.buildQuery();
     }
+
 }

@@ -1,31 +1,32 @@
 package net.amg.jira.plugins.velocity;
 
-import java.io.StringWriter;
-import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import java.util.*;
+
+import com.atlassian.sal.api.message.I18nResolver;
+import com.atlassian.velocity.DefaultVelocityManager;
+import com.atlassian.velocity.VelocityManager;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 public class MatrixGenerator{
-	
-	Logger logger = LoggerFactory.getLogger(getClass());
+
+	private I18nResolver i18nResolver;
+
+	public MatrixGenerator(I18nResolver i18nResolver){
+		this.i18nResolver = i18nResolver;
+	}
+
+	//Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public String generateMatrix(int size){
-	    List<Task> listOfTasks = new ArrayList<Task>();//TODO hard-coded list of tasks
-	    listOfTasks.add(new Task("PIP-95", "https://jira.amg.net.pl/browse/PIP-95", 2, 2));
-	    listOfTasks.add(new Task("PIP-86", "https://jira.amg.net.pl/browse/PIP-86", 1, 1));
-	    listOfTasks.add(new Task("PIP-93", "https://jira.amg.net.pl/browse/PIP-93", 2, 2));
-	    listOfTasks.add(new Task("PIP-92", "https://jira.amg.net.pl/browse/PIP-92", 5, 5));
-	    listOfTasks.add(new Task("PIP-90", "https://jira.amg.net.pl/browse/PIP-90", 4, 2));
-	    listOfTasks.add(new Task("PIP-91", "https://jira.amg.net.pl/browse/PIP-91", 4, 1));
-		
+
+		if (size == 0){
+			return i18nResolver.getText("risk.management.gadget.matrix.error.wrong_size");
+		}
+
+	    List<Task> listOfTasks = getTasks();
 	    List<Row> listOfRows = new ArrayList<Row>();
 		for(int i = 0; i < size; i++){
 			Row row = new Row();
@@ -56,41 +57,35 @@ public class MatrixGenerator{
 		    	}
 	    	}
 	    }
-	    Template t = null;
-	    try {
-	    	Velocity.init();
-	    } catch (Exception e){
-	    	logger.error("Cannot init velocity: " + e.getMessage());
-	    }
 
-            //String templateStr = "LOL";
-	    VelocityContext velocityContext = new VelocityContext();
-	    velocityContext.put("matrixSize", size);
-	    velocityContext.put("projectName", "PŁ Implementacje Przemysłowe");//TODO hard-coded project name
-	    velocityContext.put("projectURL", "https://confluence.amg.net.pl/pages/viewpage.action?pageId=244875576");//TODO hard-coded project URL
-	    velocityContext.put("redTasks", redTasks);
-	    velocityContext.put("greenTasks", greenTasks);
-	    velocityContext.put("yellowTasks", yellowTasks);
-	    DateFormat dateFormatter = new SimpleDateFormat("YYYY-MM-dd");
-	    DateFormat updateDateFormatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-	    velocityContext.put("date", dateFormatter.format(new Date()));
-	    velocityContext.put("updateDate", updateDateFormatter.format(new Date()));
-	    velocityContext.put("updatedTask", "PIP-9"); //TODO hard-coded
-	    velocityContext.put("matrix", listOfRows);
+		DateFormat dateFormatter = new SimpleDateFormat("YYYY-MM-dd");
+		DateFormat updateDateFormatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		Map<String, Object> params = new HashMap<String, Object>();
 
-	    try{	    
-                t = Velocity.getTemplate("templates/matrixTemplate.vm");
-            } catch (Exception e){
-	        logger.error("Cannot load template: " + e.getMessage());
-            }
-            
-	    Writer writer = new StringWriter();
-	    try {
-                //Velocity.evaluate( velocityContext, writer, "log tag name", templateStr);
-	    	t.merge(velocityContext, writer);
-	    } catch (Exception e){
-	    	logger.error("Cannot merge template: " + e.getMessage());
-	    }
-	    return writer.toString();
+		params.put("matrixSize", size);
+		params.put("projectName", "PŁ Implementacje Przemysłowe");//TODO hard-coded project name
+		params.put("projectURL", "https://confluence.amg.net.pl/pages/viewpage.action?pageId=244875576");//TODO hard-coded project URL
+		params.put("redTasks", redTasks);
+		params.put("greenTasks", greenTasks);
+		params.put("yellowTasks", yellowTasks);
+		params.put("date", dateFormatter.format(new Date()));
+		params.put("updateDate", updateDateFormatter.format(new Date()));
+		params.put("updatedTask", "PIP-9"); //TODO hard-coded
+		params.put("matrix", listOfRows);
+
+		VelocityManager velocityManager = new DefaultVelocityManager();
+		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
+
+	}
+
+	private List<Task> getTasks(){
+		List<Task> listOfTasks = new ArrayList<Task>();
+		listOfTasks.add(new Task("PIP-95", "https://jira.amg.net.pl/browse/PIP-95", 2, 2));
+		listOfTasks.add(new Task("PIP-86", "https://jira.amg.net.pl/browse/PIP-86", 1, 1));
+		listOfTasks.add(new Task("PIP-93", "https://jira.amg.net.pl/browse/PIP-93", 2, 2));
+		listOfTasks.add(new Task("PIP-92", "https://jira.amg.net.pl/browse/PIP-92", 5, 5));
+		listOfTasks.add(new Task("PIP-90", "https://jira.amg.net.pl/browse/PIP-90", 4, 2));
+		listOfTasks.add(new Task("PIP-91", "https://jira.amg.net.pl/browse/PIP-91", 4, 1));
+		return listOfTasks;
 	}
 }
