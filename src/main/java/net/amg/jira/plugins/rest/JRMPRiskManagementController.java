@@ -40,24 +40,14 @@ public class JRMPRiskManagementController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    private SearchRequestService searchRequestService;
-
-    private UserManager userManager;
-
-    private UserUtil userUtil;
-
     private I18nResolver i18nResolver;
 
     private SearchService searchService;
 
     private JiraAuthenticationContext authenticationContext;
 
-    public JRMPRiskManagementController(SearchRequestService searchRequestService,UserManager userManager,
-                                        UserUtil userUtil, I18nResolver i18nResolver, SearchService searchService,
+    public JRMPRiskManagementController(I18nResolver i18nResolver, SearchService searchService,
                                         JiraAuthenticationContext jiraAuthenticationContext) {
-        this.userManager = userManager;
-        this.searchRequestService = searchRequestService;
-        this.userUtil = userUtil;
         this.i18nResolver = i18nResolver;
         this.searchService = searchService;
         this.authenticationContext = jiraAuthenticationContext;
@@ -75,38 +65,36 @@ public class JRMPRiskManagementController {
         String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
         String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         Gson gson = new Gson();
-        ApplicationUser user = userUtil.getUserByName(userManager.getRemoteUsername(request));
-        if(user == null)
-        {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
         if(StringUtils.isBlank(filter))
         {
 
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
-        }else{
-            Query query = getQuery(filter.split("-")[1]);
-
-            if(query != null)
-            {
-                MessageSet messageSet = searchService.validateQuery(user.getDirectoryUser(),query);
-                if(messageSet.hasAnyErrors())
-                {
-                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
-                }
-            }else{
-                errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+        }else {
+            String type = filter.split("-")[0];
+            Query query = null;
+            if ("filter".equals(type)) {
+                query = getQueryFilter(filter.split("-")[1]);
             }
+            if("project".equals(type))
+            {
+                query = getQueryProject(filter.split("-")[1]);
+            }
+
+                if (query != null) {
+
+                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), query);
+                    if (messageSet.hasAnyErrors()) {
+                        errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                    }
+                } else {
+                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                }
+
         }
 
         if(StringUtils.isBlank(relativeDate))
         {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.empty_date"));
-        }
-
-        if(StringUtils.isBlank(title))
-        {
-            errorCollection.addError(GadgetFieldEnum.TITLE.toString(), i18nResolver.getText("risk.management.validation.error.empty_title"));
         }
 
         if(StringUtils.isBlank(refreshRate))
@@ -125,13 +113,19 @@ public class JRMPRiskManagementController {
     @GET
     @Produces({MediaType.TEXT_HTML})
     @AnonymousAllowed
-    public Response doValidation(@QueryParam("size") int size) {
+    public Response getMatrix(@QueryParam("size") int size) {
         MatrixGenerator matrixGenerator = new MatrixGenerator();
         return Response.ok(matrixGenerator.generateMatrix(size), MediaType.TEXT_HTML).build();
     }
 
-    private Query getQuery(String filter) {
+    private Query getQueryFilter(String filter) {
         JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().savedFilter(filter);
+        return subjectBuilder.buildQuery();
+    }
+
+    private Query getQueryProject(String project)
+    {
+        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().project(project);
         return subjectBuilder.buildQuery();
     }
 }

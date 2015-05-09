@@ -118,6 +118,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>2.5.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-rest-plugin</artifactId>
             <version>${jira.version}</version>
@@ -150,6 +156,7 @@
 						</pluginArtifact>
 					</pluginArtifacts>
 					-->
+                    <extractDependencies>false</extractDependencies>
                 </configuration>
             </plugin>
             <plugin>
