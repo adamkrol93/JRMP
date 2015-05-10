@@ -13,7 +13,8 @@ import com.atlassian.jira.issue.fields.screen.FieldScreenTab;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
-import org.springframework.beans.factory.DisposableBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author Adam Król
  */
 
-public class PluginListener implements DisposableBean, InitializingBean{
+public class PluginListener implements InitializingBean{
 
 
     public static final String RISK_CONSEQUENCE_TEXT_CF = "Risk Consequence";
@@ -34,6 +35,7 @@ public class PluginListener implements DisposableBean, InitializingBean{
     private final FieldScreenManager fieldScreenManager;
     private final ConstantsManager constantsManager;
     private final IssueTypeSchemeManager issueTypeSchemeManager;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public PluginListener(CustomFieldManager customFieldManager, FieldScreenManager fieldScreenManager, ConstantsManager constantsManager, IssueTypeSchemeManager issueTypeSchemeManager) {
         this.customFieldManager = customFieldManager;
@@ -42,34 +44,19 @@ public class PluginListener implements DisposableBean, InitializingBean{
         this.issueTypeSchemeManager = issueTypeSchemeManager;
     }
 
-    @Override
-    public void destroy() throws Exception {
-
-        CustomField riskConsequenceCustomField = this.customFieldManager.getCustomFieldObjectByName(RISK_CONSEQUENCE_TEXT_CF);
-
-        if (riskConsequenceCustomField != null) {
-            this.customFieldManager.removeCustomField(riskConsequenceCustomField);
-        }
-
-        CustomField riskProbabilityCustomField = this.customFieldManager.getCustomFieldObjectByName(RISK_PROBABILITY_TEXT_CF);
-
-        if (riskProbabilityCustomField != null) {
-            this.customFieldManager.removeCustomField(riskProbabilityCustomField);
-        }
-
-        IssueConstant constant = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
-        if(constant != null)
-        {
-            issueTypeSchemeManager.removeOptionFromAllSchemes(constant.getId());
-            constantsManager.removeIssueType(constant.getId());
-        }
-    }
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        IssueType riskIssueType = constantsManager.insertIssueType(RISK_ISSUE_TYPE, 0L, null, "Risk in projects", "/images/icons/issuetypes/delete.png");
+        IssueType riskIssueType;
+        IssueConstant risk = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
+        if(risk != null)
+        {
+            riskIssueType = constantsManager.getIssueTypeObject(risk.getId());
+        }else {
+            riskIssueType = constantsManager.insertIssueType(RISK_ISSUE_TYPE, 0L, null, "Risk in projects", "/images/icons/issuetypes/delete.png");
+        }
 
         List<GenericValue> issueTypes = new ArrayList<GenericValue>();
         issueTypes.add(riskIssueType.getGenericValue());
@@ -81,29 +68,35 @@ public class PluginListener implements DisposableBean, InitializingBean{
         CustomField riskConsequenceCustomField = null;
         CustomField riskProbabilityCustomField = null;
         try {
-            riskConsequenceCustomField = this.customFieldManager.createCustomField(RISK_CONSEQUENCE_TEXT_CF, "Risk Consequence",
-                    this.customFieldManager.getCustomFieldType("com.atlassian.jira.plugin.system.customfieldtypes:float"),
-                    this.customFieldManager.getCustomFieldSearcher("com.atlassian.jira.plugin.system.customfieldtypes:exactnumber"),
-                    contexts, issueTypes);
-            riskProbabilityCustomField = this.customFieldManager.createCustomField(RISK_PROBABILITY_TEXT_CF, "Risk Probability",
-                    this.customFieldManager.getCustomFieldType("com.atlassian.jira.plugin.system.customfieldtypes:float"),
-                    this.customFieldManager.getCustomFieldSearcher("com.atlassian.jira.plugin.system.customfieldtypes:exactnumber"),
-                    contexts, issueTypes);
+            FieldScreen defaultScreen = fieldScreenManager.getFieldScreen(FieldScreen.DEFAULT_SCREEN_ID);
+            if(customFieldManager.getCustomFieldObjectByName(RISK_CONSEQUENCE_TEXT_CF) == null) {
+                riskConsequenceCustomField = this.customFieldManager.createCustomField(RISK_CONSEQUENCE_TEXT_CF, "Risk Consequence",
+                        this.customFieldManager.getCustomFieldType("com.atlassian.jira.plugin.system.customfieldtypes:float"),
+                        this.customFieldManager.getCustomFieldSearcher("com.atlassian.jira.plugin.system.customfieldtypes:exactnumber"),
+                        contexts, issueTypes);
+                if (!defaultScreen.containsField(riskConsequenceCustomField.getId())) {
+                    FieldScreenTab firstTab = defaultScreen.getTab(0);
+                    firstTab.addFieldScreenLayoutItem(riskConsequenceCustomField.getId());
+                }
+            }
+            if(customFieldManager.getCustomFieldObjectByName(RISK_PROBABILITY_TEXT_CF) == null) {
+                riskProbabilityCustomField = this.customFieldManager.createCustomField(RISK_PROBABILITY_TEXT_CF, "Risk Probability",
+                        this.customFieldManager.getCustomFieldType("com.atlassian.jira.plugin.system.customfieldtypes:float"),
+                        this.customFieldManager.getCustomFieldSearcher("com.atlassian.jira.plugin.system.customfieldtypes:exactnumber"),
+                        contexts, issueTypes);
+                if (!defaultScreen.containsField(riskProbabilityCustomField.getId())) {
+                    FieldScreenTab firstTab = defaultScreen.getTab(0);
+                    firstTab.addFieldScreenLayoutItem(riskProbabilityCustomField.getId());
+                }
+            }
 
 
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            logger.info("Couldnt create risk Custom fields",e);
         }
 
-        FieldScreen defaultScreen = fieldScreenManager.getFieldScreen(FieldScreen.DEFAULT_SCREEN_ID);
-        if (!defaultScreen.containsField(riskConsequenceCustomField.getId())) {
-            FieldScreenTab firstTab = defaultScreen.getTab(0);
-            firstTab.addFieldScreenLayoutItem(riskConsequenceCustomField.getId());
-        }
-        if (!defaultScreen.containsField(riskProbabilityCustomField.getId())) {
-            FieldScreenTab firstTab = defaultScreen.getTab(0);
-            firstTab.addFieldScreenLayoutItem(riskProbabilityCustomField.getId());
-        }
+
+
 
 
     }
