@@ -10,12 +10,16 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
 import net.amg.jira.plugins.listeners.PluginListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by adam on 08.05.15.
  */
 
 public class ImpactPropabilityImpl implements ImpactPropability {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     private SearchService searchService;
 
@@ -44,7 +48,7 @@ public class ImpactPropabilityImpl implements ImpactPropability {
         try {
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
-            e.printStackTrace();
+           logger.info("getMatrixSize Error, searchResult are null",e);
             return 1;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 1x1, bo czemu nie
         }
 
