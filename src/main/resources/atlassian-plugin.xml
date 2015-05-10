@@ -43,6 +43,9 @@
   <component key="impactProbability" class="net.amg.jira.plugins.services.ImpactPropabilityImpl">
     <interface>net.amg.jira.plugins.services.ImpactPropability</interface>
   </component>
+  <component key="JRMPsearchService" class="net.amg.jira.plugins.services.JRMPSearchServiceImpl">
+    <interface>net.amg.jira.plugins.services.JRMPSearchService</interface>
+  </component>
   <!-- import from the product container -->
   <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
   <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
