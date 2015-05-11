@@ -37,7 +37,7 @@ public class ImpactPropabilityImpl implements ImpactPropability {
     }
 
     @Override
-    public int getMatrixSize(Query query)
+    public double getMaxPropability(Query query)
     {
         if(query == null)
         {
@@ -73,6 +73,6 @@ public class ImpactPropabilityImpl implements ImpactPropability {
         }
 
 
-        return (int) maxSize;
+        return maxSize;
     }
 }

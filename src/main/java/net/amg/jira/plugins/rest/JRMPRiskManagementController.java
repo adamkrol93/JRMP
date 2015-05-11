@@ -1,6 +1,8 @@
 package net.amg.jira.plugins.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.search.util.QueryCreator;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
@@ -58,13 +60,13 @@ public class JRMPRiskManagementController {
         String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
         String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         Gson gson = new Gson();
+        Query query = null;
         if(StringUtils.isBlank(filter))
         {
 
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
         }else {
             String type = filter.split("-")[0];
-            Query query = null;
             if ("filter".equals(type)) {
                 query = getQueryFilter(filter.split("-")[1]);
             }
@@ -99,19 +101,24 @@ public class JRMPRiskManagementController {
         if(errorCollection.hasAnyErrors()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errorCollection)).build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.ok(query.getQueryString()).build();
     }
 
     @Path("/matrix")
     @GET
     @Produces({MediaType.TEXT_HTML})
     @AnonymousAllowed
-    public Response doValidation(@DefaultValue("0") @QueryParam("size")  int size) {
-        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver);
+    public Response getMatrix(@DefaultValue("0") @QueryParam("size") int size, @QueryParam("query") String queryString) {
+        if(queryString == null || queryString.isEmpty()){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), queryString.replaceAll("%3D","=")).getQuery();
+        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver, searchService, authenticationContext);
         try {
-            return Response.ok(matrixGenerator.generateMatrix(size), MediaType.TEXT_HTML).build();
+            return Response.ok(matrixGenerator.generateMatrix(size, query), MediaType.TEXT_HTML).build();
         } catch(Exception e){
-            return Response.noContent().build();
+            e.printStackTrace();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
