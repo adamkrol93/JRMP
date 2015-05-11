@@ -7,5 +7,5 @@ import com.atlassian.query.Query;
  */
 public interface ImpactPropability {
 
-    int getMatrixSize(Query query);
+    double getMaxPropability(Query query);
 }

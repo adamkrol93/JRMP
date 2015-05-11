@@ -1,37 +1,56 @@
 package net.amg.jira.plugins.velocity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.atlassian.query.Query;
+import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
+import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
+import net.amg.jira.plugins.listeners.PluginListener;
+import net.amg.jira.plugins.services.ImpactPropability;
+import net.amg.jira.plugins.services.ImpactPropabilityImpl;
+import net.amg.jira.plugins.services.JRMPSearchService;
+import net.amg.jira.plugins.services.JRMPSearchServiceImpl;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
 public class MatrixGenerator{
 
 	private I18nResolver i18nResolver;
+	private SearchService searchService;
+	private JiraAuthenticationContext authenticationContext;
 
-	public MatrixGenerator(I18nResolver i18nResolver){
+	public MatrixGenerator(I18nResolver i18nResolver, SearchService searchService, JiraAuthenticationContext authenticationContext){
 		this.i18nResolver = i18nResolver;
+		this.searchService = searchService;
+		this.authenticationContext = authenticationContext;
 	}
 
 	//Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public String generateMatrix(int size){
+	public String generateMatrix(int size, Query query){
+		double maxProbability = getMaxProbability(query);
+		List<Issue> listOfIssues = getIssues(query);
 
-		if (size == 0){
-			return i18nResolver.getText("risk.management.gadget.matrix.error.wrong_size");
+		if (listOfIssues.isEmpty()){
+			i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues");
 		}
 
-	    List<Task> listOfTasks = getTasks();
+		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
+
 	    List<Row> listOfRows = new ArrayList<Row>();
 		for(int i = 0; i < size; i++){
 			Row row = new Row();
 			for(int j = 0; j< size; j++){
-				Cell cell = new Cell((double)((size-i)*(j+1))/(size*size));
+				Cell cell = new Cell((double)((size - i)*(j + 1)) / (size * size));
 				row.addCell(cell);
 			}
 			listOfRows.add(row);
@@ -42,20 +61,18 @@ public class MatrixGenerator{
 	    int greenTasks = 0;
 		
 	    for(Task task : listOfTasks){
-	    	if (task.getProbability() <= size && task.getConsequency() <= size){
-	    		listOfRows.get(size-task.getProbability()).getCells().get(task.getConsequency()-1).addTask(task);
-		    	switch (listOfRows.get(task.getProbability()-1).getCells().get(task.getConsequency()-1).getRiskEnum()){
-		    		case RED: 
-		    			redTasks++;
-		    			break;
-		    		case YELLOW:
-		    			yellowTasks++;
-		    			break;
-		    		case GREEN:
-		    			greenTasks++;
-		    			break;
-		    	}
-	    	}
+			listOfRows.get(getRow(task.getProbability(),maxProbability,size)).getCells().get(getCell(task.getConsequency(),maxProbability,size)).addTask(task);
+			switch (listOfRows.get(getRow(task.getProbability(), maxProbability,size)).getCells().get(getCell(task.getConsequency(),maxProbability,size)).getRiskEnum()){
+				case RED:
+					redTasks++;
+					break;
+				case YELLOW:
+					yellowTasks++;
+					break;
+				case GREEN:
+					greenTasks++;
+					break;
+			}
 	    }
 
 		DateFormat dateFormatter = new SimpleDateFormat("YYYY-MM-dd");
@@ -63,29 +80,72 @@ public class MatrixGenerator{
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("matrixSize", size);
-		params.put("projectName", "PŁ Implementacje Przemysłowe");//TODO hard-coded project name
-		params.put("projectURL", "https://confluence.amg.net.pl/pages/viewpage.action?pageId=244875576");//TODO hard-coded project URL
+		params.put("projectName", "");
+		params.put("projectURL", "");
 		params.put("redTasks", redTasks);
 		params.put("greenTasks", greenTasks);
 		params.put("yellowTasks", yellowTasks);
 		params.put("date", dateFormatter.format(new Date()));
-		params.put("updateDate", updateDateFormatter.format(new Date()));
-		params.put("updatedTask", "PIP-9"); //TODO hard-coded
+		params.put("updateDate", updateDateFormatter.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
+		params.put("updatedTask", getLastUpdatedIssue(listOfIssues).getKey());
 		params.put("matrix", listOfRows);
 
 		VelocityManager velocityManager = new DefaultVelocityManager();
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
-
 	}
 
-	private List<Task> getTasks(){
+	private Double getMaxProbability(Query query){
+		ImpactPropability impactPropability = new ImpactPropabilityImpl(searchService, authenticationContext, ComponentAccessor.getConstantsManager(), ComponentAccessor.getCustomFieldManager());
+		return impactPropability.getMaxPropability(query);
+	}
+
+	private List<Issue> getIssues(Query query){
+		List<Issue> issues = null;
+		JRMPSearchService jrmpSearchService = new JRMPSearchServiceImpl(searchService, authenticationContext, ComponentAccessor.getCustomFieldManager());
+		try {
+			issues = jrmpSearchService.getAllQualifiedIssues(query);
+		} catch (NoIssuesFoundException e) {
+			return Collections.EMPTY_LIST;
+		}
+		return issues;
+	}
+
+	private List<Task> getTasksFromIssues(List<Issue> issues){
+		CustomField probability = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
+		CustomField consequence = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
 		List<Task> listOfTasks = new ArrayList<Task>();
-		listOfTasks.add(new Task("PIP-95", "https://jira.amg.net.pl/browse/PIP-95", 2, 2));
-		listOfTasks.add(new Task("PIP-86", "https://jira.amg.net.pl/browse/PIP-86", 1, 1));
-		listOfTasks.add(new Task("PIP-93", "https://jira.amg.net.pl/browse/PIP-93", 2, 2));
-		listOfTasks.add(new Task("PIP-92", "https://jira.amg.net.pl/browse/PIP-92", 5, 5));
-		listOfTasks.add(new Task("PIP-90", "https://jira.amg.net.pl/browse/PIP-90", 4, 2));
-		listOfTasks.add(new Task("PIP-91", "https://jira.amg.net.pl/browse/PIP-91", 4, 1));
+		for (Issue issue : issues){
+			listOfTasks.add(new Task(issue.getKey(),
+					ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + issue.getKey(),
+					(Double)issue.getCustomFieldValue(probability),
+					(Double)issue.getCustomFieldValue(consequence)));
+		}
 		return listOfTasks;
+	}
+
+	private Issue getLastUpdatedIssue(List<Issue> issues){
+		Issue lastUpdated = issues.get(0);
+		for(Issue issue : issues){
+			if (issue.getUpdated().getTime() > lastUpdated.getUpdated().getTime()){
+				lastUpdated = issue;
+			}
+		}
+		return lastUpdated;
+	}
+
+	private int getCell(double value, double max, int size){
+		if (value == max) {
+			return size-1;
+		} else {
+			return (int)Math.floor((value / max) * size);
+		}
+	}
+
+	private int getRow(double value, double max, int size){
+		if (value == max) {
+			return 0;
+		} else {
+			return size - (int)Math.floor((value / max) * size) - 1;
+		}
 	}
 }
