@@ -19,4 +19,5 @@ public class RESTRiskManagementResource {
     {
        return Response.ok(new RESTRiskManagementResourceModel("Hello World")).build();
     }
+
 }
