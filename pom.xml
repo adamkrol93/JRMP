@@ -116,12 +116,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.osgi</groupId>
-            <artifactId>spring-osgi-annotation</artifactId>
-            <version>1.2.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>2.5.6.SEC01</version>
@@ -166,6 +160,15 @@
 						</pluginArtifact>
 					</pluginArtifacts>
 					-->
+                    <instructions>
+                        <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
+                        <Bundle-Activator>net.amg.jira.plugins.listeners.PluginListener</Bundle-Activator>
+                    </instructions>
+                    <testInstructions>
+                        <Import-Package>
+                            net.amg.jira.plugins;version="0.0.0"
+                        </Import-Package>
+                    </testInstructions>
                     <extractDependencies>false</extractDependencies>
                 </configuration>
             </plugin>

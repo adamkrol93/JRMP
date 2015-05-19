@@ -32,20 +32,23 @@
     <resource type="download" name="images/" location="/images"/>
     <context>jira-risk-management</context>
   </web-resource>
-  <!-- publish our component -->
-  <component key="myPluginComponent" class="net.amg.jira.plugins.MyPluginComponentImpl" public="true">
-    <interface>net.amg.jira.plugins.MyPluginComponent</interface>
-  </component>
-  <component key="eventListener" class="net.amg.jira.plugins.listeners.PluginListener" public="true">
-    <description>A Listener for plugin lifecycle events</description>
-    <interface>org.springframework.beans.factory.InitializingBean</interface>
-  </component>
-  <component key="impactProbability" class="net.amg.jira.plugins.services.ImpactPropabilityImpl">
-    <interface>net.amg.jira.plugins.services.ImpactPropability</interface>
-  </component>
-  <component key="JRMPsearchService" class="net.amg.jira.plugins.services.JRMPSearchServiceImpl">
-    <interface>net.amg.jira.plugins.services.JRMPSearchService</interface>
-  </component>
+   <!--publish our component-->
+  <!--<component key="myPluginComponent" class="net.amg.jira.plugins.MyPluginComponentImpl" public="true">-->
+    <!--<interface>net.amg.jira.plugins.MyPluginComponent</interface>-->
+  <!--</component>-->
+  <!--<component key="eventListener" class="net.amg.jira.plugins.listeners.PluginListener" public="true">-->
+    <!--<description>A Listener for plugin lifecycle events</description>-->
+    <!--<interface>org.springframework.beans.factory.InitializingBean</interface>-->
+  <!--</component>-->
+  <!--<component key="impactProbability" class="net.amg.jira.plugins.services.ImpactPropabilityImpl">-->
+    <!--<interface>net.amg.jira.plugins.services.ImpactPropability</interface>-->
+  <!--</component>-->
+  <!--<component key="JRMPsearchService" class="net.amg.jira.plugins.services.JRMPSearchServiceImpl">-->
+    <!--<interface>net.amg.jira.plugins.services.JRMPSearchService</interface>-->
+  <!--</component>-->
+  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.velocity.MatrixGeneratorImpl">-->
+    <!--<interface>net.amg.jira.plugins.velocity.MatrixGenerator</interface>-->
+  <!--</component>-->
   <!-- import from the product container -->
   <!--<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>-->
   <!--<component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>-->
@@ -55,7 +58,7 @@
   <!--<component-import key="fieldScreenManager" interface="com.atlassian.jira.issue.fields.screen.FieldScreenManager"/>-->
   <!--<component-import key="constansManager" interface="com.atlassian.jira.config.ConstantsManager"/>-->
   <!--<component-import key="issueTypeSchemeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager"/>-->
-  <rest name="REST Risk Management Resource" i18n-name-key="rest-risk-management-resource.name" key="rest-risk-management-resource" path="/restcontroller" version="1.0">
-    <description key="rest-risk-management-resource.description">The REST Risk Management Resource Plugin</description>
-  </rest>
+  <!--<rest name="REST Risk Management Resource" i18n-name-key="rest-risk-management-resource.name" key="rest-risk-management-resource" path="/restcontroller" version="1.0">-->
+    <!--<description key="rest-risk-management-resource.description">The REST Risk Management Resource Plugin</description>-->
+  <!--</rest>-->
 </atlassian-plugin>

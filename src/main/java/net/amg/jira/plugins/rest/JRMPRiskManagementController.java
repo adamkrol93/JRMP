@@ -5,7 +5,6 @@ import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
-import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
@@ -13,7 +12,7 @@ import net.amg.jira.plugins.velocity.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.osgi.extensions.annotation.ServiceReference;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -27,6 +26,7 @@ import javax.ws.rs.core.Response;
  * @author Adam Król
  */
 @Path("/controller")
+@Controller
 public class JRMPRiskManagementController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,30 +37,21 @@ public class JRMPRiskManagementController {
 
     private JiraAuthenticationContext authenticationContext;
 
-    private final MatrixGenerator matrixGenerator;
 
-    public JRMPRiskManagementController(MatrixGenerator matrixGenerator) {
+    private MatrixGenerator matrixGenerator;
+
+    public void setMatrixGenerator(MatrixGenerator matrixGenerator) {
         this.matrixGenerator = matrixGenerator;
     }
 
-//    public JRMPRiskManagementController(I18nResolver i18nResolver, SearchService searchService,
-//                                        JiraAuthenticationContext jiraAuthenticationContext) {
-//        this.i18nResolver = i18nResolver;
-//        this.searchService = searchService;
-//        this.authenticationContext = jiraAuthenticationContext;
-//    }
-
-    @ServiceReference
     public void setI18nResolver(I18nResolver i18nResolver) {
         this.i18nResolver = i18nResolver;
     }
 
-    @ServiceReference
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
     }
 
-    @ServiceReference
     public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
     }
@@ -68,7 +59,6 @@ public class JRMPRiskManagementController {
     @Path("/validate")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @AnonymousAllowed
     public Response doValidation(@Context HttpServletRequest request) {
         ErrorCollection errorCollection = new ErrorCollection();
         errorCollection.setParameters(request.getParameterMap());
@@ -124,7 +114,6 @@ public class JRMPRiskManagementController {
     @Path("/matrix")
     @GET
     @Produces({MediaType.TEXT_HTML})
-    @AnonymousAllowed
     public Response getMatrix(@DefaultValue("0") @QueryParam("size") int size, @QueryParam("query") String queryString) {
         if(queryString == null || queryString.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();

@@ -2,7 +2,9 @@ package net.amg.jira.plugins;
 
 import com.atlassian.sal.api.ApplicationProperties;
 import org.springframework.osgi.extensions.annotation.ServiceReference;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MyPluginComponentImpl implements MyPluginComponent
 {
     private ApplicationProperties applicationProperties;

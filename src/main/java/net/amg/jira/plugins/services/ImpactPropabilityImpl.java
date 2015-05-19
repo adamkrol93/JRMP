@@ -12,12 +12,12 @@ import com.atlassian.query.Query;
 import net.amg.jira.plugins.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.osgi.extensions.annotation.ServiceReference;
+import org.springframework.stereotype.Service;
 
 /**
- * Created by adam on 08.05.15.
+ * @author Adam Król
  */
-
+@Service
 public class ImpactPropabilityImpl implements ImpactPropability {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -37,22 +37,18 @@ public class ImpactPropabilityImpl implements ImpactPropability {
 //        this.customFieldManager = customFieldManager;
 //    }
 
-    @ServiceReference
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
     }
 
-    @ServiceReference
     public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
     }
 
-    @ServiceReference
     public void setConstantsManager(ConstantsManager constantsManager) {
         this.constantsManager = constantsManager;
     }
 
-    @ServiceReference
     public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
     }
