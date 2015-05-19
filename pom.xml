@@ -116,8 +116,20 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.osgi</groupId>
+            <artifactId>spring-osgi-annotation</artifactId>
+            <version>1.2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>2.5.6.SEC01</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
             <version>2.5.6.SEC01</version>
             <scope>provided</scope>
         </dependency>
@@ -169,6 +181,7 @@
     <properties>
         <jira.version>6.1.7</jira.version>
         <amps.version>5.0.18</amps.version>
+        <osgi.version>1.2.1</osgi.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->
         <testkit.version>5.2.26</testkit.version>

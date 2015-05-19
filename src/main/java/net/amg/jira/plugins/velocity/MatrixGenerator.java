@@ -1,20 +1,19 @@
 package net.amg.jira.plugins.velocity;
 
-import com.atlassian.query.Query;
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.security.JiraAuthenticationContext;
+import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
 import net.amg.jira.plugins.listeners.PluginListener;
 import net.amg.jira.plugins.services.ImpactPropability;
-import net.amg.jira.plugins.services.ImpactPropabilityImpl;
 import net.amg.jira.plugins.services.JRMPSearchService;
-import net.amg.jira.plugins.services.JRMPSearchServiceImpl;
+import org.springframework.osgi.extensions.annotation.ServiceReference;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,15 +26,39 @@ public class MatrixGenerator{
 	private I18nResolver i18nResolver;
 	private SearchService searchService;
 	private JiraAuthenticationContext authenticationContext;
+	private final ImpactPropability impactPropability;
+	private final JRMPSearchService jrmpSearchService;
 
-	public MatrixGenerator(I18nResolver i18nResolver, SearchService searchService, JiraAuthenticationContext authenticationContext){
+	public MatrixGenerator(ImpactPropability impactPropability, JRMPSearchService jrmpSearchService) {
+		this.impactPropability = impactPropability;
+		this.jrmpSearchService = jrmpSearchService;
+	}
+
+
+//	public MatrixGenerator(I18nResolver i18nResolver, SearchService searchService, JiraAuthenticationContext authenticationContext){
+//		this.i18nResolver = i18nResolver;
+//		this.searchService = searchService;
+//		this.authenticationContext = authenticationContext;
+//	}
+
+	//Logger logger = LoggerFactory.getLogger(getClass());
+
+
+	@ServiceReference
+	public void setI18nResolver(I18nResolver i18nResolver) {
 		this.i18nResolver = i18nResolver;
+	}
+
+	@ServiceReference
+	public void setSearchService(SearchService searchService) {
 		this.searchService = searchService;
+	}
+
+	@ServiceReference
+	public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
 		this.authenticationContext = authenticationContext;
 	}
 
-	//Logger logger = LoggerFactory.getLogger(getClass());
-	
 	public String generateMatrix(int size, Query query){
 		double maxProbability = getMaxProbability(query);
 		List<Issue> listOfIssues = getIssues(query);
@@ -95,13 +118,13 @@ public class MatrixGenerator{
 	}
 
 	private Double getMaxProbability(Query query){
-		ImpactPropability impactPropability = new ImpactPropabilityImpl(searchService, authenticationContext, ComponentAccessor.getConstantsManager(), ComponentAccessor.getCustomFieldManager());
+//		ImpactPropability impactPropability = new ImpactPropabilityImpl(searchService, authenticationContext, ComponentAccessor.getConstantsManager(), ComponentAccessor.getCustomFieldManager());
 		return impactPropability.getMaxPropability(query);
 	}
 
 	private List<Issue> getIssues(Query query){
 		List<Issue> issues = null;
-		JRMPSearchService jrmpSearchService = new JRMPSearchServiceImpl(searchService, authenticationContext, ComponentAccessor.getCustomFieldManager());
+//		JRMPSearchService jrmpSearchService = new JRMPSearchServiceImpl(searchService, authenticationContext, ComponentAccessor.getCustomFieldManager());
 		try {
 			issues = jrmpSearchService.getAllQualifiedIssues(query);
 		} catch (NoIssuesFoundException e) {

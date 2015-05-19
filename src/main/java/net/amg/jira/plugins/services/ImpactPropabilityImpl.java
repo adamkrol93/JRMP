@@ -12,6 +12,7 @@ import com.atlassian.query.Query;
 import net.amg.jira.plugins.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.osgi.extensions.annotation.ServiceReference;
 
 /**
  * Created by adam on 08.05.15.
@@ -25,14 +26,34 @@ public class ImpactPropabilityImpl implements ImpactPropability {
 
     private JiraAuthenticationContext authenticationContext;
 
-    private final ConstantsManager constantsManager;
+    private ConstantsManager constantsManager;
 
-    private final CustomFieldManager customFieldManager;
+    private CustomFieldManager customFieldManager;
 
-    public ImpactPropabilityImpl(SearchService searchService, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, CustomFieldManager customFieldManager) {
+//    public ImpactPropabilityImpl(SearchService searchService, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, CustomFieldManager customFieldManager) {
+//        this.searchService = searchService;
+//        this.authenticationContext = jiraAuthenticationContext;
+//        this.constantsManager = constantsManager;
+//        this.customFieldManager = customFieldManager;
+//    }
+
+    @ServiceReference
+    public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
-        this.authenticationContext = jiraAuthenticationContext;
+    }
+
+    @ServiceReference
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
+    }
+
+    @ServiceReference
+    public void setConstantsManager(ConstantsManager constantsManager) {
         this.constantsManager = constantsManager;
+    }
+
+    @ServiceReference
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
     }
 

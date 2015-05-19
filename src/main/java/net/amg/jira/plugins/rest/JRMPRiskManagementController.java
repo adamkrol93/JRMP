@@ -1,8 +1,6 @@
 package net.amg.jira.plugins.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.search.util.QueryCreator;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
@@ -15,11 +13,9 @@ import net.amg.jira.plugins.velocity.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.osgi.extensions.annotation.ServiceReference;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -41,11 +37,32 @@ public class JRMPRiskManagementController {
 
     private JiraAuthenticationContext authenticationContext;
 
-    public JRMPRiskManagementController(I18nResolver i18nResolver, SearchService searchService,
-                                        JiraAuthenticationContext jiraAuthenticationContext) {
+    private final MatrixGenerator matrixGenerator;
+
+    public JRMPRiskManagementController(MatrixGenerator matrixGenerator) {
+        this.matrixGenerator = matrixGenerator;
+    }
+
+//    public JRMPRiskManagementController(I18nResolver i18nResolver, SearchService searchService,
+//                                        JiraAuthenticationContext jiraAuthenticationContext) {
+//        this.i18nResolver = i18nResolver;
+//        this.searchService = searchService;
+//        this.authenticationContext = jiraAuthenticationContext;
+//    }
+
+    @ServiceReference
+    public void setI18nResolver(I18nResolver i18nResolver) {
         this.i18nResolver = i18nResolver;
+    }
+
+    @ServiceReference
+    public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
-        this.authenticationContext = jiraAuthenticationContext;
+    }
+
+    @ServiceReference
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
     }
 
     @Path("/validate")
@@ -113,7 +130,7 @@ public class JRMPRiskManagementController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), queryString.replaceAll("%3D","=")).getQuery();
-        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver, searchService, authenticationContext);
+//        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver, searchService, authenticationContext);
         try {
             return Response.ok(matrixGenerator.generateMatrix(size, query), MediaType.TEXT_HTML).build();
         } catch(Exception e){

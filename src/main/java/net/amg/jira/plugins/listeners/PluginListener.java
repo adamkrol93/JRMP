@@ -16,6 +16,7 @@ import org.ofbiz.core.entity.GenericValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.osgi.extensions.annotation.ServiceReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +32,39 @@ public class PluginListener implements InitializingBean{
     public static final String RISK_CONSEQUENCE_TEXT_CF = "Risk Consequence";
     public static final String RISK_PROBABILITY_TEXT_CF = "Risk Probability";
     public static final String RISK_ISSUE_TYPE = "Risk";
-    private final CustomFieldManager customFieldManager;
-    private final FieldScreenManager fieldScreenManager;
-    private final ConstantsManager constantsManager;
-    private final IssueTypeSchemeManager issueTypeSchemeManager;
+    private CustomFieldManager customFieldManager;
+    private FieldScreenManager fieldScreenManager;
+    private ConstantsManager constantsManager;
+    private IssueTypeSchemeManager issueTypeSchemeManager;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public PluginListener(CustomFieldManager customFieldManager, FieldScreenManager fieldScreenManager, ConstantsManager constantsManager, IssueTypeSchemeManager issueTypeSchemeManager) {
+//    public PluginListener(CustomFieldManager customFieldManager, FieldScreenManager fieldScreenManager, ConstantsManager constantsManager, IssueTypeSchemeManager issueTypeSchemeManager) {
+//        this.customFieldManager = customFieldManager;
+//        this.fieldScreenManager = fieldScreenManager;
+//        this.constantsManager = constantsManager;
+//        this.issueTypeSchemeManager = issueTypeSchemeManager;
+//    }
+
+
+    @ServiceReference
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
-        this.fieldScreenManager = fieldScreenManager;
-        this.constantsManager = constantsManager;
-        this.issueTypeSchemeManager = issueTypeSchemeManager;
     }
 
+    @ServiceReference
+    public void setFieldScreenManager(FieldScreenManager fieldScreenManager) {
+        this.fieldScreenManager = fieldScreenManager;
+    }
 
+    @ServiceReference
+    public void setConstantsManager(ConstantsManager constantsManager) {
+        this.constantsManager = constantsManager;
+    }
+
+    @ServiceReference
+    public void setIssueTypeSchemeManager(IssueTypeSchemeManager issueTypeSchemeManager) {
+        this.issueTypeSchemeManager = issueTypeSchemeManager;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -94,10 +114,5 @@ public class PluginListener implements InitializingBean{
         } catch (GenericEntityException e) {
             logger.info("Couldnt create risk Custom fields",e);
         }
-
-
-
-
-
     }
 }

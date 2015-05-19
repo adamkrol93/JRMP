@@ -14,6 +14,7 @@ import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
 import net.amg.jira.plugins.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.osgi.extensions.annotation.ServiceReference;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,15 +25,31 @@ import java.util.List;
 public class JRMPSearchServiceImpl implements JRMPSearchService {
 
 
-    private final SearchService searchService;
-    private final JiraAuthenticationContext authenticationContext;
-    private final CustomFieldManager customFieldManager;
+    private SearchService searchService;
+    private JiraAuthenticationContext authenticationContext;
+    private CustomFieldManager customFieldManager;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public JRMPSearchServiceImpl(SearchService searchService, JiraAuthenticationContext authenticationContext, CustomFieldManager customFieldManager) {
+//    public JRMPSearchServiceImpl(SearchService searchService, JiraAuthenticationContext authenticationContext, CustomFieldManager customFieldManager) {
+//        this.searchService = searchService;
+//        this.authenticationContext = authenticationContext;
+//        this.customFieldManager = customFieldManager;
+//    }
+
+
+    @ServiceReference
+    public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
+    }
+
+    @ServiceReference
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
+    }
+
+    @ServiceReference
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
     }
 
