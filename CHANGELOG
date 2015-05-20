@@ -13,3 +13,4 @@
 - PIP-86 Dodane generowanie macierzy ryzyk
 - PIP-139 Mały refaktoring
 - PIP-XXX Listener działający i zmieniona konfiguracja na OSGI
+- PIP-XXX Działające wstrzykiwanie wszystkiego
