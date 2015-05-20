@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.rest;
+package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
@@ -8,7 +8,7 @@ import com.atlassian.jira.util.MessageSet;
 import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
-import net.amg.jira.plugins.velocity.MatrixGenerator;
+import net.amg.jira.plugins.jrmp.velocity.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,22 +39,6 @@ public class JRMPRiskManagementController {
 
 
     private MatrixGenerator matrixGenerator;
-
-    public void setMatrixGenerator(MatrixGenerator matrixGenerator) {
-        this.matrixGenerator = matrixGenerator;
-    }
-
-    public void setI18nResolver(I18nResolver i18nResolver) {
-        this.i18nResolver = i18nResolver;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
 
     @Path("/validate")
     @GET
@@ -138,5 +122,22 @@ public class JRMPRiskManagementController {
         JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().project(project);
         return subjectBuilder.buildQuery();
     }
+
+    public void setMatrixGenerator(MatrixGenerator matrixGenerator) {
+        this.matrixGenerator = matrixGenerator;
+    }
+
+    public void setI18nResolver(I18nResolver i18nResolver) {
+        this.i18nResolver = i18nResolver;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.rest;
+package net.amg.jira.plugins.jrmp.rest;
 
 import javax.xml.bind.annotation.*;
 @XmlRootElement(name = "message")

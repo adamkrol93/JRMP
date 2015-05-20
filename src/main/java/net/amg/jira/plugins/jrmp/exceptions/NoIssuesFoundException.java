@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.exceptions;
+package net.amg.jira.plugins.jrmp.exceptions;
 
 /**
  * Wyjątek rzucany, jeżeli Query nie zwraca poprawnych wartości.

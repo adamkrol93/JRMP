@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.velocity;
+package net.amg.jira.plugins.jrmp.velocity;
 
 public class Task {
 	private String name;

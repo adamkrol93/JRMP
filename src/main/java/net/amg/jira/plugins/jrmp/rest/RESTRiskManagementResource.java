@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.rest;
+package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 

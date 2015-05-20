@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.services;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.config.ConstantsManager;
@@ -9,7 +9,7 @@ import com.atlassian.jira.issue.search.SearchResults;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author Adam Król
  */
 @Service
-public class ImpactPropabilityImpl implements ImpactPropability {
+public class ImpactProbabilityImpl implements ImpactProbability {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -37,21 +37,6 @@ public class ImpactPropabilityImpl implements ImpactPropability {
 //        this.customFieldManager = customFieldManager;
 //    }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
-
-    public void setConstantsManager(ConstantsManager constantsManager) {
-        this.constantsManager = constantsManager;
-    }
-
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
 
     @Override
     public double getMaxPropability(Query query)
@@ -91,5 +76,21 @@ public class ImpactPropabilityImpl implements ImpactPropability {
 
 
         return maxSize;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
+    }
+
+    public void setConstantsManager(ConstantsManager constantsManager) {
+        this.constantsManager = constantsManager;
+    }
+
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+        this.customFieldManager = customFieldManager;
     }
 }

@@ -1,7 +1,6 @@
-package net.amg.jira.plugins.rest;
+package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.rest.api.util.ValidationError;
-import org.apache.commons.collections.KeyValue;
 
 import java.util.ArrayList;
 import java.util.Collection;

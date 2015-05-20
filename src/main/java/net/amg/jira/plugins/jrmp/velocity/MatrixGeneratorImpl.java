@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.velocity;
+package net.amg.jira.plugins.jrmp.velocity;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
@@ -7,10 +7,10 @@ import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
-import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
-import net.amg.jira.plugins.listeners.PluginListener;
-import net.amg.jira.plugins.services.ImpactPropability;
-import net.amg.jira.plugins.services.JRMPSearchService;
+import net.amg.jira.plugins.jrmp.exceptions.NoIssuesFoundException;
+import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.services.ImpactProbability;
+import net.amg.jira.plugins.jrmp.services.JRMPSearchService;
 import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
@@ -21,11 +21,11 @@ import java.util.*;
 public class MatrixGeneratorImpl implements MatrixGenerator{
 
 	private I18nResolver i18nResolver;
-	private ImpactPropability impactPropability;
+	private ImpactProbability impactProbability;
 	private JRMPSearchService jrmpSearchService;
 
-	public void setImpactPropability(ImpactPropability impactPropability) {
-		this.impactPropability = impactPropability;
+	public void setImpactProbability(ImpactProbability impactProbability) {
+		this.impactProbability = impactProbability;
 	}
 
 	public void setJrmpSearchService(JRMPSearchService jrmpSearchService) {
@@ -98,7 +98,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 	private Double getMaxProbability(Query query){
 //		ImpactPropability impactPropability = new ImpactPropabilityImpl(searchService, authenticationContext, ComponentAccessor.getConstantsManager(), ComponentAccessor.getCustomFieldManager());
-		return impactPropability.getMaxPropability(query);
+		return impactProbability.getMaxPropability(query);
 	}
 
 	private List<Issue> getIssues(Query query){

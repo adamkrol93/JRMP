@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.services;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.issue.CustomFieldManager;
@@ -10,13 +10,13 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
-import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
-import net.amg.jira.plugins.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,23 +38,11 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
 //        this.customFieldManager = customFieldManager;
 //    }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
-
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
-
     @Override
-    public List<Issue> getAllQualifiedIssues(Query query) throws NoIssuesFoundException {
+    public List<Issue> getAllQualifiedIssues(Query query) {
         if(query == null)
         {
-           throw new NoIssuesFoundException();
+           return new LinkedList<Issue>();
         }
 
         Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
@@ -82,14 +70,26 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
             searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
             logger.info("getMatrixSize Error, searchResult are null",e);
-            throw new NoIssuesFoundException("searchService returned Exception",e);
+            return new LinkedList<Issue>();
         }
 
         if(searchResults.getIssues().isEmpty())
         {
-            throw new NoIssuesFoundException("No issues found for this filter");
+            return new LinkedList<Issue>();
         }
 
         return searchResults.getIssues();
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
+        this.authenticationContext = authenticationContext;
+    }
+
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+        this.customFieldManager = customFieldManager;
     }
 }

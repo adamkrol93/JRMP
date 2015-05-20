@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.velocity;
+package net.amg.jira.plugins.jrmp.velocity;
 
 public enum Colour {
 	RED("red"), YELLOW("yellow"), GREEN("green");

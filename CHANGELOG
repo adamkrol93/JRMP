@@ -11,3 +11,5 @@
 - PIP-116 Usługa zwracająca listę issue z typem Risk oraz niepustymi wartościami Risk COnsequency i Risk Propability
 - PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu
 - PIP-86 Dodane generowanie macierzy ryzyk
+- PIP-139 Mały refaktoring
+- PIP-XXX Listener działający i zmieniona konfiguracja na OSGI

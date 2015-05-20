@@ -1,8 +1,8 @@
-package net.amg.jira.plugins.services;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.exceptions.NoIssuesFoundException;
+import net.amg.jira.plugins.jrmp.exceptions.NoIssuesFoundException;
 
 import java.util.List;
 
