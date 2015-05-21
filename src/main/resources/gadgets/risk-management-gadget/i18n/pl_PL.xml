@@ -45,4 +45,7 @@
     <msg name="gadget.common.quick.find">Wyszukaj filtr</msg>
     <msg name="gadget.common.error.500">Wystąpił wyjątek podczas komunikacji</msg>
     <msg name="gadget.common.error.400">Formularz zawiera błędy</msg>
+    <!--MatrixGenerator-->
+    <msg name="risk.management.gadget.matrix.error.wrong_size">Zły rozmiar macierzy</msg>
+    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć rzadnego zadania!</msg>
 </messagebundle>

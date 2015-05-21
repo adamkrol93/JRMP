@@ -1,0 +1,52 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Risk Matrix</title>
+</head>
+<style type="text/css">
+    .matrix  {border-collapse:collapse;border-spacing:0;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:2px;border-color:white}
+    .matrix td{overflow:hidden;word-break:normal;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:2px;border-color:white;text-align:center;height:60px;width:50px}
+    .matrix .yellow{background-color:#fff500;color:#000000}
+    .matrix .red{background-color:#ff0000;color:#000000}
+    .matrix .green{background-color:#33bb00;color:#000000}
+    .matrix .x{font-size:12px;text-align:center;padding:2px 0px 2px 5px;height:10px}
+    .matrix .xlabel{text-align:center;height:10px;padding:5px}
+    .matrix .y{font-size:12px;text-align:right;width:5px;padding:2px 0px 2px 5px}
+    .matrix .ylabel{width:5px;padding:0px;height:10px;text-align:right}
+    .matrix .empty{height:0px;width:0px}
+</style>
+<body>
+    <font size="2" face="arial"><center><strong>Project:</strong> <a href="$projectURL">$projectName</a> &nbsp&nbsp&nbsp Risk date: $date</font><br>
+    <font size="1" face="arial">Updated: $updateDate ($updatedTask) | <font color="red">Red issues:</font> <font color="blue">$redTasks</font> | <font color="orange">Yellow issues:</font> <font color="blue">$yellowTasks</font> | <font color="green">Green issues:</font> <font color="blue">$greenTasks</font></font>
+    <table class="matrix">         
+        #set ($counter = $matrixSize)  
+        #foreach($row in $matrix)
+            <tr>
+            #if ($counter == $matrixSize)
+            <td class="ylabel" rowspan="$matrixSize">P</th>
+            #end
+            <td class="y">$counter</th>
+            #foreach($cell in $row.cells)
+                <td class="$cell.risk">
+                #foreach($task in $cell.tasks)
+                <a href="$task.url">$task.name</a><br>
+                #end
+                </th>
+            #end
+            </tr>
+            #set ($counter = $counter - 1)
+        #end
+        <tr>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        #foreach($i in [1..$matrixSize])
+            <td class="x">$i</td>
+        #end
+        </tr>
+        <tr>
+            <td class="empty"></td>
+            <td class="empty"></td>
+            <td class="xlabel" colspan="$matrixSize">C</td>
+        </tr>
+    </body>
+</html>

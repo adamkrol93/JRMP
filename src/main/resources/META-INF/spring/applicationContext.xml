@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:osgi="http://www.springframework.org/schema/osgi"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/osgi
+       http://www.springframework.org/schema/osgi/spring-osgi.xsd"
+        default-autowire="autodetect">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="net.amg.jira.plugins.jrmp"/>
+
+    <osgi:reference id="searchService" interface="com.atlassian.jira.bc.issue.search.SearchService"/>
+    <osgi:reference id="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
+    <osgi:reference id="customFieldManager" interface="com.atlassian.jira.issue.CustomFieldManager"/>
+    <osgi:reference id="fieldScreenManager" interface="com.atlassian.jira.issue.fields.screen.FieldScreenManager"/>
+    <osgi:reference id="constantsManager" interface="com.atlassian.jira.config.ConstantsManager"/>
+    <osgi:reference id="issueTypeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager"/>
+
+    <osgi:service id="net.amg.jira.plugins.jrmp.listeners.PluginListener" interface="com.atlassian.sal.api.lifecycle.LifecycleAware" ref="pluginListener" />
+</beans>

@@ -6,3 +6,11 @@
 - PIP-54 Dodanie pól panelu konfiguracyjnego w gadget.xml
 - PIP-54 Poprawienie błędów wynikających z pliku gadget.xml, które uniemożliwiały wyświetlenie elementów
 - PIP-85 Skonfigurowany RESTowy walidator
+- PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu
+- PIP-115 Dodany typ nowy typ zadania - Ryzyko, oraz dwa customowe pola. Jest usługa zwracająca wielkość macierzy.
+- PIP-116 Usługa zwracająca listę issue z typem Risk oraz niepustymi wartościami Risk COnsequency i Risk Propability
+- PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu
+- PIP-86 Dodane generowanie macierzy ryzyk
+- PIP-139 Mały refaktoring
+- PIP-XXX Listener działający i zmieniona konfiguracja na OSGI
+- PIP-XXX Działające wstrzykiwanie wszystkiego

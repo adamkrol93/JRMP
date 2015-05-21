@@ -45,4 +45,7 @@
     <msg name="gadget.common.quick.find">Search for filter</msg>
     <msg name="gadget.common.error.500">Weird exception has just occurred</msg>
     <msg name="gadget.common.error.400">Form contains errors</msg>
+    <!--MatrixGenerator-->
+    <msg name="risk.management.gadget.matrix.error.wrong_size">Wrong matrix size</msg>
+    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Cannot find any issue!</msg>
 </messagebundle>
