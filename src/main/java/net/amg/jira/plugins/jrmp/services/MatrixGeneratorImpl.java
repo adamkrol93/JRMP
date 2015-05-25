@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.jrmp.velocity;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
@@ -9,20 +9,32 @@ import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.jrmp.exceptions.NoIssuesFoundException;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
-import net.amg.jira.plugins.jrmp.services.ImpactProbability;
-import net.amg.jira.plugins.jrmp.services.JRMPSearchService;
-import org.springframework.stereotype.Component;
+import net.amg.jira.plugins.jrmp.velocity.Cell;
+import net.amg.jira.plugins.jrmp.velocity.Row;
+import net.amg.jira.plugins.jrmp.velocity.Task;
+import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Component
+@Service
 public class MatrixGeneratorImpl implements MatrixGenerator{
 
+	public static final String MATRIX_SIZE_STRING = "matrixSize";
+	public static final String PROJECT_NAME_STRING = "projectName";
+	public static final String PROJECT_URL_STRING = "projectURL";
+	public static final String RED_TASKS_STRING = "redTasks";
+	public static final String GREEN_TASKS_STRING = "greenTasks";
+	public static final String YELLOW_TASKS_STRING = "yellowTasks";
+	public static final String DATE_STRING = "date";
+	public static final String UPDATE_DATE_STRING = "updateDate";
+	public static final String UPDATED_TASK_STRING = "updatedTask";
+	public static final String MATRIX_STRING = "matrix";
 	private I18nResolver i18nResolver;
 	private ImpactProbability impactProbability;
 	private JRMPSearchService jrmpSearchService;
+	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 
 	public void setImpactProbability(ImpactProbability impactProbability) {
 		this.impactProbability = impactProbability;
@@ -38,8 +50,9 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 
 	@Override
-	public String generateMatrix(int size, Query query){
+	public String generateMatrix(Query query){
 		double maxProbability = getMaxProbability(query);
+		int size = (int) maxProbability;
 		List<Issue> listOfIssues = getIssues(query);
 
 		if (listOfIssues.isEmpty()){
@@ -77,33 +90,30 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			}
 	    }
 
-		DateFormat dateFormatter = new SimpleDateFormat("YYYY-MM-dd");
 		DateFormat updateDateFormatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		Map<String, Object> params = new HashMap<String, Object>();
 
-		params.put("matrixSize", size);
-		params.put("projectName", "");
-		params.put("projectURL", "");
-		params.put("redTasks", redTasks);
-		params.put("greenTasks", greenTasks);
-		params.put("yellowTasks", yellowTasks);
-		params.put("date", dateFormatter.format(new Date()));
-		params.put("updateDate", updateDateFormatter.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
-		params.put("updatedTask", getLastUpdatedIssue(listOfIssues).getKey());
-		params.put("matrix", listOfRows);
+		params.put(MATRIX_SIZE_STRING, size);
+		params.put(PROJECT_NAME_STRING, "");
+		params.put(PROJECT_URL_STRING, "");
+		params.put(RED_TASKS_STRING, redTasks);
+		params.put(GREEN_TASKS_STRING, greenTasks);
+		params.put(YELLOW_TASKS_STRING, yellowTasks);
+		params.put(DATE_STRING, DATE_FORMATTER.format(new Date()));
+		params.put(UPDATE_DATE_STRING, updateDateFormatter.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
+		params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
+		params.put(MATRIX_STRING, listOfRows);
 
 		VelocityManager velocityManager = new DefaultVelocityManager();
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
 	}
 
 	private Double getMaxProbability(Query query){
-//		ImpactPropability impactPropability = new ImpactPropabilityImpl(searchService, authenticationContext, ComponentAccessor.getConstantsManager(), ComponentAccessor.getCustomFieldManager());
-		return impactProbability.getMaxPropability(query);
+		return impactProbability.getMaxProbability(query);
 	}
 
 	private List<Issue> getIssues(Query query){
 		List<Issue> issues = null;
-//		JRMPSearchService jrmpSearchService = new JRMPSearchServiceImpl(searchService, authenticationContext, ComponentAccessor.getCustomFieldManager());
 		try {
 			issues = jrmpSearchService.getAllQualifiedIssues(query);
 		} catch (NoIssuesFoundException e) {

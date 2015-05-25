@@ -43,8 +43,8 @@
   <!--<component key="JRMPsearchService" class="net.amg.jira.plugins.jrmp.services.JRMPSearchServiceImpl">-->
     <!--<interface>net.amg.jira.plugins.jrmp.services.JRMPSearchService</interface>-->
   <!--</component>-->
-  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.jrmp.velocity.MatrixGeneratorImpl">-->
-    <!--<interface>net.amg.jira.plugins.jrmp.velocity.MatrixGenerator</interface>-->
+  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.jrmp.services.MatrixGeneratorImpl">-->
+    <!--<interface>net.amg.jira.plugins.jrmp.services.MatrixGenerator</interface>-->
   <!--</component>-->
   <!-- import from the product container -->
   <!--<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>-->

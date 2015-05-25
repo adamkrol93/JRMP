@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.jrmp.velocity;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.query.Query;
 
@@ -6,5 +6,5 @@ import com.atlassian.query.Query;
  * @author Adam Król
  */
 public interface MatrixGenerator {
-    String generateMatrix(int size, Query query);
+    String generateMatrix(Query query);
 }

@@ -8,7 +8,7 @@
 - PIP-85 Skonfigurowany RESTowy walidator
 - PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu
 - PIP-115 Dodany typ nowy typ zadania - Ryzyko, oraz dwa customowe pola. Jest usługa zwracająca wielkość macierzy.
-- PIP-116 Usługa zwracająca listę issue z typem Risk oraz niepustymi wartościami Risk COnsequency i Risk Propability
+- PIP-116 Usługa zwracająca listę issue z typem Risk oraz niepustymi wartościami Risk COnsequency i Risk Probability
 - PIP-103 Poprawiony RESTOWY walidator oraz poprawione wyświetlanie pluginu
 - PIP-86 Dodane generowanie macierzy ryzyk
 - PIP-139 Mały refaktoring

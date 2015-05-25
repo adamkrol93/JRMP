@@ -8,7 +8,7 @@ import com.atlassian.jira.util.MessageSet;
 import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
-import net.amg.jira.plugins.jrmp.velocity.MatrixGenerator;
+import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,14 +98,19 @@ public class JRMPRiskManagementController {
     @Path("/matrix")
     @GET
     @Produces({MediaType.TEXT_HTML})
-    public Response getMatrix(@DefaultValue("0") @QueryParam("size") int size, @QueryParam("query") String queryString) {
-        if(queryString == null || queryString.isEmpty()){
+    public Response getMatrix(@Context HttpServletRequest request) {
+
+        String filter = request.getParameter(GadgetFieldEnum.FILTER.toString());
+        String relativeDate = request.getParameter(GadgetFieldEnum.DATE.toString());
+        String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
+        String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
+        if(filter == null || filter.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), queryString.replaceAll("%3D","=")).getQuery();
+        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), filter.replaceAll("%3D","=")).getQuery();
 //        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver, searchService, authenticationContext);
         try {
-            return Response.ok(matrixGenerator.generateMatrix(size, query), MediaType.TEXT_HTML).build();
+            return Response.ok(matrixGenerator.generateMatrix(query), MediaType.TEXT_HTML).build();
         } catch(Exception e){
             e.printStackTrace();
             return Response.status(Response.Status.BAD_REQUEST).build();

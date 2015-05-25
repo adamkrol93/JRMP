@@ -30,28 +30,21 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
     private CustomFieldManager customFieldManager;
 
-//    public ImpactPropabilityImpl(SearchService searchService, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, CustomFieldManager customFieldManager) {
-//        this.searchService = searchService;
-//        this.authenticationContext = jiraAuthenticationContext;
-//        this.constantsManager = constantsManager;
-//        this.customFieldManager = customFieldManager;
-//    }
-
 
     @Override
-    public double getMaxPropability(Query query)
+    public double getMaxProbability(Query query)
     {
         if(query == null)
         {
-            return 1;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 1x1, bo czemu nie
+            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
         SearchResults searchResults;
         try {
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
-           logger.info("getMatrixSize Error, searchResult are null",e);
-            return 1;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 1x1, bo czemu nie
+           logger.info("Something went wrong while searching for issues",e);
+            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
         double maxSize = 0;

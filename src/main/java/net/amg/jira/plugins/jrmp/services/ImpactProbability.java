@@ -7,5 +7,5 @@ import com.atlassian.query.Query;
  */
 public interface ImpactProbability {
 
-    double getMaxPropability(Query query);
+    double getMaxProbability(Query query);
 }
