@@ -105,39 +105,21 @@ AMG.jrmp.init = function (args) {
                 onResizeAdjustHeight: true,
                 template: function (args) {
                     var gadget = this;
-                    var filters;// = args.favFilters.filters;
 
-                    if (!filters) {
-                        gadget.getView().removeClass("loading").html("<p>__MSG_gadget.favourite.filters.no.favourites__</p>");
-                    } else {
-                        var list = AJS.$("<ul/>").attr("id", "filter-list");
-
-                        AJS.$(filters).each(function () {
-                            list.append(
-                                AJS.$("<li/>").append(
-                                    AJS.$("<div/>").addClass("filter-name").append(
-                                        AJS.$("<a/>").attr({
-                                            target: "_parent",
-                                            title: gadgets.util.escapeString(this.description),
-                                            href: "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value
-                                        }).text(this.label)
-                                    )
-                                ).append(
-                                    AJS.$("<div/>").addClass("filter-count").text(this.count)
-                                ).click(function () {
-                                        if (window.parent) {
-                                            window.parent.location = "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value;
-                                        } else {
-                                            window.location = "__ATLASSIAN_BASE_URL__/secure/IssueNavigator.jspa?mode=hide&requestId=" + this.value;
-                                        }
-                                    })
-                            );
-                        });
-                        gadget.getView().html(list);
+                    var matrix=args.matrix;
+                    if(!matrix){
+                     gadget.getView().html("<p>WLOLOLO</p>");
+                    }else{
+                        gadget.getView().html(matrix);
                     }
+                    //gadget.getView().html("<p>"+matrix+"</p>");
+
                 },
                 args: [{
-
+                    key: "matrix",
+                    ajaxOptions:{
+                        url: "/rest/jira-risk-management/1.0/controller/matrix"
+                    }
                 }]
             }
         })
