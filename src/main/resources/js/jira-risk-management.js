@@ -105,7 +105,7 @@ AMG.jrmp.init = function (args) {
                 onResizeAdjustHeight: true,
                 template: function (args) {
                     var gadget = this;
-
+                    console.log(args);
                     var matrix=args.matrix;
                     if(!matrix){
                      gadget.getView().html("<p>WLOLOLO</p>");
@@ -117,8 +117,12 @@ AMG.jrmp.init = function (args) {
                 },
                 args: [{
                     key: "matrix",
-                    ajaxOptions:{
-                        url: "/rest/jira-risk-management/1.0/controller/matrix"
+                    ajaxOptions: function() {
+                        return {
+                            url:"/rest/jira-risk-management/1.0/controller/matrix?Filter="+this.getPref("Filter"),
+                            contentType: "application/json",
+                            dataType: "html"
+                        };
                     }
                 }]
             }
