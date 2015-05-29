@@ -121,7 +121,18 @@ public class JRMPRiskManagementController {
         if(filter == null || filter.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), filter.replaceAll("%3D","=")).getQuery();
+
+        Query query = null;
+
+        String type = filter.split("-")[0];
+        if ("filter".equals(type)) {
+            query = getQueryFilter(filter.split("-")[1]);
+        }
+        if("project".equals(type))
+        {
+            query = getQueryProject(filter.split("-")[1]);
+        }
+//        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), filter.replaceAll("%3D","=")).getQuery();
         try {
             return Response.ok(matrixGenerator.generateMatrix(query), MediaType.TEXT_HTML).build();
         } catch(Exception e){

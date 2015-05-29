@@ -15,3 +15,4 @@
 - PIP-XXX Listener działający i zmieniona konfiguracja na OSGI
 - PIP-XXX Działające wstrzykiwanie wszystkiego
 - PIP-144 Dodana licencja Apache 2.0
+- PIP-145 Poprawiona opcja generowania macierzy
