@@ -131,13 +131,16 @@ public class JRMPRiskManagementController {
         if("project".equals(type))
         {
             query = getQueryProject(filter.split("-")[1]);
+
         }
+
 //        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), filter.replaceAll("%3D","=")).getQuery();
         try {
             return Response.ok(matrixGenerator.generateMatrix(query), MediaType.TEXT_HTML).build();
         } catch(Exception e){
             e.printStackTrace();
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.ok("", MediaType.TEXT_HTML).build();
+            //return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 

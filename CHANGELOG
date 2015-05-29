@@ -16,3 +16,4 @@
 - PIP-XXX Działające wstrzykiwanie wszystkiego
 - PIP-144 Dodana licencja Apache 2.0
 - PIP-145 Poprawiona opcja generowania macierzy
+- PIP-141 Wyświetlanie komunikatu o pustej macierzy w przypadku braku risk'issue
