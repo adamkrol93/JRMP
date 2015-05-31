@@ -20,6 +20,7 @@ import java.util.List;
 public class Cell {
 	private List<Task> tasks;
 	private Colour colour;
+	private int overload;
 
 	public Cell(double riskRate){
 		this.tasks = new ArrayList<Task>();
@@ -38,6 +39,9 @@ public class Cell {
 	
 	public void addTask(Task task){
 		tasks.add(task);
+		if (tasks.size()>2){
+			overload++;
+		}
 	}
 	
 	public String getRisk(){
@@ -46,5 +50,13 @@ public class Cell {
 	
 	public Colour getRiskEnum(){
 		return colour;
+	}
+
+	public int getOverload() {
+		return overload;
+	}
+
+	public void setOverload(int overload) {
+		this.overload = overload;
 	}
 }

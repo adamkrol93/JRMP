@@ -17,10 +17,10 @@ package net.amg.jira.plugins.jrmp.velocity;
 public class Task {
 	private String name;
 	private String url;
-	private Double probability;
-	private Double consequency;
+	private int probability;
+	private int consequency;
 	
-	public Task(String name, String url, Double probability, Double consequency) {
+	public Task(String name, String url, int probability, int consequency) {
 		super();
 		this.name = name;
 		this.url = url;
@@ -40,16 +40,16 @@ public class Task {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public Double getProbability() {
+	public int getProbability() {
 		return probability;
 	}
-	public void setProbability(Double probability) {
+	public void setProbability(int probability) {
 		this.probability = probability;
 	}
-	public Double getConsequency() {
+	public int getConsequency() {
 		return consequency;
 	}
-	public void setConsequency(Double consequency) {
+	public void setConsequency(int consequency) {
 		this.consequency = consequency;
 	}
 	

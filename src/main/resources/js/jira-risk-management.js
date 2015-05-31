@@ -119,9 +119,14 @@ AMG.jrmp.init = function (args) {
                     key: "matrix",
                     ajaxOptions: function() {
                         return {
-                            url:"/rest/jira-risk-management/1.0/controller/matrix?Filter="+this.getPref("Filter"),
+                            type: "POST",
+                            url:"/rest/jira-risk-management/1.0/controller/matrix",
                             contentType: "application/json",
-                            dataType: "html"
+                            dataType: "html",
+                            data: JSON.stringify({
+                                filter: this.getPref("Filter")
+                            })
+
                         };
                     }
                 }]

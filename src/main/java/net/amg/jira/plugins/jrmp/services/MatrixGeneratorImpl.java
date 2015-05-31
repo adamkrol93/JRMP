@@ -38,17 +38,29 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final String MATRIX_SIZE_STRING = "matrixSize";
 	public static final String PROJECT_NAME_STRING = "projectName";
 	public static final String PROJECT_URL_STRING = "projectURL";
-	public static final String RED_TASKS_STRING = "redTasks";
-	public static final String GREEN_TASKS_STRING = "greenTasks";
-	public static final String YELLOW_TASKS_STRING = "yellowTasks";
+	public static final String PROJECT_LABEL_STRING = "projectLabel";
+	public static final String RISK_DATE_LABEL_STRING = "riskDateLabel";
+	public static final String UPDATED_LABEL = "updatedLabel";
+	public static final String RED_TASKS_LABEL_STRING = "redTasksLabel";
+	public static final String GREEN_TASKS_LABEL_STRING = "greenTasksLabel";
+	public static final String YELLOW_TASKS_LABEL_STRING = "yellowTasksLabel";
+	public static final String RED_TASKS_VALUE_STRING = "redTasksValue";
+	public static final String GREEN_TASKS_VALUE_STRING = "greenTasksValue";
+	public static final String YELLOW_TASKS_VALUE_STRING = "yellowTasksValue";
 	public static final String DATE_STRING = "date";
 	public static final String UPDATE_DATE_STRING = "updateDate";
 	public static final String UPDATED_TASK_STRING = "updatedTask";
+	public static final String UPDATED_TASK_URL_STRING = "updatedTaskUrl";
+	public static final String OVERLOAD_COMMENT_MULTI_STRING = "overloadCommentMulti";
+	public static final String OVERLOAD_COMMENT_SINGLE_STRING = "overloadCommentSingle";
+
 	public static final String MATRIX_STRING = "matrix";
+	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
+	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
 	private I18nResolver i18nResolver;
 	private ImpactProbability impactProbability;
 	private JRMPSearchService jrmpSearchService;
-	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 
 	public void setImpactProbability(ImpactProbability impactProbability) {
 		this.impactProbability = impactProbability;
@@ -65,12 +77,12 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 	@Override
 	public String generateMatrix(Query query){
-		double maxProbability = getMaxProbability(query);
-		int size = (int) maxProbability;
+
+		int size = getMaxProbability(query);
 		List<Issue> listOfIssues = getIssues(query);
 
-		if (listOfIssues.isEmpty()){
-			i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues");
+		if (listOfIssues.isEmpty()) {
+			return i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues");
 		}
 
 		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
@@ -90,8 +102,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	    int greenTasks = 0;
 		
 	    for(Task task : listOfTasks){
-			listOfRows.get(getRow(task.getProbability(),maxProbability,size)).getCells().get(getCell(task.getConsequency(),maxProbability,size)).addTask(task);
-			switch (listOfRows.get(getRow(task.getProbability(), maxProbability,size)).getCells().get(getCell(task.getConsequency(),maxProbability,size)).getRiskEnum()){
+			listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequency()-1).addTask(task);
+			switch (listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequency()-1).getRiskEnum()){
 				case RED:
 					redTasks++;
 					break;
@@ -104,25 +116,33 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			}
 	    }
 
-		DateFormat updateDateFormatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put(MATRIX_SIZE_STRING, size);
 		params.put(PROJECT_NAME_STRING, "");
 		params.put(PROJECT_URL_STRING, "");
-		params.put(RED_TASKS_STRING, redTasks);
-		params.put(GREEN_TASKS_STRING, greenTasks);
-		params.put(YELLOW_TASKS_STRING, yellowTasks);
+		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.gadget.matrix.updated_label"));
+		params.put(RISK_DATE_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.risk_date_label"));
+		params.put(PROJECT_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.project_label"));
+		params.put(RED_TASKS_VALUE_STRING, redTasks);
+		params.put(GREEN_TASKS_VALUE_STRING, greenTasks);
+		params.put(YELLOW_TASKS_VALUE_STRING, yellowTasks);
+		params.put(RED_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.red_tasks_label"));
+		params.put(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.green_tasks_label"));
+		params.put(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.yellow_tasks_label"));
 		params.put(DATE_STRING, DATE_FORMATTER.format(new Date()));
-		params.put(UPDATE_DATE_STRING, updateDateFormatter.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
+		params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
 		params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
+		params.put(UPDATED_TASK_URL_STRING, ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
+		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.gadget.matrix.overload_comment_multi"));
+		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.gadget.matrix.overload_comment_single"));
 		params.put(MATRIX_STRING, listOfRows);
 
 		VelocityManager velocityManager = new DefaultVelocityManager();
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
 	}
 
-	private Double getMaxProbability(Query query){
+	private int getMaxProbability(Query query){
 		return impactProbability.getMaxProbability(query);
 	}
 
@@ -143,8 +163,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		for (Issue issue : issues){
 			listOfTasks.add(new Task(issue.getKey(),
 					ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + issue.getKey(),
-					(Double)issue.getCustomFieldValue(probability),
-					(Double)issue.getCustomFieldValue(consequence)));
+					((Double) issue.getCustomFieldValue(probability)).intValue(),
+					((Double) issue.getCustomFieldValue(consequence)).intValue()));
 		}
 		return listOfTasks;
 	}
@@ -159,7 +179,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		return lastUpdated;
 	}
 
-	private int getCell(double value, double max, int size){
+/*	private int getCell(double value, double max, int size){
 		if (value == max) {
 			return size-1;
 		} else {
@@ -173,5 +193,5 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		} else {
 			return size - (int)Math.floor((value / max) * size) - 1;
 		}
-	}
+	}*/
 }
