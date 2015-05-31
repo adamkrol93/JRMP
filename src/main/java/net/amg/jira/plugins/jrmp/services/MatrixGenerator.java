@@ -15,6 +15,7 @@
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.query.Query;
+import com.atlassian.sal.api.message.I18nResolver;
 
 /**
  * @author Adam Król

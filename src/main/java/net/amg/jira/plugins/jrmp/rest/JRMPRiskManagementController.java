@@ -33,6 +33,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 /**
  * Controller used for validations and other useful things
@@ -89,7 +90,6 @@ public class JRMPRiskManagementController {
                 } else {
                     errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
                 }
-
         }
 
         if(StringUtils.isBlank(relativeDate))
@@ -110,14 +110,14 @@ public class JRMPRiskManagementController {
     }
 
     @Path("/matrix")
-    @GET
+    @POST
     @Produces({MediaType.TEXT_HTML})
-    public Response getMatrix(@Context HttpServletRequest request) {
+    @Consumes("application/json")
+    public Response getMatrix(MatrixRequest request) {
 
-        String filter = request.getParameter(GadgetFieldEnum.FILTER.toString());
-        String relativeDate = request.getParameter(GadgetFieldEnum.DATE.toString());
-        String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
-        String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
+        String filter = request.getFilter();
+
+        //String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         if(filter == null || filter.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }

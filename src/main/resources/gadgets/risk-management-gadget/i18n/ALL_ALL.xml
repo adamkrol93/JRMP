@@ -49,4 +49,12 @@
     <msg name="risk.management.gadget.matrix.error.wrong_size">Wrong matrix size</msg>
     <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Cannot find any issue!</msg>
     <msg name="risk.management.gadget.matrix.error.empty_matrix">No matrix to create</msg>
+    <msg name="risk.management.gadget.matrix.overload_comment_single">task</msg>
+    <msg name="risk.management.gadget.matrix.overload_comment_multi">tasks</msg>
+    <msg name="risk.management.gadget.matrix.red_tasks_label">Red tasks:</msg>
+    <msg name="risk.management.gadget.matrix.green_tasks_label">Green tasks:</msg>
+    <msg name="risk.management.gadget.matrix.yellow_tasks_label">Yellow tasks:</msg>
+    <msg name="risk.management.gadget.matrix.risk_date_label">Risk date:</msg>
+    <msg name="risk.management.gadget.matrix.project_label">Project:</msg>
+    <msg name="risk.management.gadget.matrix.updated_label">Updated:</msg>
 </messagebundle>

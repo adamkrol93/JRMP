@@ -46,7 +46,7 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
 
     @Override
-    public double getMaxProbability(Query query)
+    public int getMaxProbability(Query query)
     {
         if(query == null)
         {
@@ -61,14 +61,14 @@ public class ImpactProbabilityImpl implements ImpactProbability {
             return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
-        double maxSize = 0;
+        Double maxSize = 0.0;
 
         for(Issue issue : searchResults.getIssues())
         {
             if(issue.getIssueTypeObject().equals(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, PluginListener.RISK_ISSUE_TYPE)))
             {
-                double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
-                double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
+                Double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
+                Double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
                 if(riskConsequence > maxSize)
                 {
                     maxSize = riskConsequence;
@@ -82,7 +82,7 @@ public class ImpactProbabilityImpl implements ImpactProbability {
         }
 
 
-        return maxSize;
+        return maxSize.intValue();
     }
 
     public void setSearchService(SearchService searchService) {
