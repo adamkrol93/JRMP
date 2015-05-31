@@ -1,7 +1,5 @@
 package net.amg.jira.plugins.jrmp.rest;
 
-import java.util.Date;
-
 /**
  * Created by jonatan on 30.05.15.
  */

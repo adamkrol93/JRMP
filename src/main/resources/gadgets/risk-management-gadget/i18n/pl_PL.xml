@@ -49,12 +49,4 @@
     <msg name="risk.management.gadget.matrix.error.wrong_size">Zły rozmiar macierzy</msg>
     <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć rzadnego zadania!</msg>
     <msg name="risk.management.gadget.matrix.error.empty_matrix">Brak macierzy do wygenerowania</msg>
-    <msg name="risk.management.gadget.matrix.overload_comment_single">zadanie</msg>
-    <msg name="risk.management.gadget.matrix.overload_comment_multi">zadania</msg>
-    <msg name="risk.management.gadget.matrix.red_tasks_label">Czerwone zadania:</msg>
-    <msg name="risk.management.gadget.matrix.green_tasks_label">Zielone zadania:</msg>
-    <msg name="risk.management.gadget.matrix.yellow_tasks_label">Żółte zadania:</msg>
-    <msg name="risk.management.gadget.matrix.risk_date_label">Data macierzy:</msg>
-    <msg name="risk.management.gadget.matrix.project_label">Projekt:</msg>
-    <msg name="risk.management.gadget.matrix.updated_label">Zaktualizowano:</msg>
 </messagebundle>
