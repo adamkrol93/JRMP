@@ -14,12 +14,11 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import com.atlassian.query.Query;
-import com.atlassian.sal.api.message.I18nResolver;
+import net.amg.jira.plugins.jrmp.rest.ProjectOrFilter;
 
 /**
  * @author Adam Król
  */
 public interface MatrixGenerator {
-    String generateMatrix(Query query);
+    String generateMatrix(ProjectOrFilter projectOrFilter);
 }

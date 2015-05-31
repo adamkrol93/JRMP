@@ -18,3 +18,4 @@
 - PIP-145 Poprawiona opcja generowania macierzy
 - PIP-141 Wyświetlanie komunikatu o pustej macierzy w przypadku braku risk'issue
 - PIP-129 Macierz generowana przez POST
+- PIP-150 Refactoring backend projectOrFilter, poprawiona translacja, dodane brakujące pola w macierzy

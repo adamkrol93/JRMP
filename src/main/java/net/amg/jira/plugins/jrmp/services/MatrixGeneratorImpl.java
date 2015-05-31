@@ -23,6 +23,7 @@ import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.jrmp.exceptions.NoIssuesFoundException;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.rest.ProjectOrFilter;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
 import net.amg.jira.plugins.jrmp.velocity.Row;
 import net.amg.jira.plugins.jrmp.velocity.Task;
@@ -53,7 +54,6 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final String UPDATED_TASK_URL_STRING = "updatedTaskUrl";
 	public static final String OVERLOAD_COMMENT_MULTI_STRING = "overloadCommentMulti";
 	public static final String OVERLOAD_COMMENT_SINGLE_STRING = "overloadCommentSingle";
-
 	public static final String MATRIX_STRING = "matrix";
 	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
@@ -76,10 +76,9 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 
 	@Override
-	public String generateMatrix(Query query){
-
-		int size = getMaxProbability(query);
-		List<Issue> listOfIssues = getIssues(query);
+	public String generateMatrix(ProjectOrFilter projectOrFilter){
+		int size = getMaxProbability(projectOrFilter.getQuery());
+		List<Issue> listOfIssues = getIssues(projectOrFilter.getQuery());
 
 		if (listOfIssues.isEmpty()) {
 			return i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues");
@@ -118,24 +117,35 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
+		String title = projectOrFilter.getName();
+		String url = "";
+
+		if(projectOrFilter.isFilter()){
+			url = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/?filter=" + projectOrFilter.getId();
+		}
+
+		if(projectOrFilter.isProject()){
+			url = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/?project=" + projectOrFilter.getId();
+		}
+
 		params.put(MATRIX_SIZE_STRING, size);
-		params.put(PROJECT_NAME_STRING, "");
-		params.put(PROJECT_URL_STRING, "");
-		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.gadget.matrix.updated_label"));
-		params.put(RISK_DATE_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.risk_date_label"));
-		params.put(PROJECT_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.project_label"));
+		params.put(PROJECT_NAME_STRING, title);
+		params.put(PROJECT_URL_STRING, url);
+		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.matrix.updated_label"));
+		params.put(RISK_DATE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.risk_date_label"));
+		params.put(PROJECT_LABEL_STRING, i18nResolver.getText("risk.management.matrix.project_label"));
 		params.put(RED_TASKS_VALUE_STRING, redTasks);
 		params.put(GREEN_TASKS_VALUE_STRING, greenTasks);
 		params.put(YELLOW_TASKS_VALUE_STRING, yellowTasks);
-		params.put(RED_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.red_tasks_label"));
-		params.put(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.green_tasks_label"));
-		params.put(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.gadget.matrix.yellow_tasks_label"));
+		params.put(RED_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.red_tasks_label"));
+		params.put(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.green_tasks_label"));
+		params.put(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.yellow_tasks_label"));
 		params.put(DATE_STRING, DATE_FORMATTER.format(new Date()));
 		params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
 		params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
 		params.put(UPDATED_TASK_URL_STRING, ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
-		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.gadget.matrix.overload_comment_multi"));
-		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.gadget.matrix.overload_comment_single"));
+		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi"));
+		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_single"));
 		params.put(MATRIX_STRING, listOfRows);
 
 		VelocityManager velocityManager = new DefaultVelocityManager();

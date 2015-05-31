@@ -1,10 +1,8 @@
 package ut.net.amg.jira.plugins.rest;
 
-import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 /*import net.amg.jira.plugins.jrmp.rest.RESTRiskManagementResource;
 import net.amg.jira.plugins.jrmp.rest.RESTRiskManagementResourceModel;

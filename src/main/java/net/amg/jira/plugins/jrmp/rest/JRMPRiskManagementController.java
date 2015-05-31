@@ -15,11 +15,8 @@
 package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.jql.builder.JqlClauseBuilder;
-import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
-import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
 import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
@@ -33,7 +30,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 
 /**
  * Controller used for validations and other useful things
@@ -66,24 +62,24 @@ public class JRMPRiskManagementController {
         String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
         String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         Gson gson = new Gson();
-        Query query = null;
         if(StringUtils.isBlank(filter))
         {
-
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
         }else {
-            String type = filter.split("-")[0];
+            /*String type = filter.split("-")[0];
             if ("filter".equals(type)) {
                 query = getQueryFilter(filter.split("-")[1]);
             }
             if("project".equals(type))
             {
                 query = getQueryProject(filter.split("-")[1]);
-            }
+            }*/
 
-                if (query != null) {
+            ProjectOrFilter projectOrFilter = new ProjectOrFilter(filter);
 
-                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), query);
+                if (projectOrFilter.getQuery() != null) {
+
+                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
                         errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
                     }
@@ -106,7 +102,7 @@ public class JRMPRiskManagementController {
         if(errorCollection.hasAnyErrors()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errorCollection)).build();
         }
-        return Response.ok(query.getQueryString()).build();
+        return Response.ok().build();
     }
 
     @Path("/matrix")
@@ -122,37 +118,15 @@ public class JRMPRiskManagementController {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Query query = null;
+        ProjectOrFilter projectOrFilter = new ProjectOrFilter(request.getFilter());
 
-        String type = filter.split("-")[0];
-        if ("filter".equals(type)) {
-            query = getQueryFilter(filter.split("-")[1]);
-        }
-        if("project".equals(type))
-        {
-            query = getQueryProject(filter.split("-")[1]);
-
-        }
-
-//        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), filter.replaceAll("%3D","=")).getQuery();
         try {
-            return Response.ok(matrixGenerator.generateMatrix(query), MediaType.TEXT_HTML).build();
+            return Response.ok(matrixGenerator.generateMatrix(projectOrFilter), MediaType.TEXT_HTML).build();
         } catch(Exception e){
             e.printStackTrace();
             return Response.ok("", MediaType.TEXT_HTML).build();
             //return Response.status(Response.Status.BAD_REQUEST).build();
         }
-    }
-
-    private Query getQueryFilter(String filter) {
-        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().savedFilter(filter);
-        return subjectBuilder.buildQuery();
-    }
-
-    private Query getQueryProject(String project)
-    {
-        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().project(project);
-        return subjectBuilder.buildQuery();
     }
 
     public void setMatrixGenerator(MatrixGenerator matrixGenerator) {
