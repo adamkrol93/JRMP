@@ -20,13 +20,17 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
+import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
+import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
 
 /**
  * @author Adam Król
@@ -55,6 +59,25 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
         SearchResults searchResults;
         try {
+            Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
+
+            while(iterator.hasNext()) {
+
+                Clause c = iterator.next();
+                if(c.getName().contains("issuetype"))
+                {
+                    query.getWhereClause().getClauses().remove(c);
+                }
+            }
+            JqlQueryBuilder builder = JqlQueryBuilder.newBuilder(query);
+
+
+            builder.where().and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
+                    .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
+                    .and().issueType(PluginListener.RISK_ISSUE_TYPE);
+
+            query = builder.buildQuery();
+
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
            logger.info("Something went wrong while searching for issues",e);
@@ -67,15 +90,18 @@ public class ImpactProbabilityImpl implements ImpactProbability {
         {
             if(issue.getIssueTypeObject().equals(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, PluginListener.RISK_ISSUE_TYPE)))
             {
-                Double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
-                Double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
-                if(riskConsequence > maxSize)
+                try {
+                    Double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
+                    Double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
+                    if (riskConsequence > maxSize) {
+                        maxSize = riskConsequence;
+                    }
+                    if (riskProbability > maxSize) {
+                        maxSize = riskProbability;
+                    }
+                }catch (Exception e)
                 {
-                    maxSize = riskConsequence;
-                }
-                if(riskProbability > maxSize)
-                {
-                    maxSize = riskProbability;
+                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
                 }
             }
 
