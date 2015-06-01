@@ -32,7 +32,7 @@
     <UserPref name="Date" datatype="hidden" />
     <UserPref name="Title"  datatype="hidden"/>
     <UserPref name="RefreshInterval" datatype="hidden"/>
-    <Content type="html">
+    <Content type="html" view="profile,canvas">
         <![CDATA[
         #requireResource("com.atlassian.jira.gadgets:common")
         #requireResource("com.atlassian.auiplugin:ajs")

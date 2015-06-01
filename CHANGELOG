@@ -19,3 +19,4 @@
 - PIP-141 Wyświetlanie komunikatu o pustej macierzy w przypadku braku risk'issue
 - PIP-129 Macierz generowana przez POST
 - PIP-131 Refactoring backend projectOrFilter, poprawiona translacja, dodane brakujące pola w macierzy
+- PIP-151 Gadget wchodzi w tryb zmaksymalizowany
