@@ -1,52 +1,87 @@
+##Velocity template for Jira Risk Managment Gadget
+##It is used to generate html code of gadget view
+##
+##Template params:
+##
+##  projectLabel - String - project or filter translated label
+##  projectURL - String - project or filter URL
+##  projectName - String - project or filter name
+##  riskDateLabel - String - label for date when matrix was generated
+##  date - String - date when matrix was generated
+##  updatedLabel - Stirng - label for last updated task
+##  updateDate - Stirgn - date of modification of last updated task
+##  updatedTaskUrl - String - url to last updated task
+##  updatedTask - String - key for last updated task
+##  redTasksLabel - Stirng - label for red tasks counter
+##  redTasksValue - int - red tasks counter value
+##  yelloeTasksLabel - Stirng - label for yellow tasks counter
+##  yellowTasksValue - int - yellow tasks counter value
+##  greenTasksLabel - Stirng - label for green tasks counter
+##  greenTasksValue - int - green tasks counter value
+##  matrixSize - int - matrix size
+##  overloadCommentMulti - String - comment for overload cell plural form
+##  overloadCommentMulti_2 - String - comment for overload cell plural form
+##  overloadCommentSingle - String - comment for overload cell singular form
+##  matrix - List<net.amg.jira.plugns.jrmp.velocity.Row> - list of rows for risk matrix
+##  consequenceLabel - String - translated label for risk consequence
+##  probabilityLabel - String - translated label for risk probability
+
 <html>
-<head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Risk Matrix</title>
-</head>
-<style type="text/css">
-    .matrix  {border-collapse:collapse;border-spacing:0;font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:2px;border-color:white}
-    .matrix td{overflow:hidden;word-break:normal;font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:2px;border-color:white;text-align:center;height:60px;width:50px}
-    .matrix .yellow{background-color:#fff500;color:#000000}
-    .matrix .red{background-color:#ff0000;color:#000000}
-    .matrix .green{background-color:#33bb00;color:#000000}
-    .matrix .x{font-size:12px;text-align:center;padding:2px 0px 2px 5px;height:10px}
-    .matrix .xlabel{text-align:center;height:10px;padding:5px}
-    .matrix .y{font-size:12px;text-align:right;width:5px;padding:2px 0px 2px 5px}
-    .matrix .ylabel{width:5px;padding:0px;height:10px;text-align:right}
-    .matrix .empty{height:0px;width:0px}
-</style>
-<body>
-    <font size="2" face="arial"><center><strong>Project:</strong> <a href="$projectURL">$projectName</a> &nbsp&nbsp&nbsp Risk date: $date</font><br>
-    <font size="1" face="arial">Updated: $updateDate ($updatedTask) | <font color="red">Red issues:</font> <font color="blue">$redTasks</font> | <font color="orange">Yellow issues:</font> <font color="blue">$yellowTasks</font> | <font color="green">Green issues:</font> <font color="blue">$greenTasks</font></font>
-    <table class="matrix">         
-        #set ($counter = $matrixSize)  
-        #foreach($row in $matrix)
-            <tr>
+<link rel="stylesheet" type="text/css" href="matrixStyle.css">
+<div class="amg jrmp matrix default">
+    <div class="matrixHeaderRow">
+        <div class="projectLabeL">$projectLabel</div> <a href="$projectURL">$projectName</a> &nbsp&nbsp <div class="riskDateLabel"> $riskDateLabel $date</div><br>
+    </div>
+    <div class="matrixHeaderRow">
+        <div class="updatedLabel">$updatedLabel $updateDate (<a href="$updatedTaskUrl">$updatedTask</a>)</div> <div class="separator">|</div>
+        <div class="redTasksLabel">$redTasksLabel</div> <div class="tasksValue">$redTasksValue</div> <div class="separator">|</div>
+        <div class="yellowTasksLabel">$yellowTasksLabel</div> <div class="tasksValue">$yellowTasksValue</div> <div class="separator">|</div>
+        <div class="greenTasksLabel">$greenTasksLabel</div> <div class="tasksValue">$greenTasksValue</div>
+    </div>
+<table class="matrix">
+    #set ($counter = $matrixSize)
+    #foreach($row in $matrix)
+        <tr>
             #if ($counter == $matrixSize)
-            <td class="ylabel" rowspan="$matrixSize">P</th>
+                <td rowspan="$matrixSize"><div class="ylabel">$probabilityLabel</div></td>
             #end
-            <td class="y">$counter</th>
+            <td class="y">$counter</td>
             #foreach($cell in $row.cells)
                 <td class="$cell.risk">
-                #foreach($task in $cell.tasks)
-                <a href="$task.url">$task.name</a><br>
-                #end
-                </th>
+                    #set ($cellCounter = 0)
+                    #foreach($task in $cell.tasks)
+                        <a href="$task.url">$task.name</a><br>
+                        #set ($cellCounter = $cellCounter + 1)
+                        #if($cellCounter == 2)
+                            #if($cell.overload == 1)
+                                +$cell.overload $overloadCommentSingle
+                                #elseif ($cell.overload < 5)
+                                    +$cell.overload $overloadCommentMulti
+                            #else
+                                +$cell.overload $overloadCommentMulti_2
+                            #end
+                            #break($foreach)
+                        #end
+                    #end
+                </td>
             #end
-            </tr>
-            #set ($counter = $counter - 1)
-        #end
-        <tr>
+        </tr>
+        #set ($counter = $counter - 1)
+    #end
+    <tr>
         <td class="empty"></td>
         <td class="empty"></td>
         #foreach($i in [1..$matrixSize])
             <td class="x">$i</td>
         #end
-        </tr>
-        <tr>
-            <td class="empty"></td>
-            <td class="empty"></td>
-            <td class="xlabel" colspan="$matrixSize">C</td>
-        </tr>
-    </body>
+    </tr>
+    <tr>
+        <td class="empty"></td>
+        <td class="empty"></td>
+        <td class="xlabel" colspan="$matrixSize">$consequenceLabel</td>
+    </tr>
+</table>
+</div>
 </html>

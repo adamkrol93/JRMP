@@ -1,14 +1,25 @@
+/*Copyright 2015 AMG.net
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.jql.builder.JqlClauseBuilder;
-import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
-import com.atlassian.query.Query;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
-import net.amg.jira.plugins.jrmp.velocity.MatrixGenerator;
+import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,31 +62,30 @@ public class JRMPRiskManagementController {
         String title = request.getParameter(GadgetFieldEnum.TITLE.toString());
         String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         Gson gson = new Gson();
-        Query query = null;
         if(StringUtils.isBlank(filter))
         {
-
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
         }else {
-            String type = filter.split("-")[0];
+            /*String type = filter.split("-")[0];
             if ("filter".equals(type)) {
                 query = getQueryFilter(filter.split("-")[1]);
             }
             if("project".equals(type))
             {
                 query = getQueryProject(filter.split("-")[1]);
-            }
+            }*/
 
-                if (query != null) {
+            ProjectOrFilter projectOrFilter = new ProjectOrFilter(filter);
 
-                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), query);
+                if (projectOrFilter.getQuery() != null) {
+
+                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
                         errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
                     }
                 } else {
                     errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
                 }
-
         }
 
         if(StringUtils.isBlank(relativeDate))
@@ -92,35 +102,31 @@ public class JRMPRiskManagementController {
         if(errorCollection.hasAnyErrors()) {
             return Response.status(Response.Status.BAD_REQUEST).entity(gson.toJson(errorCollection)).build();
         }
-        return Response.ok(query.getQueryString()).build();
+        return Response.ok().build();
     }
 
     @Path("/matrix")
-    @GET
+    @POST
     @Produces({MediaType.TEXT_HTML})
-    public Response getMatrix(@DefaultValue("0") @QueryParam("size") int size, @QueryParam("query") String queryString) {
-        if(queryString == null || queryString.isEmpty()){
+    @Consumes("application/json")
+    public Response getMatrix(MatrixRequest request) {
+
+        String filter = request.getFilter();
+
+        //String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
+        if(filter == null || filter.isEmpty()){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        Query query = searchService.parseQuery(authenticationContext.getUser().getDirectoryUser(), queryString.replaceAll("%3D","=")).getQuery();
-//        MatrixGenerator matrixGenerator = new MatrixGenerator(i18nResolver, searchService, authenticationContext);
+
+        ProjectOrFilter projectOrFilter = new ProjectOrFilter(request.getFilter());
+
         try {
-            return Response.ok(matrixGenerator.generateMatrix(size, query), MediaType.TEXT_HTML).build();
+            return Response.ok(matrixGenerator.generateMatrix(projectOrFilter), MediaType.TEXT_HTML).build();
         } catch(Exception e){
             e.printStackTrace();
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.ok("", MediaType.TEXT_HTML).build();
+            //return Response.status(Response.Status.BAD_REQUEST).build();
         }
-    }
-
-    private Query getQueryFilter(String filter) {
-        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().savedFilter(filter);
-        return subjectBuilder.buildQuery();
-    }
-
-    private Query getQueryProject(String project)
-    {
-        JqlClauseBuilder subjectBuilder = JqlQueryBuilder.newClauseBuilder().project(project);
-        return subjectBuilder.buildQuery();
     }
 
     public void setMatrixGenerator(MatrixGenerator matrixGenerator) {

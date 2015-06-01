@@ -9,7 +9,8 @@
     <param name="plugin-logo">images/pluginLogo.png</param>
   </plugin-info>
   <!-- add our i18n resource -->
-  <resource type="i18n" name="i18n" location="net.amg.jira.plugins.jira-risk-management.translate"/>
+  <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
+  <resource type="i18n" name="i18n" location="translate.translations"/>
   <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadgets/risk-management-gadget/gadget.xml"/>
   <resource type="download" name="i18n/ALL_ALL.xml" location="gadgets/risk-management-gadget/i18n/ALL_ALL.xml">
     <param name="content-type" value="text/xml; charset=UTF-8"/>
@@ -28,6 +29,7 @@
     <!--<dependency>com.atlassian.jira.gadgets:jira-global</dependency>-->
     <dependency>jira.webresources:autocomplete</dependency>
     <resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>
+    <resource type="download" name="matrixStyle.css" location="css/matrixStyle.css"/>
     <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
     <resource type="download" name="images/" location="/images"/>
     <context>jira-risk-management</context>
@@ -43,8 +45,8 @@
   <!--<component key="JRMPsearchService" class="net.amg.jira.plugins.jrmp.services.JRMPSearchServiceImpl">-->
     <!--<interface>net.amg.jira.plugins.jrmp.services.JRMPSearchService</interface>-->
   <!--</component>-->
-  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.jrmp.velocity.MatrixGeneratorImpl">-->
-    <!--<interface>net.amg.jira.plugins.jrmp.velocity.MatrixGenerator</interface>-->
+  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.jrmp.services.MatrixGeneratorImpl">-->
+    <!--<interface>net.amg.jira.plugins.jrmp.services.MatrixGenerator</interface>-->
   <!--</component>-->
   <!-- import from the product container -->
   <!--<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>-->

@@ -12,20 +12,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package net.amg.jira.plugins.jrmp.velocity;
+package net.amg.jira.plugins.jrmp.services;
 
-public enum Colour {
-	RED("red"), YELLOW("yellow"), GREEN("green");
-    
-	private String text;
+import net.amg.jira.plugins.jrmp.rest.ProjectOrFilter;
 
-	Colour(String text){
-		this.text = text;
-	}
-	
-	@Override
-	public String toString(){
-		return text;
-	}
-};  
-
+/**
+ * @author Adam Król
+ */
+public interface MatrixGenerator {
+    String generateMatrix(ProjectOrFilter projectOrFilter);
+}

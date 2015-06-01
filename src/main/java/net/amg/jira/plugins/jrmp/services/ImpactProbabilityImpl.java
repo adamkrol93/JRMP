@@ -1,3 +1,17 @@
+/*Copyright 2015 AMG.net
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ */
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
@@ -6,13 +20,17 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
+import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
+import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Iterator;
 
 /**
  * @author Adam Król
@@ -30,52 +48,67 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
     private CustomFieldManager customFieldManager;
 
-//    public ImpactPropabilityImpl(SearchService searchService, JiraAuthenticationContext jiraAuthenticationContext, ConstantsManager constantsManager, CustomFieldManager customFieldManager) {
-//        this.searchService = searchService;
-//        this.authenticationContext = jiraAuthenticationContext;
-//        this.constantsManager = constantsManager;
-//        this.customFieldManager = customFieldManager;
-//    }
-
 
     @Override
-    public double getMaxPropability(Query query)
+    public int getMaxProbability(Query query)
     {
         if(query == null)
         {
-            return 1;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 1x1, bo czemu nie
+            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
         SearchResults searchResults;
         try {
+            Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
+
+            while(iterator.hasNext()) {
+
+                Clause c = iterator.next();
+                if(c.getName().contains("issuetype"))
+                {
+                    query.getWhereClause().getClauses().remove(c);
+                }
+            }
+            JqlQueryBuilder builder = JqlQueryBuilder.newBuilder(query);
+
+
+            builder.where().and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
+                    .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
+                    .and().issueType(PluginListener.RISK_ISSUE_TYPE);
+
+            query = builder.buildQuery();
+
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
-           logger.info("getMatrixSize Error, searchResult are null",e);
-            return 1;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 1x1, bo czemu nie
+           logger.info("Something went wrong while searching for issues",e);
+            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
-        double maxSize = 0;
+        Double maxSize = 0.0;
 
         for(Issue issue : searchResults.getIssues())
         {
             if(issue.getIssueTypeObject().equals(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, PluginListener.RISK_ISSUE_TYPE)))
             {
-                double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
-                double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
-                if(riskConsequence > maxSize)
+                try {
+                    Double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
+                    Double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
+                    if (riskConsequence > maxSize) {
+                        maxSize = riskConsequence;
+                    }
+                    if (riskProbability > maxSize) {
+                        maxSize = riskProbability;
+                    }
+                }catch (Exception e)
                 {
-                    maxSize = riskConsequence;
-                }
-                if(riskProbability > maxSize)
-                {
-                    maxSize = riskProbability;
+                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
                 }
             }
 
         }
 
 
-        return maxSize;
+        return maxSize.intValue();
     }
 
     public void setSearchService(SearchService searchService) {
