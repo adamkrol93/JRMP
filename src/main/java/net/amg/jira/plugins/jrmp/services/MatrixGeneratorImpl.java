@@ -53,8 +53,11 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final String UPDATED_TASK_STRING = "updatedTask";
 	public static final String UPDATED_TASK_URL_STRING = "updatedTaskUrl";
 	public static final String OVERLOAD_COMMENT_MULTI_STRING = "overloadCommentMulti";
+	public static final String OVERLOAD_COMMENT_MULTI_2_STRING = "overloadCommentMulti_2";
 	public static final String OVERLOAD_COMMENT_SINGLE_STRING = "overloadCommentSingle";
 	public static final String MATRIX_STRING = "matrix";
+	public static final String CONSEQUENCE_LABEL_STRING = "consequenceLabel";
+	public static final String PROBABILITY_LABEL_STRING = "probabilityLabel";
 	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
@@ -128,6 +131,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			url = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/?project=" + projectOrFilter.getId();
 		}
 
+		params.put(PROBABILITY_LABEL_STRING, i18nResolver.getText("risk.management.matrix.probability_label"));
+		params.put(CONSEQUENCE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.consequence_label"));
 		params.put(MATRIX_SIZE_STRING, size);
 		params.put(PROJECT_NAME_STRING, title);
 		params.put(PROJECT_URL_STRING, url);
@@ -145,6 +150,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
 		params.put(UPDATED_TASK_URL_STRING, ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
 		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi"));
+		params.put(OVERLOAD_COMMENT_MULTI_2_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi_2"));
 		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_single"));
 		params.put(MATRIX_STRING, listOfRows);
 

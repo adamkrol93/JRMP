@@ -29,6 +29,7 @@
     <!--<dependency>com.atlassian.jira.gadgets:jira-global</dependency>-->
     <dependency>jira.webresources:autocomplete</dependency>
     <resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>
+    <resource type="download" name="matrixStyle.css" location="css/matrixStyle.css"/>
     <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
     <resource type="download" name="images/" location="/images"/>
     <context>jira-risk-management</context>
