@@ -38,6 +38,7 @@ import java.util.Iterator;
 @Service
 public class ImpactProbabilityImpl implements ImpactProbability {
 
+    public static final int MAX_PROBABILITY = 10;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private SearchService searchService;
@@ -98,6 +99,10 @@ public class ImpactProbabilityImpl implements ImpactProbability {
                     }
                     if (riskProbability > maxSize) {
                         maxSize = riskProbability;
+                    }
+                    if(maxSize > MAX_PROBABILITY)
+                    {
+                        return MAX_PROBABILITY;
                     }
                 }catch (Exception e)
                 {
