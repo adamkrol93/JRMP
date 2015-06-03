@@ -4,9 +4,11 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
+import com.atlassian.query.clause.ClauseVisitor;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by jonatan on 03.06.15.
@@ -35,10 +37,11 @@ public class QueryBuilderImpl implements QueryBuiler {
         JqlQueryBuilder builder = JqlQueryBuilder.newBuilder(query);
 
 
-        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE)
-                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
-                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty();
+        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE).and()
+                .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
+                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
 
         query = builder.buildQuery();
+        System.out.println(query.getWhereClause().toString());
     }
 }
