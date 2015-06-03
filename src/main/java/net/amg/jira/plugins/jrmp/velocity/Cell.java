@@ -22,14 +22,16 @@ public class Cell {
 	private Colour colour;
 	private int overload;
 
-	public Cell(double riskRate){
+	public Cell(double probability, double consequence, double matrixSize){
 		this.tasks = new ArrayList<Task>();
-		if (riskRate <= 0.25){
-			colour = Colour.GREEN;
-		} else if (riskRate <= 0.75){
+		double length = Math.sqrt(((matrixSize - (probability - 0.5)) * (matrixSize - (probability - 0.5)))+((matrixSize - (consequence - 0.5)) * (matrixSize - (consequence - 0.5))));
+		double lengthToExtreme = Math.sqrt(((matrixSize-0.5) * (matrixSize-0.5)) + (0.5 * 0.5));
+		if (0.6 * matrixSize >= length){
+			colour = Colour.RED;
+		} else if (lengthToExtreme >= length){
 			colour = Colour.YELLOW;
 		} else {
-			colour = Colour.RED;
+			colour = Colour.GREEN;
 		}
 	}
 	

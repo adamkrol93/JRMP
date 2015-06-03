@@ -93,7 +93,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		for(int i = 0; i < size; i++){
 			Row row = new Row();
 			for(int j = 0; j< size; j++){
-				Cell cell = new Cell((double)((size - i)*(j + 1)) / (size * size));
+				Cell cell = new Cell((double)((size - i)), (double)(j + 1), (double)size);
 				row.addCell(cell);
 			}
 			listOfRows.add(row);
@@ -102,10 +102,10 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		int redTasks = 0;
 	    int yellowTasks = 0;
 	    int greenTasks = 0;
-		
+
 	    for(Task task : listOfTasks){
-			listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequency()-1).addTask(task);
-			switch (listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequency()-1).getRiskEnum()){
+			listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
+			switch (listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
 				case RED:
 					redTasks++;
 					break;
