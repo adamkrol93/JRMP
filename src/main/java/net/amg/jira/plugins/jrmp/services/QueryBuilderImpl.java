@@ -42,6 +42,5 @@ public class QueryBuilderImpl implements QueryBuiler {
                 .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
 
         query = builder.buildQuery();
-        System.out.println(query.getWhereClause().toString());
     }
 }
