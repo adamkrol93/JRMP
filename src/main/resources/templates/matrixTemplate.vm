@@ -54,7 +54,7 @@
                     #foreach($task in $cell.tasks)
                         <a href="$task.url">$task.name</a><br>
                         #set ($cellCounter = $cellCounter + 1)
-                        #if($cellCounter == 2)
+                        #if($cellCounter > 2)
                             #if($cell.overload == 1)
                                 +$cell.overload $overloadCommentSingle
                                 #elseif ($cell.overload < 5)
