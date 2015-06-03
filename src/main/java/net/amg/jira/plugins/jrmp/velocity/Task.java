@@ -18,14 +18,14 @@ public class Task {
 	private String name;
 	private String url;
 	private int probability;
-	private int consequency;
+	private int consequence;
 	
-	public Task(String name, String url, int probability, int consequency) {
+	public Task(String name, String url, int probability, int consequence) {
 		super();
 		this.name = name;
 		this.url = url;
 		this.probability = probability;
-		this.consequency = consequency;
+		this.consequence = consequence;
 	}
 	
 	public String getName() {
@@ -46,11 +46,11 @@ public class Task {
 	public void setProbability(int probability) {
 		this.probability = probability;
 	}
-	public int getConsequency() {
-		return consequency;
+	public int getConsequence() {
+		return consequence;
 	}
-	public void setConsequency(int consequency) {
-		this.consequency = consequency;
+	public void setConsequence(int consequence) {
+		this.consequence = consequence;
 	}
 	
 }
