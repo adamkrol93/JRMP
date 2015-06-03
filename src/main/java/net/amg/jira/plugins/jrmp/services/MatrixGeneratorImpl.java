@@ -173,14 +173,27 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	}
 
 	private List<Task> getTasksFromIssues(List<Issue> issues){
-		CustomField probability = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
-		CustomField consequence = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
+		CustomField probabilityField = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
+		CustomField consequenceField = ComponentAccessor.getCustomFieldManager().getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
+
 		List<Task> listOfTasks = new ArrayList<Task>();
-		for (Issue issue : issues){
-			listOfTasks.add(new Task(issue.getKey(),
+		for (Issue issue : issues) {
+			int probability;
+			try {
+				probability = ((Double) issue.getCustomFieldValue(probabilityField)).intValue();
+			} catch (NullPointerException e){
+				probability = 1;
+			}
+			int consequence;
+			try {
+				consequence = ((Double) issue.getCustomFieldValue(consequenceField)).intValue();
+			} catch (NullPointerException e){
+				consequence = 1;
+			}
+					listOfTasks.add(new Task(issue.getKey(),
 					ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + issue.getKey(),
-					((Double) issue.getCustomFieldValue(probability)).intValue(),
-					((Double) issue.getCustomFieldValue(consequence)).intValue()));
+					probability,
+					consequence));
 		}
 		return listOfTasks;
 	}

@@ -53,7 +53,10 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
            return new LinkedList<Issue>();
         }
 
-        Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
+        QueryBuiler builder = new QueryBuilderImpl(customFieldManager);
+        builder.buildQuery(query);
+
+        /*Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
         while(iterator.hasNext()) {
 
@@ -70,7 +73,7 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
         builder.where().and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
                 .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
                 .and().issueType(PluginListener.RISK_ISSUE_TYPE);
-        query = builder.buildQuery();
+        query = builder.buildQuery();*/
 
 
         SearchResults searchResults;

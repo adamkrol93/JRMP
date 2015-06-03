@@ -60,7 +60,7 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
         SearchResults searchResults;
         try {
-            Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
+            /*Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
             while(iterator.hasNext()) {
 
@@ -77,7 +77,10 @@ public class ImpactProbabilityImpl implements ImpactProbability {
                     .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
                     .and().issueType(PluginListener.RISK_ISSUE_TYPE);
 
-            query = builder.buildQuery();
+            query = builder.buildQuery();*/
+
+            QueryBuiler builder = new QueryBuilderImpl(customFieldManager);
+            builder.buildQuery(query);
 
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
