@@ -6,5 +6,5 @@ import com.atlassian.query.Query;
  * Created by jonatan on 03.06.15.
  */
 public interface QueryBuiler {
-    void buildQuery(Query query);
+    Query buildQuery(Query query);
 }

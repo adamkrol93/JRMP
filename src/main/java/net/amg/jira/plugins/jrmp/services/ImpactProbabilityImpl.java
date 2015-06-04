@@ -80,7 +80,7 @@ public class ImpactProbabilityImpl implements ImpactProbability {
             query = builder.buildQuery();*/
 
             QueryBuiler builder = new QueryBuilderImpl(customFieldManager);
-            builder.buildQuery(query);
+            query = builder.buildQuery(query);
 
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {

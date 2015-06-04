@@ -54,7 +54,7 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
         }
 
         QueryBuiler builder = new QueryBuilderImpl(customFieldManager);
-        builder.buildQuery(query);
+        query = builder.buildQuery(query);
 
         /*Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
@@ -74,7 +74,6 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
                 .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
                 .and().issueType(PluginListener.RISK_ISSUE_TYPE);
         query = builder.buildQuery();*/
-
 
         SearchResults searchResults;
         try {

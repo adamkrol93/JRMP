@@ -4,11 +4,9 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
-import com.atlassian.query.clause.ClauseVisitor;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by jonatan on 03.06.15.
@@ -22,7 +20,7 @@ public class QueryBuilderImpl implements QueryBuiler {
     }
 
     @Override
-    public void buildQuery(Query query) {
+    public Query buildQuery(Query query) {
         Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
         while(iterator.hasNext()) {
@@ -41,6 +39,6 @@ public class QueryBuilderImpl implements QueryBuiler {
                 .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
                 .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
 
-        query = builder.buildQuery();
+        return builder.buildQuery();
     }
 }
