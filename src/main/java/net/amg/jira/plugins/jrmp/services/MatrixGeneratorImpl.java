@@ -181,12 +181,18 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			int probability;
 			try {
 				probability = ((Double) issue.getCustomFieldValue(probabilityField)).intValue();
+				if(probability > ImpactProbabilityImpl.MAX_PROBABILITY){
+					probability = ImpactProbabilityImpl.MAX_PROBABILITY;
+				}
 			} catch (NullPointerException e){
 				probability = 1;
 			}
 			int consequence;
 			try {
 				consequence = ((Double) issue.getCustomFieldValue(consequenceField)).intValue();
+				if(consequence > ImpactProbabilityImpl.MAX_PROBABILITY){
+					consequence = ImpactProbabilityImpl.MAX_PROBABILITY;
+				}
 			} catch (NullPointerException e){
 				consequence = 1;
 			}

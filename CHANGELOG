@@ -25,3 +25,4 @@
 - PIP-162 Poprawa generowonych kolorów komórek macierzy
 - PIP-158 Uwzględnianie ryzyk z pustym probability/consequence
 - PIP-160 Dodanie nowych kluczy dotyczących opisujących brak risk-issue
+- PIP-167 Poprawa usługi ImpactProbabilityImpl, zwracane maksimum z przedziału [3,10]
