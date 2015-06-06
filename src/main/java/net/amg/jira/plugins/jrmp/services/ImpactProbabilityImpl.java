@@ -39,6 +39,7 @@ import java.util.Iterator;
 public class ImpactProbabilityImpl implements ImpactProbability {
 
     public static final int MAX_PROBABILITY = 10;
+    public static final int MIN_PROBABILITY = 3;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private SearchService searchService;
@@ -55,7 +56,7 @@ public class ImpactProbabilityImpl implements ImpactProbability {
     {
         if(query == null)
         {
-            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
+            return MIN_PROBABILITY;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
         SearchResults searchResults;
@@ -84,39 +85,48 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
-           logger.info("Something went wrong while searching for issues",e);
-            return 3;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
+            logger.info("Something went wrong while searching for issues",e);
+            return MIN_PROBABILITY;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
-        Double maxSize = 0.0;
+        int maxSize = MIN_PROBABILITY;
 
         for(Issue issue : searchResults.getIssues())
         {
             if(issue.getIssueTypeObject().equals(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, PluginListener.RISK_ISSUE_TYPE)))
             {
+                int riskConsequence = 0;
+                int riskProbability = 0;
+
                 try {
-                    Double riskConsequence = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF));
-                    Double riskProbability = (Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF));
-                    if (riskConsequence > maxSize) {
-                        maxSize = riskConsequence;
-                    }
-                    if (riskProbability > maxSize) {
-                        maxSize = riskProbability;
-                    }
-                    if(maxSize > MAX_PROBABILITY)
-                    {
-                        return MAX_PROBABILITY;
-                    }
+                    riskProbability = ((Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF))).intValue();
                 }catch (Exception e)
                 {
                     logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
+                }
+
+                try {
+                    riskConsequence = ((Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF))).intValue();
+                }catch (Exception e)
+                {
+                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
+                }
+
+                if (riskConsequence > maxSize) {
+                    maxSize = riskConsequence;
+                }
+                if (riskProbability > maxSize) {
+                    maxSize = riskProbability;
+                }
+                if(maxSize > MAX_PROBABILITY)
+                {
+                    return MAX_PROBABILITY;
                 }
             }
 
         }
 
-
-        return maxSize.intValue();
+        return maxSize;
     }
 
     public void setSearchService(SearchService searchService) {
