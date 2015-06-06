@@ -56,11 +56,11 @@
                         #set ($cellCounter = $cellCounter + 1)
                         #if($cellCounter >= 2 && $cell.overload > 0)
                             #if($cell.overload == 1)
-                                +$cell.overload $overloadCommentSingle
+                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentSingle</a>
                                 #elseif ($cell.overload < 5)
-                                    +$cell.overload $overloadCommentMulti
+                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti</a>
                             #else
-                                +$cell.overload $overloadCommentMulti_2
+                            <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti_2</a>
                             #end
                             #break($foreach)
                         #end

@@ -14,6 +14,8 @@
  */
 package net.amg.jira.plugins.jrmp.velocity;
 
+import com.atlassian.jira.component.ComponentAccessor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class Cell {
 	
 	public void addTask(Task task){
 		tasks.add(task);
-		if (tasks.size()>2){
+		if (tasks.size()>2) {
 			overload++;
 		}
 	}
@@ -61,4 +63,20 @@ public class Cell {
 	public void setOverload(int overload) {
 		this.overload = overload;
 	}
+
+	public String getJqlQuery() {
+		String comma = "%2C";
+		String jqlQuery = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + tasks.get(0).getName() + "?jql=issuekey in (";
+		for(Task task : tasks){
+			jqlQuery+=task.getName() + comma;
+			if(jqlQuery.length()>1999){
+				jqlQuery = jqlQuery.substring(0,jqlQuery.length()-(task.getName().length()));
+				break;
+			}
+		}
+		jqlQuery = jqlQuery.substring(0,jqlQuery.length()-comma.length());
+		jqlQuery += ")";
+		return jqlQuery;
+	}
+
 }
