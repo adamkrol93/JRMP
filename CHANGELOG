@@ -25,3 +25,4 @@
 - PIP-162 Poprawa generowonych kolorów komórek macierzy
 - PIP-158 Uwzględnianie ryzyk z pustym probability/consequence
 - PIP-167 Poprawa usługi ImpactProbabilityImpl, zwracane maksimum z przedziału [3,10]
+- PIP-175 Link do listy zadań gdy ich ilość przekracza rozmiar komórki
