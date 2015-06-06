@@ -24,3 +24,4 @@
 - PIP-160 Dodanie polskich znaków przy pomocy native to ascii
 - PIP-162 Poprawa generowonych kolorów komórek macierzy
 - PIP-158 Uwzględnianie ryzyk z pustym probability/consequence
+- PIP-160 Dodanie nowych kluczy dotyczących opisujących brak risk-issue

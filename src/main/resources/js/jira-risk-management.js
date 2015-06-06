@@ -107,11 +107,12 @@ AMG.jrmp.init = function (args) {
                     var gadget = this;
                     console.log(args);
                     var matrix=args.matrix;
-                    if(!matrix){
-                     gadget.getView().html(gadget.getMsg("risk.management.gadget.matrix.error.empty_matrix"));
+                    gadget.getView().html(matrix);
+                    /*if(!matrix){
+
                     }else{
                         gadget.getView().html(matrix);
-                    }
+                    }*/
                     //gadget.getView().html("<p>"+matrix+"</p>");
 
                 },

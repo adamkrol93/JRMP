@@ -1,3 +1,9 @@
+<!DOCTYPE messagebundle [
+        <!ELEMENT messagebundle (msg)*>
+        <!ELEMENT msg (#PCDATA)>
+        <!ATTLIST msg
+                name CDATA #REQUIRED>
+        ]>
 <messagebundle>
     <msg name="risk.management.gadget.title">JIRA Zarządzanie Ryzykiem Gadget</msg>
     <msg name="risk.management.gadget.description">Gadżet wyświetla macierz ryzyk występujących w projekcie</msg>
@@ -47,6 +53,6 @@
     <msg name="gadget.common.error.400">Formularz zawiera błędy</msg>
     <!--MatrixGenerator-->
     <msg name="risk.management.gadget.matrix.error.wrong_size">Zły rozmiar macierzy</msg>
-    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć rzadnego zadania!</msg>
+    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć żadnego zadania!</msg>
     <msg name="risk.management.gadget.matrix.error.empty_matrix">Brak macierzy do wygenerowania</msg>
 </messagebundle>

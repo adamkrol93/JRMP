@@ -115,7 +115,8 @@ public class JRMPRiskManagementController {
 
         //String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
         if(filter == null || filter.isEmpty()){
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.ok(i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues"), MediaType.TEXT_HTML).build();
+            //return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         ProjectOrFilter projectOrFilter = new ProjectOrFilter(request.getFilter());
@@ -124,8 +125,8 @@ public class JRMPRiskManagementController {
             return Response.ok(matrixGenerator.generateMatrix(projectOrFilter), MediaType.TEXT_HTML).build();
         } catch(Exception e){
             e.printStackTrace();
-            return Response.ok("", MediaType.TEXT_HTML).build();
-            //return Response.status(Response.Status.BAD_REQUEST).build();
+            //return Response.ok(i18nResolver.getText("risk.management.gadget.matrix.error.empty_matrix"), MediaType.TEXT_HTML).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
