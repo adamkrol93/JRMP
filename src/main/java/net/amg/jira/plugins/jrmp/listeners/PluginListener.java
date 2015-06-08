@@ -125,7 +125,7 @@ public class PluginListener implements LifecycleAware  {
                     FieldScreenTab firstTab = defaultScreen.getTab(0);
                     firstTab.addFieldScreenLayoutItem(riskConsequenceCustomField.getId());
                 }
-                for(int i = 1; i < 11; i++)
+                for(int i = 1; i < 6; i++)
                 {
                     addOptionToCustomField(riskConsequenceCustomField,String.valueOf(i),optionsManager);
                 }
@@ -140,7 +140,7 @@ public class PluginListener implements LifecycleAware  {
                     FieldScreenTab firstTab = defaultScreen.getTab(0);
                     firstTab.addFieldScreenLayoutItem(riskProbabilityCustomField.getId());
                 }
-                for(int i = 1; i < 11; i++)
+                for(int i = 1; i < 6; i++)
                 {
                     addOptionToCustomField(riskProbabilityCustomField,String.valueOf(i),optionsManager);
                 }
