@@ -12,13 +12,13 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package net.amg.jira.plugins.jrmp.rest;
+package net.amg.jira.plugins.jrmp.rest.model;
 
 /**
  * @author Adam Król
  */
 public enum GadgetFieldEnum {
-    FILTER("Filter"),DATE("Date"), TITLE("Title"), REFRESH("refresh");
+    FILTER("Filter"),DATE("Date"), TITLE("Title"), REFRESH("refresh"),TEMPLATE("template");
 
     private String fieldName;
 

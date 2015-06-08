@@ -19,6 +19,7 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
+import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldEnum;
 import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -66,14 +67,6 @@ public class JRMPRiskManagementController {
         {
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
         }else {
-            /*String type = filter.split("-")[0];
-            if ("filter".equals(type)) {
-                query = getQueryFilter(filter.split("-")[1]);
-            }
-            if("project".equals(type))
-            {
-                query = getQueryProject(filter.split("-")[1]);
-            }*/
 
             ProjectOrFilter projectOrFilter = new ProjectOrFilter(filter);
 
@@ -112,20 +105,19 @@ public class JRMPRiskManagementController {
     public Response getMatrix(MatrixRequest request) {
 
         String filter = request.getFilter();
-
-        //String refreshRate = request.getParameter(GadgetFieldEnum.REFRESH.toString());
-        if(filter == null || filter.isEmpty()){
+        String title = request.getTitle();
+        String template = request.getTemplate();
+        String date = request.getDate();
+        if(filter == null || filter.isEmpty() || template == null || template.isEmpty() || date == null || date.isEmpty()){
             return Response.ok(i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues"), MediaType.TEXT_HTML).build();
-            //return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
         ProjectOrFilter projectOrFilter = new ProjectOrFilter(request.getFilter());
 
         try {
-            return Response.ok(matrixGenerator.generateMatrix(projectOrFilter), MediaType.TEXT_HTML).build();
+            return Response.ok(matrixGenerator.generateMatrix(projectOrFilter,title,template), MediaType.TEXT_HTML).build();
         } catch(Exception e){
-            e.printStackTrace();
-            //return Response.ok(i18nResolver.getText("risk.management.gadget.matrix.error.empty_matrix"), MediaType.TEXT_HTML).build();
+            logger.error("The Matrix couldnt be generated bacause of: " + e.getMessage(),e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
@@ -146,5 +138,29 @@ public class JRMPRiskManagementController {
         this.authenticationContext = authenticationContext;
     }
 
+
+    @GET
+    public Response emptyGETResponse()
+    {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @POST
+    public Response emptyPOSTResponse()
+    {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @PUT
+    public Response emptyPUTResponse()
+    {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    @DELETE
+    public Response emptyDELETEResponse()
+    {
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
 }

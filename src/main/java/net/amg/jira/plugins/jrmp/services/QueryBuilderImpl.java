@@ -25,7 +25,7 @@ import java.util.Iterator;
 /**
  * Created by jonatan on 03.06.15.
  */
-public class QueryBuilderImpl implements QueryBuiler {
+public class QueryBuilderImpl implements QueryBuilder {
 
     private CustomFieldManager customFieldManager;
 

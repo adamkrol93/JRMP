@@ -10,7 +10,7 @@
     <!--Template field -->
     <msg name="risk.management.gadget.template.label">Szablon gadżetu</msg>
     <msg name="risk.management.gadget.template.description">Wybierz szablon</msg>
-    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">Macierz zarządzania ryzykiem</msg>
+    <msg name="risk.management.gadget.template.option.RiskManagementMatrix">Macierz zarządzania ryzykiem</msg>
     <!--Filter field -->
     <msg name="risk.management.gadget.filter.label">Projekt lub zapisany filtr</msg>
     <msg name="risk.management.gadget.filter.default">Szukaj</msg>

@@ -20,6 +20,7 @@
     <osgi:reference id="fieldScreenManager" interface="com.atlassian.jira.issue.fields.screen.FieldScreenManager"/>
     <osgi:reference id="constantsManager" interface="com.atlassian.jira.config.ConstantsManager"/>
     <osgi:reference id="issueTypeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager"/>
+    <osgi:reference id="webResourceUrlProvider" interface="com.atlassian.plugin.webresource.WebResourceUrlProvider"/>
 
     <osgi:service id="net.amg.jira.plugins.jrmp.listeners.PluginListener" interface="com.atlassian.sal.api.lifecycle.LifecycleAware" ref="pluginListener" />
 </beans>
