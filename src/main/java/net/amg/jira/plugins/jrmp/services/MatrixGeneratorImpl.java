@@ -180,7 +180,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		for (Issue issue : issues) {
 			int probability;
 			try {
-				probability = ((Double) issue.getCustomFieldValue(probabilityField)).intValue();
+				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
 				if(probability > ImpactProbabilityImpl.MAX_PROBABILITY){
 					probability = ImpactProbabilityImpl.MAX_PROBABILITY;
 				}
@@ -189,7 +189,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			}
 			int consequence;
 			try {
-				consequence = ((Double) issue.getCustomFieldValue(consequenceField)).intValue();
+				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
 				if(consequence > ImpactProbabilityImpl.MAX_PROBABILITY){
 					consequence = ImpactProbabilityImpl.MAX_PROBABILITY;
 				}
