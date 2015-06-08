@@ -20,17 +20,13 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.search.SearchException;
 import com.atlassian.jira.issue.search.SearchResults;
-import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
-import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.Iterator;
 
 /**
  * @author Adam Król
@@ -99,14 +95,14 @@ public class ImpactProbabilityImpl implements ImpactProbability {
                 int riskProbability = 0;
 
                 try {
-                    riskProbability = ((Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF))).intValue();
+                    riskProbability = Integer.valueOf(issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF)).toString());
                 }catch (Exception e)
                 {
                     logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
                 }
 
                 try {
-                    riskConsequence = ((Double) issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF))).intValue();
+                    riskConsequence = Integer.valueOf(issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF)).toString());
                 }catch (Exception e)
                 {
                     logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
