@@ -20,6 +20,7 @@ import com.atlassian.jira.util.MessageSet;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
 import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldEnum;
+import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -68,10 +69,9 @@ public class JRMPRiskManagementController {
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
         }else {
 
-            ProjectOrFilter projectOrFilter = new ProjectOrFilter(filter);
-
+            ProjectOrFilter projectOrFilter = new ProjectOrFilter();
+            if (projectOrFilter.initProjectOrFilter(filter)){
                 if (projectOrFilter.getQuery() != null) {
-
                     MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
                         errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
@@ -79,6 +79,11 @@ public class JRMPRiskManagementController {
                 } else {
                     errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
                 }
+            } else {
+                errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+            }
+
+
         }
 
         if(StringUtils.isBlank(relativeDate))
@@ -112,7 +117,11 @@ public class JRMPRiskManagementController {
             return Response.ok(i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues"), MediaType.TEXT_HTML).build();
         }
 
-        ProjectOrFilter projectOrFilter = new ProjectOrFilter(request.getFilter());
+        ProjectOrFilter projectOrFilter = new ProjectOrFilter();
+        if (!projectOrFilter.initProjectOrFilter(request.getFilter())){
+            logger.error("The Matrix couldnt be generated bacause of bad filter from request");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         try {
             return Response.ok(matrixGenerator.generateMatrix(projectOrFilter,title,template), MediaType.TEXT_HTML).build();

@@ -14,7 +14,7 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import net.amg.jira.plugins.jrmp.rest.ProjectOrFilter;
+import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 
 /**
  * @author Adam Król
