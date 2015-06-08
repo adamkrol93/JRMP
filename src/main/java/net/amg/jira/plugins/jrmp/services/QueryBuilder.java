@@ -19,6 +19,6 @@ import com.atlassian.query.Query;
 /**
  * Created by jonatan on 03.06.15.
  */
-public interface QueryBuiler {
+public interface QueryBuilder {
     Query buildQuery(Query query);
 }

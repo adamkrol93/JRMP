@@ -29,3 +29,4 @@
 - PIP-167 Poprawa usługi ImpactProbabilityImpl, zwracane maksimum z przedziału [3,10]
 - PIP-175 Link do listy zadań gdy ich ilość przekracza rozmiar komórki
 - PIP-161 Zmieniony typ customFieldów na listy
+- PIP-176 Ogromny refaktoring

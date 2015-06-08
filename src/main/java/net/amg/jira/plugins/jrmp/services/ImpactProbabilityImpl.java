@@ -57,31 +57,12 @@ public class ImpactProbabilityImpl implements ImpactProbability {
 
         SearchResults searchResults;
         try {
-            /*Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
-
-            while(iterator.hasNext()) {
-
-                Clause c = iterator.next();
-                if(c.getName().contains("issuetype"))
-                {
-                    query.getWhereClause().getClauses().remove(c);
-                }
-            }
-            JqlQueryBuilder builder = JqlQueryBuilder.newBuilder(query);
-
-
-            builder.where().and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
-                    .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty()
-                    .and().issueType(PluginListener.RISK_ISSUE_TYPE);
-
-            query = builder.buildQuery();*/
-
-            QueryBuiler builder = new QueryBuilderImpl(customFieldManager);
+            QueryBuilder builder = new QueryBuilderImpl(customFieldManager);
             query = builder.buildQuery(query);
 
            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
-            logger.info("Something went wrong while searching for issues",e);
+            logger.info("Something went wrong while searching for issues : " + e.getMessage(),e);
             return MIN_PROBABILITY;//Jak coś się nie powiedzie to zwracamy użytkownikowi macierz 3x3, bo takie jest minimum
         }
 
@@ -98,14 +79,14 @@ public class ImpactProbabilityImpl implements ImpactProbability {
                     riskProbability = Integer.valueOf(issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF)).toString());
                 }catch (Exception e)
                 {
-                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
+                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey() + " ex : " + e.getMessage());
                 }
 
                 try {
                     riskConsequence = Integer.valueOf(issue.getCustomFieldValue(this.customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF)).toString());
                 }catch (Exception e)
                 {
-                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey());
+                    logger.info("Failed to get Risk Consequence/Probability from issue " + issue.getKey() + " ex : " + e.getMessage());
                 }
 
                 if (riskConsequence > maxSize) {

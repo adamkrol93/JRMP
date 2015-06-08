@@ -4,7 +4,7 @@
     <!--Template field -->
     <msg name="risk.management.gadget.template.label">Gadget template</msg>
     <msg name="risk.management.gadget.template.description">Select a template</msg>
-    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">RiskManegementMatrix</msg>
+    <msg name="risk.management.gadget.template.option.RiskManagementMatrix">RiskManagementMatrix</msg>
     <!--Filter field -->
     <msg name="risk.management.gadget.filter.label">Project or saved filter</msg>
     <msg name="risk.management.gadget.filter.default">Search</msg>

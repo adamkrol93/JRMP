@@ -16,7 +16,6 @@ package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.jrmp.exceptions.NoIssuesFoundException;
 
 import java.util.List;
 
@@ -26,5 +25,5 @@ import java.util.List;
  */
 public interface JRMPSearchService {
 
-    List<Issue> getAllQualifiedIssues(Query query) throws NoIssuesFoundException;
+    List<Issue> getAllQualifiedIssues(Query query);
 }

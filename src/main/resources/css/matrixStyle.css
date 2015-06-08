@@ -1,7 +1,7 @@
 .default {
     text-align:center;
 }
-.matrix {
+div.default .matrix {
     border-collapse:collapse;
     border-spacing:0;
     font-family:Arial, sans-serif;
@@ -11,7 +11,7 @@
     margin-left: auto;
     margin-right: auto;
 }
-.matrix td {
+div.default.matrix td {
     overflow:hidden;
     font-family:Arial, sans-serif;
     font-size:14px;
@@ -20,42 +20,43 @@
     border-width:2px;
     border-color:white;
 }
-.matrix .yellow {
+div.default.matrix .yellow {
     background-color:#fff500;
     color:#000000;
     height:70px;
     width:70px;
 }
-.matrix .red {
+div.default.matrix .red {
     background-color:#ff0000;
     color:#000000;
     height:70px;
     width:70px;
 }
-.matrix .green {
+div.default.matrix .green {
     background-color:#33bb00;
     color:#000000;
     height:70px;
     width:70px;
 }
-.matrix .x {
+div.default.matrix .x {
+    font-size:12px;
     font-size:12px;
     text-align:center;
     padding:2px 0px 2px 5px;
     height:10px
 }
-.matrix .y {
+div.default.matrix .y {
     font-size:12px;
     text-align:right;
     width:5px;
     padding:2px 0px 2px 5px
 }
-.matrix .empty {
+div.default.matrix .empty {
     height: 0px;
     width: 0px;
     padding: 0px;
 }
-.ylabel {
+div.default .ylabel {
     margin-left: -50px;
     margin-right: -60px;
     -ms-transform:rotate(270deg); /* IE 9 */
@@ -63,43 +64,43 @@
     -webkit-transform:rotate(270deg); /* Safari and Chrome */
     -o-transform:rotate(270deg); /* Opera */
 }
-.xlabel {
+div.default .xlabel {
     text-align:center;
     height:5px;
     padding:2px
 }
-.matrixHeaderRow {
+div.default .matrixHeaderRow {
     font-size:13px;
     padding:1px 1px 1px 1px;
     display:inline-block;
 }
-.projectLabel {
+div.default .projectLabel {
     font-weight: bold;
     display:inline-block;
 }
-.riskDateLabel {
+div.default .riskDateLabel {
     display:inline-block;
 }
-.updatedLabel {
+div.default .updatedLabel {
     display:inline-block;
 }
-.separator {
+div.default .separator {
     font-weight:bold;
     display:inline-block;
 }
-.redTasksLabel {
+div.default .redTasksLabel {
     color:#FF0000;
     display:inline-block;
 }
-.yellowTasksLabel {
+div.default .yellowTasksLabel {
     color:#FFDD00;
     display:inline-block;
 }
-.greenTasksLabel {
+div.default .greenTasksLabel {
     color:#00BB00;
     display:inline-block;
 }
-.tasksValue {
+div.default .tasksValue {
     color:#0000FF;
     font-weight:bold;
     display:inline-block;

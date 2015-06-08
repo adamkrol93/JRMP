@@ -146,7 +146,7 @@ public class PluginListener implements LifecycleAware  {
                 }
             }
         } catch (GenericEntityException e) {
-            logger.info("Couldn't create risk Custom fields",e);
+            logger.info("Couldn't create risk Custom fields : " + e.getMessage(),e);
         } catch (NullPointerException e) {
             logger.info("Couldn't create risk Custom fields:" + e.getMessage(),e);
         }

@@ -25,13 +25,15 @@
 ##  matrix - List<net.amg.jira.plugns.jrmp.velocity.Row> - list of rows for risk matrix
 ##  consequenceLabel - String - translated label for risk consequence
 ##  probabilityLabel - String - translated label for risk probability
+##  matrixTitle - String - Matrix Title
+##  titleLabel - String - Translated Title label
+##  matrixTemplate - String - matrixTemplate
 
-<html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Risk Matrix</title>
-<link rel="stylesheet" type="text/css" href="matrixStyle.css">
-<div class="amg jrmp matrix default">
+<div class="amg jrmp matrix #if ($matrixTemplate == 'matrix')default#end">
     <div class="matrixHeaderRow">
+        #if ($matrixTitle != "")
+            <div class="projectLabeL">$titleLabel $matrixTitle </div>
+        #end
         <div class="projectLabeL">$projectLabel</div> <a href="$projectURL">$projectName</a> &nbsp&nbsp <div class="riskDateLabel"> $riskDateLabel $date</div><br>
     </div>
     <div class="matrixHeaderRow">
@@ -84,4 +86,3 @@
     </tr>
 </table>
 </div>
-</html>
