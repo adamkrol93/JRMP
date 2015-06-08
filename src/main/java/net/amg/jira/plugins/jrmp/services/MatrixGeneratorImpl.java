@@ -64,15 +64,12 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
+	public static final int MATRIX_SIZE = 5;
+
 	private I18nResolver i18nResolver;
-	private ImpactProbability impactProbability;
 	private JRMPSearchService jrmpSearchService;
     private WebResourceUrlProvider webResourceUrlProvider;
     private CustomFieldManager customFieldManager;
-
-	public void setImpactProbability(ImpactProbability impactProbability) {
-		this.impactProbability = impactProbability;
-	}
 
 	public void setJrmpSearchService(JRMPSearchService jrmpSearchService) {
 		this.jrmpSearchService = jrmpSearchService;
@@ -92,20 +89,15 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
     @Override
 	public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate){
-		int size = getMaxProbability(projectOrFilter.getQuery());
 		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery());
-
-		if (listOfIssues.isEmpty()) {
-			return i18nResolver.getText("risk.management.gadget.matrix.error.empty_list_of_issues");
-		}
 
 		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
 
 	    List<Row> listOfRows = new ArrayList<Row>();
-		for(int i = 0; i < size; i++){
+		for(int i = 0; i < MATRIX_SIZE; i++){
 			Row row = new Row();
-			for(int j = 0; j< size; j++){
-				Cell cell = new Cell((double)((size - i)), (double)(j + 1), (double)size);
+			for(int j = 0; j< MATRIX_SIZE; j++){
+				Cell cell = new Cell((double)((MATRIX_SIZE - i)), (double)(j + 1), (double)MATRIX_SIZE);
 				row.addCell(cell);
 			}
 			listOfRows.add(row);
@@ -116,8 +108,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	    int greenTasks = 0;
 
 	    for(Task task : listOfTasks){
-			listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
-			switch (listOfRows.get(size-(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
+			listOfRows.get(MATRIX_SIZE-(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
+			switch (listOfRows.get(MATRIX_SIZE-(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
 				case RED:
 					redTasks++;
 					break;
@@ -145,7 +137,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 		params.put(PROBABILITY_LABEL_STRING, i18nResolver.getText("risk.management.matrix.probability_label"));
 		params.put(CONSEQUENCE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.consequence_label"));
-		params.put(MATRIX_SIZE_STRING, size);
+		params.put(MATRIX_SIZE_STRING, MATRIX_SIZE);
 		params.put(PROJECT_NAME_STRING, title);
 		params.put(PROJECT_URL_STRING, url);
 		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.matrix.updated_label"));
@@ -158,9 +150,6 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.green_tasks_label"));
 		params.put(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.yellow_tasks_label"));
 		params.put(DATE_STRING, DATE_FORMATTER.format(new Date()));
-		params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
-		params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
-		params.put(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
 		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi"));
 		params.put(OVERLOAD_COMMENT_MULTI_2_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi_2"));
 		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_single"));
@@ -168,12 +157,13 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(MATRIX_TITLE,matrixTitle);
         params.put(MATRIX_TEMPLATE,matrixTemplate);
 		params.put(TITLE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.title_label"));
+		if(getLastUpdatedIssue(listOfIssues) != null) {
+			params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
+			params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
+			params.put(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
+		}
 		VelocityManager velocityManager = new DefaultVelocityManager();
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
-	}
-
-	private int getMaxProbability(Query query){
-		return impactProbability.getMaxProbability(query);
 	}
 
 	private List<Task> getTasksFromIssues(List<Issue> issues){
@@ -185,18 +175,12 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			int probability;
 			try {
 				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
-				if(probability > ImpactProbabilityImpl.MAX_PROBABILITY){
-					probability = ImpactProbabilityImpl.MAX_PROBABILITY;
-				}
 			} catch (NullPointerException e){
 				probability = 1;
 			}
 			int consequence;
 			try {
 				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
-				if(consequence > ImpactProbabilityImpl.MAX_PROBABILITY){
-					consequence = ImpactProbabilityImpl.MAX_PROBABILITY;
-				}
 			} catch (NullPointerException e){
 				consequence = 1;
 			}
@@ -209,6 +193,9 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	}
 
 	private Issue getLastUpdatedIssue(List<Issue> issues){
+		if (issues.isEmpty()){
+			return null;
+		}
 		Issue lastUpdated = issues.get(0);
 		for(Issue issue : issues){
 			if (issue.getUpdated().getTime() > lastUpdated.getUpdated().getTime()){

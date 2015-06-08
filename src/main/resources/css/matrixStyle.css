@@ -72,7 +72,6 @@ div.default .xlabel {
 div.default .matrixHeaderRow {
     font-size:13px;
     padding:1px 1px 1px 1px;
-    display:inline-block;
 }
 div.default .projectLabel {
     font-weight: bold;

@@ -37,7 +37,9 @@
         <div class="projectLabeL">$projectLabel</div> <a href="$projectURL">$projectName</a> &nbsp&nbsp <div class="riskDateLabel"> $riskDateLabel $date</div><br>
     </div>
     <div class="matrixHeaderRow">
+        #if ($redTasksValue > 0 || $greenTasksValue > 0 || $yellowTasksValue > 0)
         <div class="updatedLabel">$updatedLabel $updateDate (<a href="$updatedTaskUrl">$updatedTask</a>)</div> <div class="separator">|</div>
+        #end
         <div class="redTasksLabel">$redTasksLabel</div> <div class="tasksValue">$redTasksValue</div> <div class="separator">|</div>
         <div class="yellowTasksLabel">$yellowTasksLabel</div> <div class="tasksValue">$yellowTasksValue</div> <div class="separator">|</div>
         <div class="greenTasksLabel">$greenTasksLabel</div> <div class="tasksValue">$greenTasksValue</div>
