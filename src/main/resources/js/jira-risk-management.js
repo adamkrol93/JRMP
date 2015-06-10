@@ -108,7 +108,6 @@ AMG.jrmp.init = function (args) {
                 onResizeAdjustHeight: true,
                 template: function (args) {
                     var gadget = this;
-                    console.log(args);
                     var matrix=args.matrix;
                     gadget.getView().html(matrix);
 
@@ -125,7 +124,8 @@ AMG.jrmp.init = function (args) {
                                 filter: this.getPref("Filter"),
                                 template: this.getPref("Template"),
                                 title: this.getPref("Title"),
-                                date: this.getPref("Date")
+                                date: this.getPref("Date"),
+                                refreshRate: this.getPref("refresh")
                             })
 
                         };

@@ -26,6 +26,8 @@ import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
 import net.amg.jira.plugins.jrmp.velocity.Row;
 import net.amg.jira.plugins.jrmp.velocity.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -34,6 +36,8 @@ import java.util.*;
 
 @Service
 public class MatrixGeneratorImpl implements MatrixGenerator{
+
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public static final String MATRIX_SIZE_STRING = "matrixSize";
 	public static final String PROJECT_NAME_STRING = "projectName";
@@ -88,6 +92,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
     @Override
 	public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate){
+		logger.info("generateMatrix: Method start");
 		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery());
 
 		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
@@ -162,6 +167,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			params.put(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
 		}
 		VelocityManager velocityManager = new DefaultVelocityManager();
+
+		logger.info("generateMatrix: Everything went okay. Returnung velocity Template.");
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
 	}
 
@@ -174,12 +181,20 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 			int probability;
 			try {
 				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
+				if(probability > MATRIX_SIZE)
+				{
+					probability = MATRIX_SIZE;
+				}
 			} catch (NullPointerException e){
 				probability = 1;
 			}
 			int consequence;
 			try {
 				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
+				if(consequence >MATRIX_SIZE )
+				{
+					consequence = MATRIX_SIZE;
+				}
 			} catch (NullPointerException e){
 				consequence = 1;
 			}
