@@ -15,10 +15,11 @@
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.query.Query;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
 
 /**
  * Created by jonatan on 03.06.15.
  */
 public interface QueryBuilder {
-    Query buildQuery(Query query);
+    Query buildQuery(Query query,DateModel dateModel);
 }
