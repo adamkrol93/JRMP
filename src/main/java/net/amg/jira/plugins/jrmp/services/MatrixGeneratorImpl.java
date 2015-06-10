@@ -162,10 +162,11 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(MATRIX_TITLE,matrixTitle);
         params.put(MATRIX_TEMPLATE,matrixTemplate);
 		params.put(TITLE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.title_label"));
-		if(getLastUpdatedIssue(listOfIssues) != null) {
-			params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(getLastUpdatedIssue(listOfIssues).getUpdated().getTime())));
-			params.put(UPDATED_TASK_STRING, getLastUpdatedIssue(listOfIssues).getKey());
-			params.put(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + getLastUpdatedIssue(listOfIssues).getKey());
+		Issue lastUpdatedIssue = getLastUpdatedIssue(listOfIssues);
+		if(lastUpdatedIssue != null) {
+			params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(lastUpdatedIssue.getUpdated().getTime())));
+			params.put(UPDATED_TASK_STRING, lastUpdatedIssue.getKey());
+			params.put(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + lastUpdatedIssue.getKey());
 		}
 		VelocityManager velocityManager = new DefaultVelocityManager();
 
