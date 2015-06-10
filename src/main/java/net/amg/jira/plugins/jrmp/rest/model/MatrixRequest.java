@@ -1,10 +1,11 @@
-package net.amg.jira.plugins.jrmp.rest;
+package net.amg.jira.plugins.jrmp.rest.model;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.sal.api.message.I18nResolver;
 import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.rest.model.ErrorCollection;
 import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldEnum;
 import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 import org.apache.commons.lang3.StringUtils;
