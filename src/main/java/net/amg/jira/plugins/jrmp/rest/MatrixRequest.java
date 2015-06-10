@@ -4,6 +4,7 @@ import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.sal.api.message.I18nResolver;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
 import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldEnum;
 import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -25,16 +26,16 @@ public class MatrixRequest {
 
     ProjectOrFilter projectOrFilter;
 
-    public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService)
-    {
+    DateModel dateModel;
+
+    public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService) {
         ErrorCollection errorCollection = new ErrorCollection();
 
-        if(StringUtils.isBlank(filter))
-        {
-            errorCollection.addError(GadgetFieldEnum.FILTER.toString(),i18nResolver.getText("risk.management.validation.error.empty_filter"));
-        }else {
-
-            if (projectOrFilter.initProjectOrFilter(filter)){
+        if (StringUtils.isBlank(filter)) {
+            errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.empty_filter"));
+        } else {
+            projectOrFilter = new ProjectOrFilter();
+            if (projectOrFilter.initProjectOrFilter(filter)) {
                 if (projectOrFilter.getQuery() != null) {
                     MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
@@ -50,13 +51,19 @@ public class MatrixRequest {
 
         }
 
-        if(StringUtils.isBlank(date))
-        {
+        if (StringUtils.isBlank(date)) {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.empty_date"));
         }
 
-        if(StringUtils.isBlank(refreshRate))
-        {
+        try {
+            dateModel = DateModel.values()[Integer.valueOf(date)];
+        } catch (IndexOutOfBoundsException e) {
+            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.wrong_date"));
+        } catch (NumberFormatException e) {
+            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.wrong_date"));
+        }
+
+        if (StringUtils.isBlank(refreshRate)) {
             errorCollection.addError(GadgetFieldEnum.REFRESH.toString(), i18nResolver.getText("risk.management.validation.error.empty_refresh"));
         }
 
@@ -109,5 +116,13 @@ public class MatrixRequest {
 
     public void setRefreshRate(String refreshRate) {
         this.refreshRate = refreshRate;
+    }
+
+    public DateModel getDateModel() {
+        return dateModel;
+    }
+
+    public void setDateModel(DateModel dateModel) {
+        this.dateModel = dateModel;
     }
 }

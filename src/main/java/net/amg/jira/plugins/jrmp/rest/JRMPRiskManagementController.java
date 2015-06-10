@@ -96,7 +96,7 @@ public class JRMPRiskManagementController {
             try {
                 return Response.ok(matrixGenerator.generateMatrix(matrixRequest.getProjectOrFilter(),
                         matrixRequest.getTitle(),
-                        matrixRequest.getTemplate()),
+                        matrixRequest.getTemplate(),matrixRequest.getDateModel()),
                         MediaType.TEXT_HTML).build();
             } catch(Exception e){
                 logger.error("getMatrix: The Matrix couldn't be generated because of: " + e.getMessage(),e);

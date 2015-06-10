@@ -22,6 +22,7 @@ import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
 import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
 import net.amg.jira.plugins.jrmp.velocity.Row;
@@ -91,9 +92,9 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
     }
 
     @Override
-	public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate){
+	public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel){
 		logger.info("generateMatrix: Method start");
-		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery());
+		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(),dateModel);
 
 		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
 

@@ -22,6 +22,7 @@ import com.atlassian.jira.issue.search.SearchResults;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,18 +40,18 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
     private SearchService searchService;
     private JiraAuthenticationContext authenticationContext;
     private CustomFieldManager customFieldManager;
+    private QueryBuilder builder;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public List<Issue> getAllQualifiedIssues(Query query) {
+    public List<Issue> getAllQualifiedIssues(Query query, DateModel dateModel) {
         if(query == null)
         {
            return Collections.emptyList();
         }
 
-        QueryBuilder builder = new QueryBuilderImpl(customFieldManager);
-        query = builder.buildQuery(query);
+        query = builder.buildQuery(query,dateModel);
 
         SearchResults searchResults;
         try {
@@ -78,5 +79,9 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
 
     public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
+    }
+
+    public void setBuilder(QueryBuilder builder) {
+        this.builder = builder;
     }
 }

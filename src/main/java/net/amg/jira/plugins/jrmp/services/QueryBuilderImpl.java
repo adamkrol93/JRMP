@@ -19,28 +19,27 @@ import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 
 /**
  * Created by jonatan on 03.06.15.
  */
+@Service
 public class QueryBuilderImpl implements QueryBuilder {
 
     private CustomFieldManager customFieldManager;
 
-    public QueryBuilderImpl(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
-
     @Override
-    public Query buildQuery(Query query) {
+    public Query buildQuery(Query query,DateModel dateModel) {
         Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
         while(iterator.hasNext()) {
 
             Clause c = iterator.next();
-            if(c.getName().contains("issuetype") || c.getName().contains(PluginListener.RISK_CONSEQUENCE_TEXT_CF) || c.getName().contains(PluginListener.RISK_PROBABILITY_TEXT_CF))
+            if(c.getName().contains("created") || c.getName().contains("issuetype") || c.getName().contains(PluginListener.RISK_CONSEQUENCE_TEXT_CF) || c.getName().contains(PluginListener.RISK_PROBABILITY_TEXT_CF))
             {
                 query.getWhereClause().getClauses().remove(c);
             }
@@ -53,6 +52,14 @@ public class QueryBuilderImpl implements QueryBuilder {
                 .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
                 .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
 
+        if(!dateModel.equals(DateModel.TODAY))
+        {
+            builder.where().and().created().ltEq(dateModel.getBeforeValue());
+        }
         return builder.buildQuery();
+    }
+
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+        this.customFieldManager = customFieldManager;
     }
 }

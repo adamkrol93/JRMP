@@ -31,3 +31,4 @@
 - PIP-161 Zmieniony typ customFieldów na listy
 - PIP-176 Ogromny refaktoring
 - PIP-181 Wprowadzona metoda do walidacji. Poprawione logowanie, literówki oraz kilka mniejszych błędów
+- PIP-180 Wprowadzona obsługa Relatywnej daty. Stworzyłem Enuma.

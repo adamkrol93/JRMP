@@ -27,6 +27,7 @@
     <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">Rok temu</msg>
     <msg name="risk.management.validation.error.empty_filter">Nie wybrano filtru</msg>
     <msg name="risk.management.validation.error.empty_date">Data nie może być pusta</msg>
+    <msg name="risk.management.validation.error.wrong_date">Data ma złą wartość</msg>
     <msg name="risk.management.validation.error.empty_title">Tytuł nie może być pusty</msg>
     <msg name="risk.management.validation.error.empty_refresh">Interwał odświeżania nie może być pusty</msg>
     <msg name="risk.management.validation.error.filter_is_incorrect">Wybrany filtr jest nie poprawny</msg>
