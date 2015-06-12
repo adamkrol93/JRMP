@@ -13,7 +13,7 @@ AMG.jrmp.init = function (args) {
                         {
                             userpref: "Filter",
                             type: "hidden",
-                            value: gadgets.util.unescapeString(gadget.getPref("Filter"))
+                            value: gadgets.util.unescapeString(this.getPref("Filter"))
                         };
                     }
                     else{
@@ -35,13 +35,15 @@ AMG.jrmp.init = function (args) {
                                 type: "select",
                                 options:[
                                     {
-                                       label: this.getMsg("risk.management.gadget.template.option.RiskManegementMatrix")
+                                       label: this.getMsg("risk.management.gadget.template.option.RiskManagementMatrix"),
+                                        value: "matrix"
                                     }
                                 ]
                             },
                             jQuery.extend(true, {}, searchParam, {
                                 label: gadget.getMsg("risk.management.gadget.filter.label"),
-                                description: gadget.getMsg("risk.management.gadget.filter.default")
+                                description: gadget.getMsg("risk.management.gadget.filter.default"),
+                                value: this.getPref("Filter")
                             }),
                             {
                                 userpref: "Date",
@@ -49,38 +51,39 @@ AMG.jrmp.init = function (args) {
                                 label: this.getMsg("risk.management.gadget.relativeDate.label"),
                                 description: this.getMsg("risk.management.gadget.relativeDate.description"),
                                 type: "select",
+                                selected: this.getPref("Date"),
                                 options:[
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.today"),
-                                        value: "1"
+                                        value: "0"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.yesterday"),
-                                        value: "2"
+                                        value: "1"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneWeekAgo"),
-                                        value: "3"
+                                        value: "2"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.twoWeeksAgo"),
-                                        value: "4"
+                                        value: "3"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneMonthAgo"),
-                                        value: "5"
+                                        value: "4"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.threeMonthsAgo"),
-                                        value: "6"
+                                        value: "5"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.sixMonthsAgo"),
-                                        value: "7"
+                                        value: "6"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneYearAgo"),
-                                        value: "8"
+                                        value: "7"
                                     }
                                 ]
                             },
@@ -105,14 +108,8 @@ AMG.jrmp.init = function (args) {
                 onResizeAdjustHeight: true,
                 template: function (args) {
                     var gadget = this;
-                    console.log(args);
                     var matrix=args.matrix;
-                    if(!matrix){
-                     gadget.getView().html(gadget.getMsg("risk.management.gadget.matrix.error.empty_matrix"));
-                    }else{
-                        gadget.getView().html(matrix);
-                    }
-                    //gadget.getView().html("<p>"+matrix+"</p>");
+                    gadget.getView().html(matrix);
 
                 },
                 args: [{
@@ -124,7 +121,11 @@ AMG.jrmp.init = function (args) {
                             contentType: "application/json",
                             dataType: "html",
                             data: JSON.stringify({
-                                filter: this.getPref("Filter")
+                                filter: this.getPref("Filter"),
+                                template: this.getPref("Template"),
+                                title: this.getPref("Title"),
+                                date: this.getPref("Date"),
+                                refreshRate: this.getPref("refresh")
                             })
 
                         };

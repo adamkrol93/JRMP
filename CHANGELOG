@@ -21,3 +21,15 @@
 - PIP-131 Refactoring backend projectOrFilter, poprawiona translacja, dodane brakujące pola w macierzy
 - PIP-151 Gadget wchodzi w tryb zmaksymalizowany
 - PIP-153 Refactoring velocity template
+- PIP-160 Dodanie polskich znaków przy pomocy native to ascii
+- PIP-162 Poprawa generowonych kolorów komórek macierzy
+- PIP-158 Uwzględnianie ryzyk z pustym probability/consequence
+- PIP-160 Dodanie nowych kluczy dotyczących opisujących brak risk-issue
+- PIP-167 Poprawa usługi ImpactProbabilityImpl, zwracane maksimum z przedziału [3,10]
+- PIP-167 Poprawa usługi ImpactProbabilityImpl, zwracane maksimum z przedziału [3,10]
+- PIP-175 Link do listy zadań gdy ich ilość przekracza rozmiar komórki
+- PIP-161 Zmieniony typ customFieldów na listy
+- PIP-176 Ogromny refaktoring
+- PIP-181 Wprowadzona metoda do walidacji. Poprawione logowanie, literówki oraz kilka mniejszych błędów
+- PIP-180 Wprowadzona obsługa Relatywnej daty. Stworzyłem Enuma.
+- PIP-180 Mały refaktoring

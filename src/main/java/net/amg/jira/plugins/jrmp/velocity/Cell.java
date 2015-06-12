@@ -14,6 +14,8 @@
  */
 package net.amg.jira.plugins.jrmp.velocity;
 
+import com.atlassian.jira.component.ComponentAccessor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +24,16 @@ public class Cell {
 	private Colour colour;
 	private int overload;
 
-	public Cell(double riskRate){
+	public Cell(double probability, double consequence, double matrixSize){
 		this.tasks = new ArrayList<Task>();
-		if (riskRate <= 0.25){
-			colour = Colour.GREEN;
-		} else if (riskRate <= 0.75){
+		double length = Math.sqrt(((matrixSize - (probability - 0.5)) * (matrixSize - (probability - 0.5)))+((matrixSize - (consequence - 0.5)) * (matrixSize - (consequence - 0.5))));
+		double lengthToExtreme = Math.sqrt(((matrixSize-0.5) * (matrixSize-0.5)) + (0.5 * 0.5));
+		if (0.6 * matrixSize >= length){
+			colour = Colour.RED;
+		} else if (lengthToExtreme >= length){
 			colour = Colour.YELLOW;
 		} else {
-			colour = Colour.RED;
+			colour = Colour.GREEN;
 		}
 	}
 	
@@ -39,7 +43,7 @@ public class Cell {
 	
 	public void addTask(Task task){
 		tasks.add(task);
-		if (tasks.size()>2){
+		if (tasks.size()>2) {
 			overload++;
 		}
 	}
@@ -59,4 +63,20 @@ public class Cell {
 	public void setOverload(int overload) {
 		this.overload = overload;
 	}
+
+	public String getJqlQuery() {
+		String comma = "%2C";
+		String jqlQuery = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + tasks.get(0).getName() + "?jql=issuekey in (";
+		for(Task task : tasks){
+			jqlQuery+=task.getName() + comma;
+			if(jqlQuery.length()>1999){
+				jqlQuery = jqlQuery.substring(0,jqlQuery.length()-(task.getName().length()));
+				break;
+			}
+		}
+		jqlQuery = jqlQuery.substring(0,jqlQuery.length()-comma.length());
+		jqlQuery += ")";
+		return jqlQuery;
+	}
+
 }

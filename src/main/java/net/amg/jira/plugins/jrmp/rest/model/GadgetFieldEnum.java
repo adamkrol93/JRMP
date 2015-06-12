@@ -12,14 +12,24 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package net.amg.jira.plugins.jrmp.services;
-
-import com.atlassian.query.Query;
+package net.amg.jira.plugins.jrmp.rest.model;
 
 /**
  * @author Adam Król
  */
-public interface ImpactProbability {
+public enum GadgetFieldEnum {
+    FILTER("Filter"),DATE("Date"), TITLE("Title"), REFRESH("refresh"),TEMPLATE("template");
 
-    int getMaxProbability(Query query);
+    private String fieldName;
+
+    GadgetFieldEnum(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return fieldName;
+    }
 }

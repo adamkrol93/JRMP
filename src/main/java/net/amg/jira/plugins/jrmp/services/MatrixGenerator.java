@@ -14,11 +14,12 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import net.amg.jira.plugins.jrmp.rest.ProjectOrFilter;
+import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
 
 /**
  * @author Adam Król
  */
 public interface MatrixGenerator {
-    String generateMatrix(ProjectOrFilter projectOrFilter);
+ String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel);
 }

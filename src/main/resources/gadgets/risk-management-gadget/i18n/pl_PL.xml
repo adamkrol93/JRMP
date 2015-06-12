@@ -1,10 +1,16 @@
+<!DOCTYPE messagebundle [
+        <!ELEMENT messagebundle (msg)*>
+        <!ELEMENT msg (#PCDATA)>
+        <!ATTLIST msg
+                name CDATA #REQUIRED>
+        ]>
 <messagebundle>
     <msg name="risk.management.gadget.title">JIRA Zarządzanie Ryzykiem Gadget</msg>
     <msg name="risk.management.gadget.description">Gadżet wyświetla macierz ryzyk występujących w projekcie</msg>
     <!--Template field -->
     <msg name="risk.management.gadget.template.label">Szablon gadżetu</msg>
     <msg name="risk.management.gadget.template.description">Wybierz szablon</msg>
-    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">Macierz zarządzania ryzykiem</msg>
+    <msg name="risk.management.gadget.template.option.RiskManagementMatrix">Macierz zarządzania ryzykiem</msg>
     <!--Filter field -->
     <msg name="risk.management.gadget.filter.label">Projekt lub zapisany filtr</msg>
     <msg name="risk.management.gadget.filter.default">Szukaj</msg>
@@ -21,6 +27,7 @@
     <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">Rok temu</msg>
     <msg name="risk.management.validation.error.empty_filter">Nie wybrano filtru</msg>
     <msg name="risk.management.validation.error.empty_date">Data nie może być pusta</msg>
+    <msg name="risk.management.validation.error.wrong_date">Data ma złą wartość</msg>
     <msg name="risk.management.validation.error.empty_title">Tytuł nie może być pusty</msg>
     <msg name="risk.management.validation.error.empty_refresh">Interwał odświeżania nie może być pusty</msg>
     <msg name="risk.management.validation.error.filter_is_incorrect">Wybrany filtr jest nie poprawny</msg>
@@ -47,6 +54,6 @@
     <msg name="gadget.common.error.400">Formularz zawiera błędy</msg>
     <!--MatrixGenerator-->
     <msg name="risk.management.gadget.matrix.error.wrong_size">Zły rozmiar macierzy</msg>
-    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć rzadnego zadania!</msg>
+    <msg name="risk.management.gadget.matrix.error.empty_list_of_issues">Nie można znaleźć żadnego zadania!</msg>
     <msg name="risk.management.gadget.matrix.error.empty_matrix">Brak macierzy do wygenerowania</msg>
 </messagebundle>

@@ -12,7 +12,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package net.amg.jira.plugins.jrmp.rest;
+package net.amg.jira.plugins.jrmp.rest.model;
 
 import com.atlassian.jira.rest.api.util.ValidationError;
 

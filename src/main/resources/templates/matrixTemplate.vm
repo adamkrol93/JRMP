@@ -25,17 +25,21 @@
 ##  matrix - List<net.amg.jira.plugns.jrmp.velocity.Row> - list of rows for risk matrix
 ##  consequenceLabel - String - translated label for risk consequence
 ##  probabilityLabel - String - translated label for risk probability
+##  matrixTitle - String - Matrix Title
+##  titleLabel - String - Translated Title label
+##  matrixTemplate - String - matrixTemplate
 
-<html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Risk Matrix</title>
-<link rel="stylesheet" type="text/css" href="matrixStyle.css">
-<div class="amg jrmp matrix default">
+<div class="amg jrmp matrix #if ($matrixTemplate == 'matrix')default#end">
     <div class="matrixHeaderRow">
+        #if ($matrixTitle != "")
+            <div class="projectLabeL">$titleLabel $matrixTitle </div>
+        #end
         <div class="projectLabeL">$projectLabel</div> <a href="$projectURL">$projectName</a> &nbsp&nbsp <div class="riskDateLabel"> $riskDateLabel $date</div><br>
     </div>
     <div class="matrixHeaderRow">
+        #if ($redTasksValue > 0 || $greenTasksValue > 0 || $yellowTasksValue > 0)
         <div class="updatedLabel">$updatedLabel $updateDate (<a href="$updatedTaskUrl">$updatedTask</a>)</div> <div class="separator">|</div>
+        #end
         <div class="redTasksLabel">$redTasksLabel</div> <div class="tasksValue">$redTasksValue</div> <div class="separator">|</div>
         <div class="yellowTasksLabel">$yellowTasksLabel</div> <div class="tasksValue">$yellowTasksValue</div> <div class="separator">|</div>
         <div class="greenTasksLabel">$greenTasksLabel</div> <div class="tasksValue">$greenTasksValue</div>
@@ -54,13 +58,13 @@
                     #foreach($task in $cell.tasks)
                         <a href="$task.url">$task.name</a><br>
                         #set ($cellCounter = $cellCounter + 1)
-                        #if($cellCounter == 2)
+                        #if($cellCounter >= 2 && $cell.overload > 0)
                             #if($cell.overload == 1)
-                                +$cell.overload $overloadCommentSingle
+                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentSingle</a>
                                 #elseif ($cell.overload < 5)
-                                    +$cell.overload $overloadCommentMulti
+                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti</a>
                             #else
-                                +$cell.overload $overloadCommentMulti_2
+                            <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti_2</a>
                             #end
                             #break($foreach)
                         #end
@@ -84,4 +88,3 @@
     </tr>
 </table>
 </div>
-</html>

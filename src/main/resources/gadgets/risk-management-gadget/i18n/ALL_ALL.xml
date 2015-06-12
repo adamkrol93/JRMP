@@ -4,7 +4,7 @@
     <!--Template field -->
     <msg name="risk.management.gadget.template.label">Gadget template</msg>
     <msg name="risk.management.gadget.template.description">Select a template</msg>
-    <msg name="risk.management.gadget.template.option.RiskManegementMatrix">RiskManegementMatrix</msg>
+    <msg name="risk.management.gadget.template.option.RiskManagementMatrix">RiskManagementMatrix</msg>
     <!--Filter field -->
     <msg name="risk.management.gadget.filter.label">Project or saved filter</msg>
     <msg name="risk.management.gadget.filter.default">Search</msg>
@@ -21,6 +21,7 @@
     <msg name="risk.management.gadget.relativeDate.option.oneYearAgo">1 year ago</msg>
     <msg name="risk.management.validation.error.empty_filter">Filter is empty</msg>
     <msg name="risk.management.validation.error.empty_date">Date cannot be empty</msg>
+    <msg name="risk.management.validation.error.wrong_date">Date has wrong value</msg>
     <msg name="risk.management.validation.error.empty_title">Title cannot be empty</msg>
     <msg name="risk.management.validation.error.empty_refresh">Refresh interval cannot be empty</msg>
     <msg name="risk.management.validation.error.filter_is_incorrect">Selected Filter is incorrect</msg>
