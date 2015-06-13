@@ -19,7 +19,7 @@
     <osgi:reference id="customFieldManager" interface="com.atlassian.jira.issue.CustomFieldManager"/>
     <osgi:reference id="fieldScreenManager" interface="com.atlassian.jira.issue.fields.screen.FieldScreenManager"/>
     <osgi:reference id="constantsManager" interface="com.atlassian.jira.config.ConstantsManager"/>
-    <osgi:reference id="issueTypeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager"/>
+    <osgi:reference id="issueTypeSchemeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager" />
     <osgi:reference id="webResourceUrlProvider" interface="com.atlassian.plugin.webresource.WebResourceUrlProvider"/>
     <osgi:reference id="ofBizDelegator" interface="com.atlassian.jira.ofbiz.OfBizDelegator"/>
 

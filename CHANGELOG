@@ -33,3 +33,4 @@
 - PIP-181 Wprowadzona metoda do walidacji. Poprawione logowanie, literówki oraz kilka mniejszych błędów
 - PIP-180 Wprowadzona obsługa Relatywnej daty. Stworzyłem Enuma.
 - PIP-180 Mały refaktoring
+- PIP-183 Ładniejsze wstrzykiwanie zależności, poprzez Autowired

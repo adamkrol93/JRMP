@@ -14,7 +14,6 @@
  */
 package net.amg.jira.plugins.jrmp.listeners;
 
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.config.ConstantsManager;
 import com.atlassian.jira.exception.CreateException;
 import com.atlassian.jira.issue.CustomFieldManager;
@@ -23,7 +22,6 @@ import com.atlassian.jira.issue.context.GlobalIssueContext;
 import com.atlassian.jira.issue.context.JiraContextNode;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
 import com.atlassian.jira.issue.customfields.option.Option;
-import com.atlassian.jira.issue.customfields.option.Options;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
@@ -51,16 +49,21 @@ import java.util.Map;
 public class PluginListener implements LifecycleAware  {
     private Logger logger = LoggerFactory.getLogger(getClass());
     //Constants:
-    public static final String CUSTOMFIELDTYPES_FLOAT = "com.atlassian.jira.plugin.system.customfieldtypes:select";
-    public static final String CUSTOMFIELDTYPES_EXACTNUMBER = "com.atlassian.jira.plugin.system.customfieldtypes:multiselectsearcher";
+    private static final String CUSTOMFIELDTYPES_FLOAT = "com.atlassian.jira.plugin.system.customfieldtypes:select";
+    private static final String CUSTOMFIELDTYPES_EXACTNUMBER = "com.atlassian.jira.plugin.system.customfieldtypes:multiselectsearcher";
 
+    public static final String RISK_ISSUE_TYPE = "Risk";
     public static final String RISK_CONSEQUENCE_TEXT_CF = "Risk Consequence";
     public static final String RISK_PROBABILITY_TEXT_CF = "Risk Probability";
-    public static final String RISK_ISSUE_TYPE = "Risk";
+
+    private ConstantsManager constantsManager;
+    private CustomFieldManager customFieldManager;
+    private FieldScreenManager fieldScreenManager;
+    private IssueTypeSchemeManager issueTypeSchemeManager;
+    private OptionsManager optionsManager;
 
     public Option addOptionToCustomField(CustomField customField, String value, OptionsManager optionsManager) {
         Option newOption = null;
-
         if (customField != null) {
             List<FieldConfigScheme> schemes = customField
                     .getConfigurationSchemes();
@@ -68,15 +71,8 @@ public class PluginListener implements LifecycleAware  {
                 FieldConfigScheme sc = schemes.get(0);
                 Map configs = sc.getConfigsByConfig();
                 if (configs != null && !configs.isEmpty()) {
-                    FieldConfig config = (FieldConfig) configs.keySet()
-                            .iterator().next();
-
-                    Options l = optionsManager.getOptions(config);
-                    Option opt;
-
-                    newOption = optionsManager.createOption(config, null,
-                            new Long(value),
-                            value);
+                    FieldConfig config = (FieldConfig) configs.keySet().iterator().next();
+                    newOption = optionsManager.createOption(config, null, new Long(value), value);
                 }
             }
         }
@@ -87,11 +83,7 @@ public class PluginListener implements LifecycleAware  {
     @Override
     public void onStart() {
         logger.info("Starting JIRA Risk Management plugin configuration!");
-        final IssueTypeSchemeManager issueTypeSchemeManager = ComponentAccessor.getIssueTypeSchemeManager();
-        final CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
-        final FieldScreenManager fieldScreenManager = ComponentAccessor.getFieldScreenManager();
-        final ConstantsManager constantsManager = ComponentAccessor.getConstantsManager();
-        final OptionsManager optionsManager = ComponentAccessor.getOptionsManager();
+
         IssueType riskIssueType = null;
         IssueConstant risk = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
         if(risk != null)
@@ -150,5 +142,21 @@ public class PluginListener implements LifecycleAware  {
         } catch (NullPointerException e) {
             logger.info("Couldn't create risk Custom fields:" + e.getMessage(),e);
         }
+    }
+
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+        this.customFieldManager = customFieldManager;
+    }
+    public void setFieldScreenManager(FieldScreenManager fieldScreenManager) {
+        this.fieldScreenManager = fieldScreenManager;
+    }
+    public void setConstantsManager(ConstantsManager constantsManager) {
+        this.constantsManager = constantsManager;
+    }
+    public void setIssueTypeSchemeManager(IssueTypeSchemeManager issueTypeSchemeManager) {
+        this.issueTypeSchemeManager = issueTypeSchemeManager;
+    }
+    public void setOptionsManager(OptionsManager optionsManager) {
+        this.optionsManager = optionsManager;
     }
 }

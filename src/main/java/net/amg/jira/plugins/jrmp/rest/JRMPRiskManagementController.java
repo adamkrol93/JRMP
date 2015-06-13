@@ -24,6 +24,7 @@ import net.amg.jira.plugins.jrmp.rest.model.MatrixRequest;
 import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +41,18 @@ import javax.ws.rs.core.Response;
 @Path("/controller")
 @Controller
 public class JRMPRiskManagementController {
-
-    Logger logger = LoggerFactory.getLogger(getClass());
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
     private I18nResolver i18nResolver;
-
+    @Autowired
     private SearchService searchService;
-
+    @Autowired
     private JiraAuthenticationContext authenticationContext;
-
-
+    @Autowired
     private MatrixGenerator matrixGenerator;
+    //4spring dep.injection
+    public JRMPRiskManagementController(){}
+
 
     @Path("/validate")
     @GET
@@ -98,7 +100,8 @@ public class JRMPRiskManagementController {
             try {
                 return Response.ok(matrixGenerator.generateMatrix(matrixRequest.getProjectOrFilter(),
                         matrixRequest.getTitle(),
-                        matrixRequest.getTemplate(),matrixRequest.getDateModel()),
+                        matrixRequest.getTemplate(),
+                        matrixRequest.getDateModel()),
                         MediaType.TEXT_HTML).build();
             } catch(Exception e){
                 logger.error("getMatrix: The Matrix couldn't be generated because of: " + e.getMessage(),e);
@@ -112,42 +115,29 @@ public class JRMPRiskManagementController {
 
     }
 
-    public void setMatrixGenerator(MatrixGenerator matrixGenerator) {
-        this.matrixGenerator = matrixGenerator;
-    }
-
-    public void setI18nResolver(I18nResolver i18nResolver) {
-        this.i18nResolver = i18nResolver;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
-
-
     @GET
+    @Path("{args : (.*)?}")
     public Response emptyGETResponse()
     {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @POST
+    @Path("{args : (.*)?}")
     public Response emptyPOSTResponse()
     {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @PUT
+    @Path("{args : (.*)?}")
     public Response emptyPUTResponse()
     {
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @DELETE
+    @Path("{args : (.*)?}")
     public Response emptyDELETEResponse()
     {
         return Response.status(Response.Status.BAD_REQUEST).build();
