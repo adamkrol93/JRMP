@@ -15,6 +15,7 @@
 package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
@@ -50,6 +51,8 @@ public class JRMPRiskManagementController {
     private JiraAuthenticationContext authenticationContext;
     @Autowired
     private MatrixGenerator matrixGenerator;
+    @Autowired
+    private OfBizDelegator ofBizDelegator;
     //4spring dep.injection
     public JRMPRiskManagementController(){}
 
@@ -72,7 +75,7 @@ public class JRMPRiskManagementController {
 
         Gson gson = new Gson();
 
-        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService);
+        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService,ofBizDelegator);
         errorCollection.setParameters(matrixRequest.getParameters());
 
         if(errorCollection.hasAnyErrors()) {
@@ -91,7 +94,7 @@ public class JRMPRiskManagementController {
 
         logger.debug("getMatrix: Method start");
 
-        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService);
+        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService,ofBizDelegator);
         if(!errorCollection.hasAnyErrors()){
 
             try {

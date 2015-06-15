@@ -64,14 +64,14 @@ public class QueryBuilderImpl implements QueryBuilder {
     }
 
     @Override
-    public Query buildFilterQuery(int riskPropability, int riskConsequence,Query query, DateModel dateModel) {
+    public Query buildFilterQuery(int riskProbability, int riskConsequence,Query query, DateModel dateModel) {
 
 
         JqlQueryBuilder builder = getJqlQueryBuilder(query);
 
         builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE)
                 .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).eq((long) riskConsequence)
-                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).eq((long) riskPropability);
+                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).eq((long) riskProbability);
 
         if(!dateModel.equals(DateModel.TODAY))
         {

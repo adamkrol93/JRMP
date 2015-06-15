@@ -1,6 +1,7 @@
 package net.amg.jira.plugins.jrmp.rest.model;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.MessageSet;
 import com.atlassian.sal.api.message.I18nResolver;
@@ -34,14 +35,14 @@ public class MatrixRequest {
 
     DateModel dateModel;
 
-    public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService) {
+    public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService, OfBizDelegator ofBizDelegator) {
         ErrorCollection errorCollection = new ErrorCollection();
 
         if (StringUtils.isBlank(filter)) {
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.empty_filter"));
         } else {
-            projectOrFilter = ProjectOrFilter.createProjectOrFilter(filter);
-            if (!projectOrFilter.initProjectOrFilter()) {
+            projectOrFilter = ProjectOrFilter.createProjectOrFilter(filter,ofBizDelegator);
+            if (!projectOrFilter.isValid()) {
                 errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
             } else {
                 if (projectOrFilter.getQuery() == null) {
@@ -68,7 +69,7 @@ public class MatrixRequest {
 
         try {
             dateModel = DateModel.valueOf(date);
-        } catch (NumberFormatException e) {
+        } catch (NullPointerException e) {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.wrong_date"));
         }
 
