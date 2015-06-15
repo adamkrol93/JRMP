@@ -86,12 +86,13 @@ public class PluginListener implements LifecycleAware  {
 
         IssueType riskIssueType = null;
         IssueConstant risk = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
-        if(risk != null)
-        {
+
+        if(risk != null) {
             riskIssueType = constantsManager.getIssueTypeObject(risk.getId());
         } else {
             try {
                 riskIssueType = constantsManager.insertIssueType(RISK_ISSUE_TYPE, 0L, null, "Risk in projects", "/images/icons/issuetypes/delete.png");
+                issueTypeSchemeManager.addOptionToDefault(riskIssueType.getId());
             } catch (CreateException e) {
                 logger.info("Couldn't create Risk Issue type: " + e.getMessage(), e);
             }
@@ -103,7 +104,6 @@ public class PluginListener implements LifecycleAware  {
         final List<JiraContextNode> contexts = new ArrayList<JiraContextNode>();
         contexts.add(GlobalIssueContext.getInstance());
 
-        issueTypeSchemeManager.addOptionToDefault(riskIssueType.getId());
         final CustomField riskConsequenceCustomField;
         final CustomField riskProbabilityCustomField;
         try {
