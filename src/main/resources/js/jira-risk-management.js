@@ -55,35 +55,35 @@ AMG.jrmp.init = function (args) {
                                 options:[
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.today"),
-                                        value: "0"
+                                        value: "TODAY"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.yesterday"),
-                                        value: "1"
+                                        value: "YESTERDAY"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneWeekAgo"),
-                                        value: "2"
+                                        value: "WEEK_AGO"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.twoWeeksAgo"),
-                                        value: "3"
+                                        value: "TWO_WEEKS_AGO"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneMonthAgo"),
-                                        value: "4"
+                                        value: "MONTH_AGO"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.threeMonthsAgo"),
-                                        value: "5"
+                                        value: "THREE_MONTHS_AGO"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.sixMonthsAgo"),
-                                        value: "6"
+                                        value: "SIX_MONTHS_AGO"
                                     },
                                     {
                                         label:this.getMsg("risk.management.gadget.relativeDate.option.oneYearAgo"),
-                                        value: "7"
+                                        value: "YEAR_AGO"
                                     }
                                 ]
                             },

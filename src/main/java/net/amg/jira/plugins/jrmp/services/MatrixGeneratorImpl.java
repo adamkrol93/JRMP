@@ -16,24 +16,23 @@ package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.atlassian.velocity.DefaultVelocityManager;
 import com.atlassian.velocity.VelocityManager;
-import net.amg.jira.plugins.jrmp.listeners.PluginListener;
-import net.amg.jira.plugins.jrmp.rest.model.DateModel;
-import net.amg.jira.plugins.jrmp.rest.model.ProjectOrFilter;
-import net.amg.jira.plugins.jrmp.velocity.Cell;
-import net.amg.jira.plugins.jrmp.velocity.Row;
-import net.amg.jira.plugins.jrmp.velocity.Task;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssuesModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MatrixGeneratorImpl implements MatrixGenerator{
@@ -96,36 +95,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		logger.info("generateMatrix: Method start");
 		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(),dateModel);
 
-		List<Task> listOfTasks = getTasksFromIssues(listOfIssues);
+		RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues,webResourceUrlProvider,customFieldManager,MATRIX_SIZE);
 
-	    List<Row> listOfRows = new ArrayList<Row>();
-		for(int i = 0; i < MATRIX_SIZE; i++){
-			Row row = new Row();
-			for(int j = 0; j< MATRIX_SIZE; j++){
-				Cell cell = new Cell((double)((MATRIX_SIZE - i)), (double)(j + 1), (double)MATRIX_SIZE);
-				row.addCell(cell);
-			}
-			listOfRows.add(row);
-		}
-		
-		int redTasks = 0;
-	    int yellowTasks = 0;
-	    int greenTasks = 0;
-
-	    for(Task task : listOfTasks){
-			listOfRows.get(MATRIX_SIZE-(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
-			switch (listOfRows.get(MATRIX_SIZE-(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
-				case RED:
-					redTasks++;
-					break;
-				case YELLOW:
-					yellowTasks++;
-					break;
-				case GREEN:
-					greenTasks++;
-					break;
-			}
-	    }
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -148,9 +119,9 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.matrix.updated_label"));
 		params.put(RISK_DATE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.risk_date_label"));
 		params.put(PROJECT_LABEL_STRING, i18nResolver.getText("risk.management.matrix.project_label"));
-		params.put(RED_TASKS_VALUE_STRING, redTasks);
-		params.put(GREEN_TASKS_VALUE_STRING, greenTasks);
-		params.put(YELLOW_TASKS_VALUE_STRING, yellowTasks);
+		params.put(RED_TASKS_VALUE_STRING, riskIssuesModel.getRedTasks());
+		params.put(GREEN_TASKS_VALUE_STRING, riskIssuesModel.getGreenTasks());
+		params.put(YELLOW_TASKS_VALUE_STRING, riskIssuesModel.getYellowTasks());
 		params.put(RED_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.red_tasks_label"));
 		params.put(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.green_tasks_label"));
 		params.put(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.yellow_tasks_label"));
@@ -158,11 +129,11 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		params.put(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi"));
 		params.put(OVERLOAD_COMMENT_MULTI_2_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi_2"));
 		params.put(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_single"));
-		params.put(MATRIX_STRING, listOfRows);
+		params.put(MATRIX_STRING, riskIssuesModel.getListOfRows());
 		params.put(MATRIX_TITLE,matrixTitle);
         params.put(MATRIX_TEMPLATE,matrixTemplate);
 		params.put(TITLE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.title_label"));
-		Issue lastUpdatedIssue = getLastUpdatedIssue(listOfIssues);
+		Issue lastUpdatedIssue = riskIssuesModel.getLastUpdatedIssue();
 		if(lastUpdatedIssue != null) {
 			params.put(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(lastUpdatedIssue.getUpdated().getTime())));
 			params.put(UPDATED_TASK_STRING, lastUpdatedIssue.getKey());
@@ -174,50 +145,50 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
 	}
 
-	private List<Task> getTasksFromIssues(List<Issue> issues){
-		CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
-		CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
+//	private List<Task> getTasksFromIssues(List<Issue> issues){
+//		CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
+//		CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
+//
+//		List<Task> listOfTasks = new ArrayList<Task>();
+//		for (Issue issue : issues) {
+//			int probability;
+//			try {
+//				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
+//				if(probability > MATRIX_SIZE)
+//				{
+//					probability = MATRIX_SIZE;
+//				}
+//			} catch (NullPointerException e){
+//				probability = 1;
+//			}
+//			int consequence;
+//			try {
+//				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
+//				if(consequence >MATRIX_SIZE )
+//				{
+//					consequence = MATRIX_SIZE;
+//				}
+//			} catch (NullPointerException e){
+//				consequence = 1;
+//			}
+//					listOfTasks.add(new Task(issue.getKey(),
+//					webResourceUrlProvider.getBaseUrl() + "/browse/" + issue.getKey(),
+//					probability,
+//					consequence));
+//		}
+//		return listOfTasks;
+//	}
 
-		List<Task> listOfTasks = new ArrayList<Task>();
-		for (Issue issue : issues) {
-			int probability;
-			try {
-				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
-				if(probability > MATRIX_SIZE)
-				{
-					probability = MATRIX_SIZE;
-				}
-			} catch (NullPointerException e){
-				probability = 1;
-			}
-			int consequence;
-			try {
-				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
-				if(consequence >MATRIX_SIZE )
-				{
-					consequence = MATRIX_SIZE;
-				}
-			} catch (NullPointerException e){
-				consequence = 1;
-			}
-					listOfTasks.add(new Task(issue.getKey(),
-					webResourceUrlProvider.getBaseUrl() + "/browse/" + issue.getKey(),
-					probability,
-					consequence));
-		}
-		return listOfTasks;
-	}
-
-	private Issue getLastUpdatedIssue(List<Issue> issues){
-		if (issues.isEmpty()){
-			return null;
-		}
-		Issue lastUpdated = issues.get(0);
-		for(Issue issue : issues){
-			if (issue.getUpdated().getTime() > lastUpdated.getUpdated().getTime()){
-				lastUpdated = issue;
-			}
-		}
-		return lastUpdated;
-	}
+//	private Issue getLastUpdatedIssue(List<Issue> issues){
+//		if (issues.isEmpty()){
+//			return null;
+//		}
+//		Issue lastUpdated = issues.get(0);
+//		for(Issue issue : issues){
+//			if (issue.getUpdated().getTime() > lastUpdated.getUpdated().getTime()){
+//				lastUpdated = issue;
+//			}
+//		}
+//		return lastUpdated;
+//	}
 }

@@ -21,7 +21,6 @@ import com.atlassian.jira.issue.IssueConstant;
 import com.atlassian.jira.issue.context.GlobalIssueContext;
 import com.atlassian.jira.issue.context.JiraContextNode;
 import com.atlassian.jira.issue.customfields.manager.OptionsManager;
-import com.atlassian.jira.issue.customfields.option.Option;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
@@ -30,6 +29,7 @@ import com.atlassian.jira.issue.fields.screen.FieldScreen;
 import com.atlassian.jira.issue.fields.screen.FieldScreenManager;
 import com.atlassian.jira.issue.fields.screen.FieldScreenTab;
 import com.atlassian.jira.issue.issuetype.IssueType;
+import com.atlassian.plugin.PluginException;
 import com.atlassian.sal.api.lifecycle.LifecycleAware;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
@@ -62,8 +62,7 @@ public class PluginListener implements LifecycleAware  {
     private IssueTypeSchemeManager issueTypeSchemeManager;
     private OptionsManager optionsManager;
 
-    public Option addOptionToCustomField(CustomField customField, String value, OptionsManager optionsManager) {
-        Option newOption = null;
+    public void addOptionToCustomField(CustomField customField, String value) {
         if (customField != null) {
             List<FieldConfigScheme> schemes = customField
                     .getConfigurationSchemes();
@@ -72,12 +71,10 @@ public class PluginListener implements LifecycleAware  {
                 Map configs = sc.getConfigsByConfig();
                 if (configs != null && !configs.isEmpty()) {
                     FieldConfig config = (FieldConfig) configs.keySet().iterator().next();
-                    newOption = optionsManager.createOption(config, null, new Long(value), value);
+                    optionsManager.createOption(config, null, new Long(value), value);
                 }
             }
         }
-
-        return newOption;
     }
 
     @Override
@@ -93,7 +90,8 @@ public class PluginListener implements LifecycleAware  {
             try {
                 riskIssueType = constantsManager.insertIssueType(RISK_ISSUE_TYPE, 0L, null, "Risk in projects", "/images/icons/issuetypes/delete.png");
             } catch (CreateException e) {
-                logger.info("Couldn't create Risk Issue type: " + e.getMessage(), e);
+                logger.error("Couldn't create Risk Issue type: " + e.getMessage(), e);
+                throw new PluginException("Couldn't create IssueType, stopping plugin creation",e);
             }
         }
 
@@ -119,7 +117,7 @@ public class PluginListener implements LifecycleAware  {
                 }
                 for(int i = 1; i < 6; i++)
                 {
-                    addOptionToCustomField(riskConsequenceCustomField,String.valueOf(i),optionsManager);
+                    addOptionToCustomField(riskConsequenceCustomField,String.valueOf(i));
                 }
 
             }
@@ -134,13 +132,15 @@ public class PluginListener implements LifecycleAware  {
                 }
                 for(int i = 1; i < 6; i++)
                 {
-                    addOptionToCustomField(riskProbabilityCustomField,String.valueOf(i),optionsManager);
+                    addOptionToCustomField(riskProbabilityCustomField,String.valueOf(i));
                 }
             }
         } catch (GenericEntityException e) {
-            logger.info("Couldn't create risk Custom fields : " + e.getMessage(),e);
+            logger.error("Couldn't create risk Custom fields : " + e.getMessage(), e);
+            throw new PluginException("GenericEntityException. Stopping plugin creation",e);
         } catch (NullPointerException e) {
-            logger.info("Couldn't create risk Custom fields:" + e.getMessage(),e);
+            logger.error("Couldn't create risk Custom fields:" + e.getMessage(), e);
+            throw new PluginException("NullPointerException. Stopping plugin creation",e);
         }
     }
 

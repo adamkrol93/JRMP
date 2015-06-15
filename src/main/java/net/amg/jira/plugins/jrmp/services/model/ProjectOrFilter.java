@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.jrmp.rest.model;
+package net.amg.jira.plugins.jrmp.services.model;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
@@ -25,8 +25,24 @@ public class ProjectOrFilter {
     private boolean isFilter = false;
     private boolean isProject = false;
     private OfBizDelegator ofBizDelegator;
+    private String projectOrFilter;
 
-    public boolean initProjectOrFilter(String projectOrFilter){
+    private ProjectOrFilter()
+    {
+
+    }
+
+
+    public static ProjectOrFilter createProjectOrFilter(String projectOrFilter)
+    {
+        ProjectOrFilter projectOrFilterObject = new ProjectOrFilter();
+        projectOrFilterObject.projectOrFilter = projectOrFilter;
+
+        return projectOrFilterObject;
+    }
+
+
+    public boolean initProjectOrFilter(){
         String type;
         if (projectOrFilter.contains("-")) {
             type = projectOrFilter.split("-")[0];

@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.jrmp.rest.model;
+package net.amg.jira.plugins.jrmp.services.model;
 
 /**
  * @author Adam Król
@@ -14,9 +14,5 @@ public enum DateModel {
 
     public String getBeforeValue() {
         return beforeValue;
-    }
-
-    public void setBeforeValue(String beforeValue) {
-        this.beforeValue = beforeValue;
     }
 }

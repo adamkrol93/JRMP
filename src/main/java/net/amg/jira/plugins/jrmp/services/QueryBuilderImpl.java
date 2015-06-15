@@ -19,7 +19,7 @@ import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
-import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
