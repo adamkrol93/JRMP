@@ -14,6 +14,7 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
+import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.plugin.webresource.WebResourceUrlProvider;
@@ -73,6 +74,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	private JRMPSearchService jrmpSearchService;
     private WebResourceUrlProvider webResourceUrlProvider;
     private CustomFieldManager customFieldManager;
+	private QueryBuilder queryBuilder;
+    private SearchService searchService;
 
 	public void setJrmpSearchService(JRMPSearchService jrmpSearchService) {
 		this.jrmpSearchService = jrmpSearchService;
@@ -86,8 +89,16 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
         this.webResourceUrlProvider = webResourceUrlProvider;
     }
 
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+	public void setQueryBuilder(QueryBuilder queryBuilder) {
+		this.queryBuilder = queryBuilder;
+	}
+
+	public void setCustomFieldManager(CustomFieldManager customFieldManager) {
         this.customFieldManager = customFieldManager;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     @Override
@@ -95,7 +106,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		logger.info("generateMatrix: Method start");
 		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(),dateModel);
 
-		RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues,webResourceUrlProvider,customFieldManager,MATRIX_SIZE);
+		RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues,webResourceUrlProvider,customFieldManager,
+				queryBuilder, MATRIX_SIZE,projectOrFilter.getQuery(),dateModel,searchService);
 
 
 		Map<String, Object> params = new HashMap<String, Object>();

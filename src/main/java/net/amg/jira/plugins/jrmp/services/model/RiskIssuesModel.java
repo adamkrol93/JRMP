@@ -1,10 +1,13 @@
 package net.amg.jira.plugins.jrmp.services.model;
 
+import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.plugin.webresource.WebResourceUrlProvider;
+import com.atlassian.query.Query;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.services.QueryBuilder;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
 import net.amg.jira.plugins.jrmp.velocity.Row;
 import net.amg.jira.plugins.jrmp.velocity.Task;
@@ -21,20 +24,29 @@ public class RiskIssuesModel {
     private List<Issue> issues;
     private WebResourceUrlProvider webResourceUrlProvider;
     private CustomFieldManager customFieldManager;
+    private QueryBuilder queryBuilder;
     private List<Task> tasks;
     private List<Row> listOfRows;
     private Issue lastUpdatedIssue;
+    private SearchService searchService;
 
     private int redTasks = 0;
     private int yellowTasks = 0;
     private int greenTasks = 0;
     private int matrxSize = 0;
+    private Query query;
+    private DateModel dateModel;
 
-    public RiskIssuesModel(List<Issue> issues, WebResourceUrlProvider webResourceUrlProvider, CustomFieldManager customFieldManager, int matrixSize) {
+    public RiskIssuesModel(List<Issue> issues, WebResourceUrlProvider webResourceUrlProvider, CustomFieldManager customFieldManager,
+                           QueryBuilder queryBuilder, int matrixSize, Query query, DateModel dateModel,SearchService searchService) {
         this.issues = issues;
         this.webResourceUrlProvider = webResourceUrlProvider;
         this.customFieldManager = customFieldManager;
+        this.queryBuilder = queryBuilder;
+        this.searchService = searchService;
         this.matrxSize = matrixSize;
+        this.query = query;
+        this.dateModel = dateModel;
         fillAllFields();
     }
 
@@ -48,7 +60,11 @@ public class RiskIssuesModel {
         for(int i = 0; i < matrxSize; i++){
             Row row = new Row();
             for(int j = 0; j< matrxSize; j++){
-                Cell cell = new Cell((double)((matrxSize - i)), (double)(j + 1), (double)matrxSize);
+                int probability = matrxSize - i;
+                int consequence = j + 1;
+                Cell cell = new Cell((double) probability, (double) consequence, (double)matrxSize,
+                        webResourceUrlProvider.getBaseUrl(),
+                        searchService.getJqlString(queryBuilder.buildFilterQuery(probability,consequence,query,dateModel)));
                 row.addCell(cell);
             }
             listOfRows.add(row);

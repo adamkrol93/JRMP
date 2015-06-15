@@ -4,7 +4,7 @@
                  description="__MSG_risk.management.gadget.description__">
         <Optional feature="gadget-directory">
             <Param name="categories">
-                WALLBOARD
+
             </Param>
         </Optional>
         <Optional feature="atlassian.util" />

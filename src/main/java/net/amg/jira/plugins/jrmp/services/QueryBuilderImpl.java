@@ -34,6 +34,21 @@ public class QueryBuilderImpl implements QueryBuilder {
 
     @Override
     public Query buildQuery(Query query,DateModel dateModel) {
+        JqlQueryBuilder builder = getJqlQueryBuilder(query);
+
+
+        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE).and()
+                .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
+                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
+
+        if(!dateModel.equals(DateModel.TODAY))
+        {
+            builder.where().and().created().ltEq(dateModel.getBeforeValue());
+        }
+        return builder.buildQuery();
+    }
+
+    private JqlQueryBuilder getJqlQueryBuilder(Query query) {
         Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
         while(iterator.hasNext()) {
@@ -45,12 +60,18 @@ public class QueryBuilderImpl implements QueryBuilder {
             }
         }
 
-        JqlQueryBuilder builder = JqlQueryBuilder.newBuilder(query);
+        return JqlQueryBuilder.newBuilder(query);
+    }
+
+    @Override
+    public Query buildFilterQuery(int riskPropability, int riskConsequence,Query query, DateModel dateModel) {
 
 
-        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE).and()
-                .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
-                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
+        JqlQueryBuilder builder = getJqlQueryBuilder(query);
+
+        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE)
+                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).eq((long) riskConsequence)
+                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).eq((long) riskPropability);
 
         if(!dateModel.equals(DateModel.TODAY))
         {

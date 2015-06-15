@@ -14,8 +14,11 @@
  */
 package net.amg.jira.plugins.jrmp.velocity;
 
-import com.atlassian.jira.component.ComponentAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +26,15 @@ public class Cell {
 	private List<Task> tasks;
 	private Colour colour;
 	private int overload;
+	private String baseUrl;
+	private String jql;
 
-	public Cell(double probability, double consequence, double matrixSize){
+	private Logger logger = LoggerFactory.getLogger(getClass());
+
+	public Cell(double probability, double consequence, double matrixSize, String baseUrl, String jql){
 		this.tasks = new ArrayList<Task>();
+		this.baseUrl = baseUrl;
+		this.jql = jql;
 		double length = Math.sqrt(((matrixSize - (probability - 0.5)) * (matrixSize - (probability - 0.5)))+((matrixSize - (consequence - 0.5)) * (matrixSize - (consequence - 0.5))));
 		double lengthToExtreme = Math.sqrt(((matrixSize-0.5) * (matrixSize-0.5)) + (0.5 * 0.5));
 		if (0.6 * matrixSize >= length){
@@ -66,16 +75,15 @@ public class Cell {
 
 	public String getJqlQuery() {
 		String comma = "%2C";
-		String jqlQuery = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl() + "/browse/" + tasks.get(0).getName() + "?jql=issuekey in (";
-		for(Task task : tasks){
-			jqlQuery+=task.getName() + comma;
-			if(jqlQuery.length()>1999){
-				jqlQuery = jqlQuery.substring(0,jqlQuery.length()-(task.getName().length()));
-				break;
-			}
+		try {
+			jql = URLEncoder.encode(jql, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Couldn't create UTF-8 String : " + e.getMessage(), e);
+			jql = jql.replaceAll("\\u007b","").replaceAll("\\u007d","").replaceAll(" ","%20")
+					.replaceAll("=", "%3D").replaceAll("\"",""); // Głupie ale może pomoże jak coś pójdzie nie tak
 		}
-		jqlQuery = jqlQuery.substring(0,jqlQuery.length()-comma.length());
-		jqlQuery += ")";
+
+		String jqlQuery = baseUrl + "/issues/?jql=" + jql;
 		return jqlQuery;
 	}
 

@@ -22,4 +22,5 @@ import net.amg.jira.plugins.jrmp.services.model.DateModel;
  */
 public interface QueryBuilder {
     Query buildQuery(Query query,DateModel dateModel);
+    Query buildFilterQuery(int riskPropability, int riskConsequence,Query query, DateModel dateModel);
 }
