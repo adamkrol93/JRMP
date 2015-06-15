@@ -72,7 +72,9 @@ public class RiskIssuesModel {
 
 
         tasks = new ArrayList<Task>();
-        lastUpdatedIssue = issues.get(0);
+        if(!issues.isEmpty()) {
+            lastUpdatedIssue = issues.get(0);
+        }
 
         for (Issue issue : issues) {
 

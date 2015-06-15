@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
     <ModulePrefs title="__MSG_risk.management.gadget.title__" directory_title="__MSG_risk.management.gadget.title__"
-                 description="__MSG_risk.management.gadget.description__">
+                 description="__MSG_risk.management.gadget.description__"
+                 author="Politechnika Lodzka" author_affiliation="AMG.net"
+                 author_location="Lodz, Poland"
+                 screenshot='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "screenshot.png")'
+                 thumbnail='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "thumbnail.png")'>
         <Optional feature="gadget-directory">
             <Param name="categories">
-
             </Param>
         </Optional>
         <Optional feature="atlassian.util" />
