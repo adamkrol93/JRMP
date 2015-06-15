@@ -19,9 +19,8 @@ import com.atlassian.jira.ofbiz.OfBizDelegator;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
-import net.amg.jira.plugins.jrmp.rest.model.Constants;
+import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldNames;
 import net.amg.jira.plugins.jrmp.rest.model.ErrorCollection;
-import net.amg.jira.plugins.jrmp.rest.model.GadgetFieldEnum;
 import net.amg.jira.plugins.jrmp.rest.model.MatrixRequest;
 import net.amg.jira.plugins.jrmp.services.MatrixGenerator;
 import org.slf4j.Logger;
@@ -60,9 +59,9 @@ public class JRMPRiskManagementController {
     @Path("/validate")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Response doValidation(@QueryParam(Constants.FILTER) String filter, @QueryParam(Constants.DATE) String date,
-                                 @QueryParam(Constants.REFRESH) String refresh, @QueryParam(Constants.TEMPLATE) String template,
-                                 @QueryParam(Constants.TITLE) String title) {
+    public Response doValidation(@QueryParam(GadgetFieldNames.FILTER) String filter, @QueryParam(GadgetFieldNames.DATE) String date,
+                                 @QueryParam(GadgetFieldNames.REFRESH) String refresh, @QueryParam(GadgetFieldNames.TEMPLATE) String template,
+                                 @QueryParam(GadgetFieldNames.TITLE) String title) {
 
         logger.info("Validation: Method start");
 

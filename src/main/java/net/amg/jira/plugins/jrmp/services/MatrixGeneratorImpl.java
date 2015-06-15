@@ -68,8 +68,6 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
 	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
-	public static final int MATRIX_SIZE = 5;
-
 	private I18nResolver i18nResolver;
 	private JRMPSearchService jrmpSearchService;
     private WebResourceUrlProvider webResourceUrlProvider;
@@ -107,7 +105,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(),dateModel);
 
 		RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues,webResourceUrlProvider,customFieldManager,
-				queryBuilder, MATRIX_SIZE,projectOrFilter.getQuery(),dateModel,searchService);
+				queryBuilder,projectOrFilter.getQuery(),dateModel,searchService);
 
 
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -125,7 +123,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 
 		params.put(PROBABILITY_LABEL_STRING, i18nResolver.getText("risk.management.matrix.probability_label"));
 		params.put(CONSEQUENCE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.consequence_label"));
-		params.put(MATRIX_SIZE_STRING, MATRIX_SIZE);
+		params.put(MATRIX_SIZE_STRING, RiskIssuesModel.MATRIX_SIZE);
 		params.put(PROJECT_NAME_STRING, title);
 		params.put(PROJECT_URL_STRING, url);
 		params.put(UPDATED_LABEL, i18nResolver.getText("risk.management.matrix.updated_label"));
@@ -156,51 +154,4 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 		logger.info("generateMatrix: Everything went okay. Returnung velocity Template.");
 		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params);
 	}
-
-//	private List<Task> getTasksFromIssues(List<Issue> issues){
-//		CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
-//		CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
-//
-//		List<Task> listOfTasks = new ArrayList<Task>();
-//		for (Issue issue : issues) {
-//			int probability;
-//			try {
-//				probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
-//				if(probability > MATRIX_SIZE)
-//				{
-//					probability = MATRIX_SIZE;
-//				}
-//			} catch (NullPointerException e){
-//				probability = 1;
-//			}
-//			int consequence;
-//			try {
-//				consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
-//				if(consequence >MATRIX_SIZE )
-//				{
-//					consequence = MATRIX_SIZE;
-//				}
-//			} catch (NullPointerException e){
-//				consequence = 1;
-//			}
-//					listOfTasks.add(new Task(issue.getKey(),
-//					webResourceUrlProvider.getBaseUrl() + "/browse/" + issue.getKey(),
-//					probability,
-//					consequence));
-//		}
-//		return listOfTasks;
-//	}
-
-//	private Issue getLastUpdatedIssue(List<Issue> issues){
-//		if (issues.isEmpty()){
-//			return null;
-//		}
-//		Issue lastUpdated = issues.get(0);
-//		for(Issue issue : issues){
-//			if (issue.getUpdated().getTime() > lastUpdated.getUpdated().getTime()){
-//				lastUpdated = issue;
-//			}
-//		}
-//		return lastUpdated;
-//	}
 }

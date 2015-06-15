@@ -3,7 +3,7 @@ package net.amg.jira.plugins.jrmp.rest.model;
 /**
  * @author Adam Król
  */
-public class Constants {
+public class GadgetFieldNames {
 
     public static final String FILTER = "Filter";
     public static final String DATE = "Date";
