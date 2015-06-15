@@ -148,6 +148,7 @@
                 <version>${amps.version}</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <allowGoogleTracking>false</allowGoogleTracking>
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                     <!-- Uncomment to install TestKit backdoor in JIRA. -->
@@ -171,8 +172,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>${jdkLevel}</source>
+                    <target>${jdkLevel}</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -199,6 +200,7 @@
 	</reporting>
     
     <properties>
+        <jdkLevel>1.6</jdkLevel>
         <jira.version>6.1.7</jira.version>
         <amps.version>5.0.18</amps.version>
         <osgi.version>1.2.1</osgi.version>
