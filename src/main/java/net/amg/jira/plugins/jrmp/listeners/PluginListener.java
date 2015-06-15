@@ -31,6 +31,7 @@ import com.atlassian.jira.issue.fields.screen.FieldScreenTab;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.plugin.PluginException;
 import com.atlassian.sal.api.lifecycle.LifecycleAware;
+import net.amg.jira.plugins.jrmp.services.MatrixGeneratorImpl;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.slf4j.Logger;
@@ -130,7 +131,7 @@ public class PluginListener implements LifecycleAware  {
                     FieldScreenTab firstTab = defaultScreen.getTab(0);
                     firstTab.addFieldScreenLayoutItem(riskProbabilityCustomField.getId());
                 }
-                for(int i = 1; i < 6; i++)
+                for(int i = 1; i < MatrixGeneratorImpl.MATRIX_SIZE + 1; i++)
                 {
                     addOptionToCustomField(riskProbabilityCustomField,String.valueOf(i));
                 }
