@@ -34,3 +34,4 @@
 - PIP-180 Wprowadzona obsługa Relatywnej daty. Stworzyłem Enuma.
 - PIP-180 Mały refaktoring
 - PIP-183 Ładniejsze wstrzykiwanie zależności, poprzez Autowired
+- PIP-184 Naprawa wielokrotnego issueType
