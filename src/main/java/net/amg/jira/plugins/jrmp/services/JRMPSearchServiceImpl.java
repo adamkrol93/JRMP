@@ -22,7 +22,7 @@ import com.atlassian.jira.issue.search.SearchResults;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.web.bean.PagerFilter;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
