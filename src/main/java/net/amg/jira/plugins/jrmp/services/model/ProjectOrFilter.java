@@ -1,6 +1,5 @@
-package net.amg.jira.plugins.jrmp.rest.model;
+package net.amg.jira.plugins.jrmp.services.model;
 
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.jql.builder.JqlClauseBuilder;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
@@ -24,15 +23,32 @@ public class ProjectOrFilter {
     private String id;
     private boolean isFilter = false;
     private boolean isProject = false;
+    private String projectOrFilter;
     private OfBizDelegator ofBizDelegator;
 
-    public boolean initProjectOrFilter(String projectOrFilter){
+    private boolean valid = false;
+
+    private ProjectOrFilter() {
+
+    }
+
+
+    public static ProjectOrFilter createProjectOrFilter(String projectOrFilter, OfBizDelegator ofBizDelegator) {
+        ProjectOrFilter projectOrFilterObject = new ProjectOrFilter();
+        projectOrFilterObject.projectOrFilter = projectOrFilter;
+        projectOrFilterObject.ofBizDelegator = ofBizDelegator;
+        projectOrFilterObject.initProjectOrFilter();
+        return projectOrFilterObject;
+    }
+
+
+    private void initProjectOrFilter() {
         String type;
         if (projectOrFilter.contains("-")) {
             type = projectOrFilter.split("-")[0];
             id = projectOrFilter.split("-")[1];
         } else {
-            return false;
+            return;
         }
 
         List<GenericValue> result = null;
@@ -41,22 +57,22 @@ public class ProjectOrFilter {
 
         if (FILTER.equals(type)) {
             query = getQueryFilter(id);
-            result = ComponentAccessor.getOfBizDelegator().findByAnd("SearchRequest", mapWithIdToFindProjectOrFilterName);
+            result = ofBizDelegator.findByAnd("SearchRequest", mapWithIdToFindProjectOrFilterName);
             isFilter = true;
         }
-        if(PROJECT.equals(type)){
+        if (PROJECT.equals(type)) {
             query = getQueryProject(id);
-            result = ComponentAccessor.getOfBizDelegator().findByAnd("Project", mapWithIdToFindProjectOrFilterName);
+            result = ofBizDelegator.findByAnd("Project", mapWithIdToFindProjectOrFilterName);
             isProject = true;
         }
 
-        if (!result.isEmpty()){
+        if (!result.isEmpty()) {
             name = result.get(0).getString("name");
         } else {
             name = "";
         }
 
-        return true;
+        this.valid = true;
     }
 
     private Query getQueryFilter(String filter) {
@@ -89,8 +105,7 @@ public class ProjectOrFilter {
         return isFilter;
     }
 
-    public void setOfBizDelegator(OfBizDelegator ofBizDelegator) {
-        this.ofBizDelegator = ofBizDelegator;
+    public boolean isValid() {
+        return valid;
     }
-
 }

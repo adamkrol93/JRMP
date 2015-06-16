@@ -16,7 +16,7 @@ package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
 
 import java.util.List;
 

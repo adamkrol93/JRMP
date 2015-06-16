@@ -15,11 +15,12 @@
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.jrmp.rest.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
 
 /**
  * Created by jonatan on 03.06.15.
  */
 public interface QueryBuilder {
     Query buildQuery(Query query,DateModel dateModel);
+    Query buildFilterQuery(int riskPropability, int riskConsequence,Query query, DateModel dateModel);
 }

@@ -18,7 +18,7 @@ package net.amg.jira.plugins.jrmp.rest.model;
  * @author Adam Król
  */
 public enum GadgetFieldEnum {
-    FILTER("Filter"),DATE("Date"), TITLE("Title"), REFRESH("refresh"),TEMPLATE("template");
+    FILTER(GadgetFieldNames.FILTER),DATE(GadgetFieldNames.DATE), TITLE(GadgetFieldNames.TITLE), REFRESH(GadgetFieldNames.REFRESH),TEMPLATE(GadgetFieldNames.TEMPLATE);
 
     private String fieldName;
 
