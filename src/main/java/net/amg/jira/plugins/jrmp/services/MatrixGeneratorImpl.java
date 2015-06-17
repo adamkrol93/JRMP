@@ -65,8 +65,8 @@ public class MatrixGeneratorImpl implements MatrixGenerator{
 	public static final String MATRIX_TITLE = "matrixTitle";
     public static final String MATRIX_TEMPLATE = "matrixTemplate";
 	public static final String TITLE_LABEL_STRING = "titleLabel";
-	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd");
-	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+	public static final DateFormat DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
+	public static final DateFormat UPDATE_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private I18nResolver i18nResolver;
 	private JRMPSearchService jrmpSearchService;
