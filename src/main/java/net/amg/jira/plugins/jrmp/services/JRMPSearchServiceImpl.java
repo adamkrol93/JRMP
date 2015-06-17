@@ -25,6 +25,7 @@ import com.atlassian.query.Query;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -32,23 +33,25 @@ import java.util.List;
 
 /**
  * @author Adam Król
+ * @author augustynwilk@gmail.com
  */
 @Service
 public class JRMPSearchServiceImpl implements JRMPSearchService {
-
-
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
     private SearchService searchService;
+    @Autowired
     private JiraAuthenticationContext authenticationContext;
-    private CustomFieldManager customFieldManager;
+    @Autowired
     private QueryBuilder builder;
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    JRMPSearchServiceImpl(){}
 
     @Override
     public List<Issue> getAllQualifiedIssues(Query query, DateModel dateModel) {
-        if(query == null)
-        {
-           return Collections.emptyList();
+        if(query == null) {
+            logger.info("Got null Query, returning empty result");
+            return Collections.emptyList();
         }
 
         query = builder.buildQuery(query,dateModel);
@@ -63,25 +66,10 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
 
         if(searchResults.getIssues().isEmpty())
         {
+            logger.info("Search query: " + query.toString() + " didn't return any result. Returning empty result.");
             return Collections.emptyList();
         }
-
+        logger.debug("Search Result with collection size: " + searchResults.getIssues().size());
         return searchResults.getIssues();
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setAuthenticationContext(JiraAuthenticationContext authenticationContext) {
-        this.authenticationContext = authenticationContext;
-    }
-
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
-
-    public void setBuilder(QueryBuilder builder) {
-        this.builder = builder;
     }
 }

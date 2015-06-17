@@ -20,17 +20,28 @@ import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by jonatan on 03.06.15.
+ * @author Jonatan Gostyński
+ * @author Adam Król
+ * @author augustynwilk@gmail.com
  */
 @Service
 public class QueryBuilderImpl implements QueryBuilder {
+    private static final List<String> QUERY_CLAUSES = Arrays.asList("created", "issuetype", PluginListener.RISK_CONSEQUENCE_TEXT_CF,
+            PluginListener.RISK_PROBABILITY_TEXT_CF);
 
+    @Autowired
     private CustomFieldManager customFieldManager;
+
+    QueryBuilderImpl(){}
 
     @Override
     public Query buildQuery(Query query,DateModel dateModel) {
@@ -49,14 +60,10 @@ public class QueryBuilderImpl implements QueryBuilder {
     }
 
     private JqlQueryBuilder getJqlQueryBuilder(Query query) {
-        Iterator<Clause> iterator = query.getWhereClause().getClauses().iterator();
 
-        while(iterator.hasNext()) {
-
-            Clause c = iterator.next();
-            if(c.getName().contains("created") || c.getName().contains("issuetype") || c.getName().contains(PluginListener.RISK_CONSEQUENCE_TEXT_CF) || c.getName().contains(PluginListener.RISK_PROBABILITY_TEXT_CF))
-            {
-                query.getWhereClause().getClauses().remove(c);
+        for (Clause clause : query.getWhereClause().getClauses()) {
+            if (QUERY_CLAUSES.contains(clause.getName())) {
+                query.getWhereClause().getClauses().remove(clause);
             }
         }
 
