@@ -19,6 +19,9 @@ import java.util.Map;
  */
 public class MatrixRequest {
 
+    public static final String BUNDLE_ERROR_EMPTY_FILTER = "risk.management.validation.error.empty_filter";
+    public static final String BUNDLE_ERROR_FILTER_IS_INCORRECT = "risk.management.validation.error.filter_is_incorrect";
+    public static final String BUNDLE_ERROR_EMPTY_DATE = "risk.management.validation.error.empty_date";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String filter;
@@ -31,31 +34,35 @@ public class MatrixRequest {
 
     private String refreshRate;
 
-    ProjectOrFilter projectOrFilter;
+    private ProjectOrFilter projectOrFilter;
 
-    DateModel dateModel;
+    private DateModel dateModel;
 
     public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService, OfBizDelegator ofBizDelegator) {
         ErrorCollection errorCollection = new ErrorCollection();
 
         if (StringUtils.isBlank(filter)) {
-            errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.empty_filter"));
+            errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_FILTER));
         } else {
             projectOrFilter = ProjectOrFilter.createProjectOrFilter(filter,ofBizDelegator);
             if (!projectOrFilter.isValid()) {
-                errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
             } else {
                 if (projectOrFilter.getQuery() == null) {
-                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
                 } else {
                     MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
-                        logger.warn("Query is invalid. Errors listed below");
-                        for(String s : messageSet.getErrorMessagesInEnglish())
-                        {
-                            logger.warn(s);
+                        logger.warn("Query is invalid. Enable info for search errors list");
+                        if (logger.isInfoEnabled()) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("Search error messages: \n");
+                            for (String msg : messageSet.getErrorMessagesInEnglish()) {
+                                sb.append(msg +"\n");
+                            }
+                            logger.info(sb.toString());
                         }
-                        errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                        errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
                     }
                 }
             }
@@ -64,7 +71,7 @@ public class MatrixRequest {
         }
 
         if (StringUtils.isBlank(date)) {
-            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.empty_date"));
+            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_DATE));
         }
 
         try {

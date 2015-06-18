@@ -77,7 +77,7 @@ public class Cell {
 		try {
 			jql = URLEncoder.encode(jql, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			logger.error("Couldn't create UTF-8 String from jql: " + e.getMessage(), e);
+			logger.error("Couldn't create UTF-8 String from jql: " + jql + " with message: " + e.getMessage(), e);
 			jql = jql.replaceAll("\\u007b","").replaceAll("\\u007d","").replaceAll(" ","%20")
 					.replaceAll("=", "%3D").replaceAll("\"",""); // Głupie ale może pomoże jak coś pójdzie nie tak
 		}
