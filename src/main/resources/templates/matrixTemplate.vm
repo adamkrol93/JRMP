@@ -44,47 +44,47 @@
         <div class="yellowTasksLabel">$yellowTasksLabel</div> <div class="tasksValue">$yellowTasksValue</div> <div class="separator">|</div>
         <div class="greenTasksLabel">$greenTasksLabel</div> <div class="tasksValue">$greenTasksValue</div>
     </div>
-<table class="matrix">
-    #set ($counter = $matrixSize)
-    #foreach($row in $matrix)
-        <tr>
-            #if ($counter == $matrixSize)
-                <td rowspan="$matrixSize"><div class="ylabel">$probabilityLabel</div></td>
-            #end
-            <td class="y">$counter</td>
-            #foreach($cell in $row.cells)
-                <td class="$cell.risk">
-                    #set ($cellCounter = 0)
-                    #foreach($task in $cell.tasks)
-                        <a href="$task.url">$task.name</a><br>
-                        #set ($cellCounter = $cellCounter + 1)
-                        #if($cellCounter >= 2 && $cell.overload > 0)
-                            #if($cell.overload == 1)
-                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentSingle</a>
-                                #elseif ($cell.overload < 5)
-                                <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti</a>
-                            #else
-                            <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti_2</a>
+    <div class="table">
+        <div class="ylabel">
+            <p class="prob-label">$probabilityLabel</p>
+        </div>
+        <table class="matrix">
+            #set ($counter = $matrixSize)
+            #foreach($row in $matrix)
+                <tr>
+                    <td class="y">$counter</td>
+                    #foreach($cell in $row.cells)
+                        <td class="$cell.risk">
+                            #set ($cellCounter = 0)
+                            #foreach($task in $cell.tasks)
+                                <a href="$task.url">$task.name</a><br>
+                                #set ($cellCounter = $cellCounter + 1)
+                                #if($cellCounter >= 2 && $cell.overload > 0)
+                                    #if($cell.overload == 1)
+                                        <a href="$cell.jqlQuery">+$cell.overload $overloadCommentSingle</a>
+                                        #elseif ($cell.overload < 5)
+                                        <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti</a>
+                                    #else
+                                    <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti_2</a>
+                                    #end
+                                    #break($foreach)
+                                #end
                             #end
-                            #break($foreach)
-                        #end
+                        </td>
                     #end
-                </td>
+                </tr>
+                #set ($counter = $counter - 1)
             #end
-        </tr>
-        #set ($counter = $counter - 1)
-    #end
-    <tr>
-        <td class="empty"></td>
-        <td class="empty"></td>
-        #foreach($i in [1..$matrixSize])
-            <td class="x">$i</td>
-        #end
-    </tr>
-    <tr>
-        <td class="empty"></td>
-        <td class="empty"></td>
-        <td class="xlabel" colspan="$matrixSize">$consequenceLabel</td>
-    </tr>
-</table>
+            <tr>
+                <td class="empty"></td>
+                #foreach($i in [1..$matrixSize])
+                    <td class="x">$i</td>
+                #end
+            </tr>
+            <tr>
+                <td class="empty"></td>
+                <td class="xlabel" colspan="$matrixSize">$consequenceLabel</td>
+            </tr>
+        </table>
+    </div>
 </div>

@@ -1,7 +1,7 @@
-.default {
+div.default.matrix {
     text-align:center;
 }
-div.default .matrix {
+div.amg.jrmp.matrix.default .matrix {
     border-collapse:collapse;
     border-spacing:0;
     font-family:Arial, sans-serif;
@@ -11,7 +11,7 @@ div.default .matrix {
     margin-left: auto;
     margin-right: auto;
 }
-div.default.matrix td {
+div.amg.jrmp.matrix.default td {
     overflow:hidden;
     font-family:Arial, sans-serif;
     font-size:14px;
@@ -20,88 +20,101 @@ div.default.matrix td {
     border-width:2px;
     border-color:white;
 }
-div.default.matrix .yellow {
+div.amg.jrmp.matrix.default .yellow {
     background-color:#fff500;
     color:#000000;
     height:70px;
     width:70px;
 }
-div.default.matrix .red {
+div.amg.jrmp.matrix.default .red {
     background-color:#ff0000;
     color:#000000;
     height:70px;
     width:70px;
 }
-div.default.matrix .green {
+div.amg.jrmp.matrix.default .green {
     background-color:#33bb00;
     color:#000000;
     height:70px;
     width:70px;
 }
-div.default.matrix .x {
+div.amg.jrmp.matrix.default .x {
     font-size:12px;
     font-size:12px;
     text-align:center;
     padding:2px 0px 2px 5px;
     height:10px
 }
-div.default.matrix .y {
+div.amg.jrmp.matrix.default .y {
     font-size:12px;
     text-align:right;
     width:5px;
     padding:2px 0px 2px 5px
 }
-div.default.matrix .empty {
+div.amg.jrmp.matrix.default .empty {
     height: 0px;
     width: 0px;
     padding: 0px;
 }
-div.default .ylabel {
-    margin-left: -50px;
-    margin-right: -60px;
+div.amg.jrmp.matrix.default .table {
+    position:relative;
+    margin: 0 25% 0 25%;
+}
+div.amg.jrmp.matrix.default .ylabel {
+    display:block;
+    position: absolute;
+    top: 55%;
+    left: 0;
+}
+@media screen and (min-width: 901px) {
+    div.amg.jrmp.matrix.default .ylabel {
+        left: 25%;
+    }
+}
+div.amg.jrmp.matrix.default .ylabel .prob-label {
     -ms-transform:rotate(270deg); /* IE 9 */
     -moz-transform:rotate(270deg); /* Firefox */
     -webkit-transform:rotate(270deg); /* Safari and Chrome */
     -o-transform:rotate(270deg); /* Opera */
+    width: 14px;
 }
-div.default .xlabel {
+div.amg.jrmp.matrix.default .xlabel {
     text-align:center;
     height:5px;
     padding:2px
 }
-div.default .matrixHeaderRow {
+div.amg.jrmp.matrix.default .matrixHeaderRow {
     font-size:13px;
     padding:1px 1px 1px 1px;
 }
-div.default .projectLabel {
+div.amg.jrmp.matrix.default .projectLabel {
     font-weight: bold;
     display:inline-block;
 }
-div.default .riskDateLabel {
+div.amg.jrmp.matrix.default .riskDateLabel {
     display:inline-block;
 }
-div.default .updatedLabel {
+div.amg.jrmp.matrix.default .updatedLabel {
     display:inline-block;
 }
-div.default .separator {
+div.amg.jrmp.matrix.default .separator {
     font-weight:bold;
     display:inline-block;
 }
-div.default .redTasksLabel {
+div.amg.jrmp.matrix.default .redTasksLabel {
     color:#FF0000;
     display:inline-block;
 }
-div.default .yellowTasksLabel {
+div.amg.jrmp.matrix.default .yellowTasksLabel {
     color:#FFDD00;
     display:inline-block;
 }
-div.default .greenTasksLabel {
+div.amg.jrmp.matrix.default .greenTasksLabel {
     color:#00BB00;
     display:inline-block;
 }
-div.default .tasksValue {
+div.amg.jrmp.matrix.default .tasksValue {
     color:#0000FF;
     font-weight:bold;
     display:inline-block;
 }
-
