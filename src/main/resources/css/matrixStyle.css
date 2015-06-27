@@ -66,9 +66,14 @@ div.amg.jrmp.matrix.default .ylabel {
     top: 55%;
     left: 0;
 }
-@media screen and (min-width: 901px) {
+@media screen (min-width: 601px) and (max-width: 901px) {
     div.amg.jrmp.matrix.default .ylabel {
         left: 25%;
+    }
+}
+@media screen (min-width: 0px) and (max-width: 600px) {
+    div.amg.jrmp.matrix.default .ylabel {
+        left: -10%;
     }
 }
 div.amg.jrmp.matrix.default .ylabel .prob-label {
