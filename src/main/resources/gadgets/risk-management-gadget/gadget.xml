@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-    <ModulePrefs title="__MSG_risk.management.gadget.title__" directory_title="__MSG_risk.management.gadget.title__"
+    <ModulePrefs title="__MSG_risk.management.gadget.title__"
+                 directory_title="__MSG_risk.management.gadget.title__"
                  description="__MSG_risk.management.gadget.description__"
-                 author="Politechnika Lodzka" author_affiliation="AMG.net"
-                 author_location="Lodz, Poland"
+                 author="__MSG_risk.management.gadget.author__" author_affiliation="__MSG_risk.management.gadget.author_affiliation__"
+                 author_location="__MSG_risk.management.gadget.author.location__"
                  screenshot='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "screenshot.png")'
                  thumbnail='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "thumbnail.png")'>
         <Optional feature="gadget-directory">
@@ -19,9 +20,7 @@
         <Require feature="views" />
         <Require feature="dynamic-height" />
         #oauth
-        <Locale messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/ALL_ALL.xml"/>
-        <Locale country="PL" lang="pl" messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
-
+        #supportedLocales("gadget.common,risk.management")
     </ModulePrefs>
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
 
@@ -37,18 +36,17 @@
     <UserPref name="RefreshInterval" datatype="hidden"/>
     <Content type="html" view="profile,canvas">
         <![CDATA[
-        #requireResource("com.atlassian.jira.gadgets:common")
-        #requireResource("com.atlassian.auiplugin:ajs")
-        #requireResource("jira.webresources:autocomplete")
-        #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
-        #includeResources()
+            #requireResource("com.atlassian.jira.gadgets:common")
+            #requireResource("jira.webresources:autocomplete")
+            #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
+            #includeResources()
             <script type="text/javascript">
                 var args = {};
                 args.baseUrl = "__ATLASSIAN_BASE_URL__";
                 try {
                    AMG.jrmp.init(args);
                 } catch (e) {
-                    AJS.log("Unable to initialize gadget."+e.stack);
+                    AJS.log("Unable to initialize JRMP gadget." + e.stack);
                 }
             </script>
         ]]>
