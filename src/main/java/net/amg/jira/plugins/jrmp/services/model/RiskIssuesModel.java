@@ -50,11 +50,10 @@ public class RiskIssuesModel {
         this.searchService = searchService;
         this.query = query;
         this.dateModel = dateModel;
-        fillAllFields();
+
     }
 
-
-    private void fillAllFields()
+    public void fillAllFields()
     {
         CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
         CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
