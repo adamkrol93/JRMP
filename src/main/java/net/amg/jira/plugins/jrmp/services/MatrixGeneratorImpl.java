@@ -14,78 +14,51 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
-import com.atlassian.sal.api.message.I18nResolver;
-import com.atlassian.velocity.DefaultVelocityManager;
-import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
-import net.amg.jira.plugins.jrmp.services.model.RiskIssuesModel;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MatrixGeneratorImpl implements MatrixGenerator {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Autowired
     private JRMPSearchService jrmpSearchService;
-    private WebResourceUrlProvider webResourceUrlProvider;
-    private CustomFieldManager customFieldManager;
-    private QueryBuilder queryBuilder;
-    private SearchService searchService;
+    @Autowired
     private RenderTemplateService renderTemplate;
-
+    @Autowired
+    private RiskIssuesFinder riskIssuesFinder;
 
     @Override
     public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel) {
+
         logger.info("generateMatrix: Method start");
-        List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(), dateModel);
 
-        RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues, webResourceUrlProvider, customFieldManager,
-                queryBuilder, projectOrFilter.getQuery(), dateModel, searchService);
-        riskIssuesModel.fillAllFields();
+        List<Issue> issues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(), dateModel);
 
-        return renderTemplate.renderTemplate(projectOrFilter, matrixTitle, matrixTemplate, riskIssuesModel);
-    }
+        logger.info("Found {} issues", issues);
+        RiskIssues riskIssues = riskIssuesFinder.fillAllFields(issues, projectOrFilter.getQuery(), dateModel);
 
-    public RenderTemplateService getRenderTemplate() {
-        return renderTemplate;
-    }
-
-    public void setRenderTemplate(RenderTemplateService renderTemplate) {
-        this.renderTemplate = renderTemplate;
+        return renderTemplate.renderTemplate(projectOrFilter, matrixTitle, matrixTemplate, riskIssues);
     }
 
     public void setJrmpSearchService(JRMPSearchService jrmpSearchService) {
         this.jrmpSearchService = jrmpSearchService;
     }
 
-    public void setWebResourceUrlProvider(WebResourceUrlProvider webResourceUrlProvider) {
-        this.webResourceUrlProvider = webResourceUrlProvider;
+    public void setRenderTemplate(RenderTemplateService renderTemplate) {
+        this.renderTemplate = renderTemplate;
     }
 
-    public void setQueryBuilder(QueryBuilder queryBuilder) {
-        this.queryBuilder = queryBuilder;
+    public void setRiskIssuesFinder(RiskIssuesFinder riskIssuesFinder) {
+        this.riskIssuesFinder = riskIssuesFinder;
     }
-
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
 }

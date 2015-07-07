@@ -21,5 +21,5 @@ import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
  * @author Adam Król
  */
 public interface MatrixGenerator {
- String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel);
+    String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel);
 }

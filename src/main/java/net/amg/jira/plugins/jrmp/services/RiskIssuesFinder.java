@@ -1,4 +1,4 @@
-package net.amg.jira.plugins.jrmp.services.model;
+package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.issue.CustomFieldManager;
@@ -7,77 +7,56 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.query.Query;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
-import net.amg.jira.plugins.jrmp.services.QueryBuilder;
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
 import net.amg.jira.plugins.jrmp.velocity.Row;
 import net.amg.jira.plugins.jrmp.velocity.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author Adam Król
  */
-public class RiskIssuesModel {
+@Service
+public class RiskIssuesFinder {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private List<Issue> issues;
+    @Autowired
     private WebResourceUrlProvider webResourceUrlProvider;
+    @Autowired
     private CustomFieldManager customFieldManager;
+    @Autowired
     private QueryBuilder queryBuilder;
-    private List<Task> tasks;
-    private List<Row> listOfRows;
-    private Issue lastUpdatedIssue;
+    @Autowired
     private SearchService searchService;
 
-    private int redTasks = 0;
-    private int yellowTasks = 0;
-    private int greenTasks = 0;
     public static final int MATRIX_SIZE = 5;
-    private Query query;
-    private DateModel dateModel;
 
-    public RiskIssuesModel(List<Issue> issues, WebResourceUrlProvider webResourceUrlProvider, CustomFieldManager customFieldManager,
-                           QueryBuilder queryBuilder, Query query, DateModel dateModel,SearchService searchService) {
-        this.issues = issues;
-        this.webResourceUrlProvider = webResourceUrlProvider;
-        this.customFieldManager = customFieldManager;
-        this.queryBuilder = queryBuilder;
-        this.searchService = searchService;
-        this.query = query;
-        this.dateModel = dateModel;
-
-    }
-
-    public void fillAllFields()
+    public RiskIssues fillAllFields( List<Issue> issues, Query query, DateModel dateModel)
     {
+        RiskIssues riskIssues = new RiskIssues();
+        riskIssues.setIssues(issues);
+
         CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
         CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
 
-        listOfRows = new LinkedList<Row>();
-        for(int i = 0; i < MATRIX_SIZE; i++){
-            Row row = new Row();
-            for(int j = 0; j< MATRIX_SIZE; j++){
-                int probability = MATRIX_SIZE - i;
-                int consequence = j + 1;
-                Cell cell = new Cell((double) probability, (double) consequence, (double) MATRIX_SIZE,
-                        webResourceUrlProvider.getBaseUrl(),
-                        searchService.getJqlString(queryBuilder.buildFilterQuery(probability,consequence,query,dateModel)));
-                row.addCell(cell);
-            }
-            listOfRows.add(row);
-        }
+        String baseUrl = webResourceUrlProvider.getBaseUrl();
+        List<Row> listOfRows = fillRowsContent(query, dateModel, baseUrl);
+        riskIssues.setListOfRows(listOfRows);
 
+        List<Task> tasks = new ArrayList<Task>();
+        riskIssues.setTasks(tasks);
+        Issue lastUpdatedIssue;
+        lastUpdatedIssue = issues.get(0);
 
-        tasks = new ArrayList<Task>();
-        if(!issues.isEmpty()) {
-            lastUpdatedIssue = issues.get(0);
-        }
-
+        int redTasks=0, greenTasks=0, yellowTasks=0;
         for (Issue issue : issues) {
 
             if (issue.getUpdated().getTime() > lastUpdatedIssue.getUpdated().getTime()){
@@ -107,7 +86,7 @@ public class RiskIssuesModel {
             }
 
             Task task = new Task(issue.getKey(),
-                    webResourceUrlProvider.getBaseUrl() + "/browse/" + issue.getKey(),
+                    baseUrl + "/browse/" + issue.getKey(),
                     probability,
                     consequence);
 
@@ -127,31 +106,42 @@ public class RiskIssuesModel {
 
             tasks.add(task);
         }
+        riskIssues.setGreenTasks(greenTasks);
+        riskIssues.setRedTasks(redTasks);
+        riskIssues.setYellowTasks(yellowTasks);
 
-
+        return riskIssues;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    private List<Row> fillRowsContent(Query query, DateModel dateModel, String baseUrl) {
+        List<Row> result = new ArrayList<Row>();
+        for(int i = 0; i < MATRIX_SIZE; i++){
+            Row row = new Row();
+            for(int j = 0; j< MATRIX_SIZE; j++){
+                int probability = MATRIX_SIZE - i;
+                int consequence = j + 1;
+                String jqlString = searchService.getJqlString(queryBuilder.buildFilterQuery(probability, consequence, query, dateModel));
+                Cell cell = new Cell((double) probability, (double) consequence, (double) MATRIX_SIZE, baseUrl, jqlString);
+                row.addCell(cell);
+            }
+            result.add(row);
+        }
+        return result;
     }
 
-    public int getRedTasks() {
-        return redTasks;
+    public void setWebResourceUrlProvider(WebResourceUrlProvider webResourceUrlProvider) {
+        this.webResourceUrlProvider = webResourceUrlProvider;
     }
 
-    public int getYellowTasks() {
-        return yellowTasks;
+    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
+        this.customFieldManager = customFieldManager;
     }
 
-    public int getGreenTasks() {
-        return greenTasks;
+    public void setQueryBuilder(QueryBuilder queryBuilder) {
+        this.queryBuilder = queryBuilder;
     }
 
-    public List<Row> getListOfRows() {
-        return listOfRows;
-    }
-
-    public Issue getLastUpdatedIssue() {
-        return lastUpdatedIssue;
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }
