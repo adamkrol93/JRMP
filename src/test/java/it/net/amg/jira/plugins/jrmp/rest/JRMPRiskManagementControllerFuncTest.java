@@ -1,4 +1,4 @@
-package it.net.amg.jira.plugins.rest;
+package it.net.amg.jira.plugins.jrmp.rest;
 
 import net.amg.jira.plugins.jrmp.rest.model.MatrixRequest;
 import org.apache.wink.client.ClientResponse;
