@@ -57,7 +57,7 @@ public class RiskIssuesFinder {
 
     public static final int MATRIX_SIZE = 5;
 
-    public RiskIssues fillAllFields( List<Issue> issues, Query query, DateModel dateModel)
+    public RiskIssues fillAllFields(List<Issue> issues, Query query, DateModel dateModel)
     {
         RiskIssues riskIssues = new RiskIssues();
         riskIssues.setIssues(issues);
@@ -71,6 +71,9 @@ public class RiskIssuesFinder {
 
         List<Task> tasks = new ArrayList<Task>();
         riskIssues.setTasks(tasks);
+        if (issues.isEmpty()) {
+            return riskIssues; //Avoid NPE, return empty model.
+        }
         Issue lastUpdatedIssue;
         lastUpdatedIssue = issues.get(0);
 
@@ -127,7 +130,7 @@ public class RiskIssuesFinder {
         riskIssues.setGreenTasks(greenTasks);
         riskIssues.setRedTasks(redTasks);
         riskIssues.setYellowTasks(yellowTasks);
-
+        riskIssues.setLastUpdatedIssue(lastUpdatedIssue);
         return riskIssues;
     }
 

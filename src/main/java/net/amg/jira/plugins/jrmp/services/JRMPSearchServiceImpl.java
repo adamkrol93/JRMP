@@ -85,8 +85,7 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
             return Collections.emptyList();
         }
 
-        if(searchResults.getIssues().isEmpty())
-        {
+        if(searchResults.getIssues().isEmpty()) {
             logger.info("Search query: " + query.toString() + " didn't return any result. Returning empty result.");
             return Collections.emptyList();
         }

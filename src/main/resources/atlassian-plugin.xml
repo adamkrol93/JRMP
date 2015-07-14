@@ -30,19 +30,15 @@
     <resource type="download" name="thumbnail.png" location="images/JRMPThumb.png"/>
     <!-- and our i18n resources: -->
     <resource type="i18n" name="i18n" location="i18n.translations"/>
-
     <!-- add our web resources -->
     <web-resource key="jira-risk-management-resources" name="jira risks management Web Resources">
-        <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.jira.gadgets:common</dependency>
-        <dependency>com.atlassian.gadgets.publisher:ajs-gadgets</dependency>
-        <dependency>com.atlassian.jira.gadgets:jira-global</dependency>
         <dependency>jira.webresources:autocomplete</dependency>
+        <dependency>com.atlassian.gadgets.publisher:ajs-gadgets</dependency>
         <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
         <!--<resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>-->
         <resource type="download" name="matrixStyle.css" location="/css/matrixStyle.css"/>
         <resource type="download" name="images/" location="/images"/>
-        <context>jira-risk-management</context>
     </web-resource>
     <!-- Gadget definition: -->
     <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadgets/risk-management-gadget/gadget.xml"/>

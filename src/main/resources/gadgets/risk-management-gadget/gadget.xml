@@ -27,6 +27,8 @@
                  thumbnail='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "thumbnail.png")'>
         <Optional feature="gadget-directory">
             <Param name="categories">
+                JIRA
+                Other
             </Param>
         </Optional>
         <Optional feature="atlassian.util" />
@@ -54,8 +56,8 @@
     <UserPref name="RefreshInterval" datatype="hidden"/>
     <Content type="html" view="profile,canvas">
         <![CDATA[
-            #requireResource("com.atlassian.jira.gadgets:common")
             #requireResource("jira.webresources:autocomplete")
+            #requireResource("com.atlassian.jira.gadgets:common")
             #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
             #includeResources()
             <script type="text/javascript">

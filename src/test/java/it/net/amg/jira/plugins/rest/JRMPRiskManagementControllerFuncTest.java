@@ -34,8 +34,8 @@ public class JRMPRiskManagementControllerFuncTest {
 
         RestClient client = new RestClient();
         Resource resource = client.resource(resourceUrl);
-        ClientResponse resp = resource.post();
-        MatrixRequest request = resource.get(MatrixRequest.class);
+        ClientResponse resp = resource.post(request);
+
         /*RESTRiskManagementResourceModel message = resource.get(RESTRiskManagementResourceModel.class);
 
         assertEquals("wrong message","Hello World",message.getMessage());*/

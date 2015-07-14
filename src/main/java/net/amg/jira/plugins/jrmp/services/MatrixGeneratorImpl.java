@@ -18,7 +18,14 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
+import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
+import com.atlassian.jira.util.collect.MapBuilder;
+import com.atlassian.plugin.webresource.WebResourceUrlProvider;
+import com.atlassian.sal.api.message.I18nResolver;
+import com.atlassian.velocity.DefaultVelocityManager;
+import com.atlassian.velocity.VelocityManager;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
 import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
@@ -48,7 +55,7 @@ public class MatrixGeneratorImpl implements MatrixGenerator {
 
         List<Issue> issues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(), dateModel);
 
-        logger.info("Found {} issues", issues);
+        logger.info("Found {} issues", issues.size());
         RiskIssues riskIssues = riskIssuesFinder.fillAllFields(issues, projectOrFilter.getQuery(), dateModel);
 
         return renderTemplate.renderTemplate(projectOrFilter, matrixTitle, matrixTemplate, riskIssues);
