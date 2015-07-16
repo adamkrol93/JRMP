@@ -194,17 +194,6 @@
         </plugins>
     </build>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>com.oracle</groupId>
-                <artifactId>ojdbc6</artifactId>
-                <version>11.2.0.2.0</version>
-                <scope>runtime</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
 	<reporting>
 		<plugins>
 <!--			<plugin>
@@ -247,7 +236,7 @@
     <properties>
         <jdkLevel>1.6</jdkLevel>
         <jira.version>6.1.7</jira.version>
-        <amps.version>5.0.18</amps.version>
+        <amps.version>5.1.6</amps.version>
         <osgi.version>1.2.1</osgi.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->

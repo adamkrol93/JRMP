@@ -29,12 +29,12 @@ public class JRMPRiskManagementControllerFuncTest {
     @Test
     public void messageIsValid() {
 
-        String baseUrl = System.getProperty("baseurl");
+/*        String baseUrl = System.getProperty("baseurl");
         String resourceUrl = baseUrl + "/rest/jira-risk-management/1.0/controller/matrix";
 
         RestClient client = new RestClient();
         Resource resource = client.resource(resourceUrl);
-        ClientResponse resp = resource.post(request);
+        ClientResponse resp = resource.post(request);*/
 
         /*RESTRiskManagementResourceModel message = resource.get(RESTRiskManagementResourceModel.class);
 
