@@ -1,0 +1,109 @@
+####
+## Licensed to AMG.net under one or more contributor license
+## agreements. See the NOTICE file distributed with this work
+## for additional information regarding copyright ownership.
+##
+## AMG.net licenses this file to you under the Apache License,
+## Version 2.0 (the "License"); you may not use this file
+## except in compliance with the License.  You may obtain a
+## copy of the License at the following location:
+##
+## http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+####
+
+##Velocity template for Jira Risk Managment Gadget
+##It is used to generate html code of gadget view
+##
+##Template params:
+##
+##  projectLabel - String - project or filter translated label
+##  projectURL - String - project or filter URL
+##  projectName - String - project or filter name
+##  riskDateLabel - String - label for date when matrix was generated
+##  date - String - date when matrix was generated
+##  updatedLabel - Stirng - label for last updated task
+##  updateDate - Stirgn - date of modification of last updated task
+##  updatedTaskUrl - String - url to last updated task
+##  updatedTask - String - key for last updated task
+##  redTasksLabel - Stirng - label for red tasks counter
+##  redTasksValue - int - red tasks counter value
+##  yelloeTasksLabel - Stirng - label for yellow tasks counter
+##  yellowTasksValue - int - yellow tasks counter value
+##  greenTasksLabel - Stirng - label for green tasks counter
+##  greenTasksValue - int - green tasks counter value
+##  matrixSize - int - matrix size
+##  overloadCommentMulti - String - comment for overload cell plural form
+##  overloadCommentMulti_2 - String - comment for overload cell plural form
+##  overloadCommentSingle - String - comment for overload cell singular form
+##  matrix - List<net.amg.jira.plugns.jrmp.velocity.Row> - list of rows for risk matrix
+##  consequenceLabel - String - translated label for risk consequence
+##  probabilityLabel - String - translated label for risk probability
+##  matrixTitle - String - Matrix Title
+##  titleLabel - String - Translated Title label
+##  matrixTemplate - String - matrixTemplate
+
+<div class="amg jrmp matrix #if ($matrixTemplate == 'matrix')default#end">
+    <div class="matrixHeaderRow">
+        #if ($matrixTitle != "")
+            <div class="projectLabeL">$titleLabel $matrixTitle </div>
+        #end
+        <div class="projectLabeL">$projectLabel</div> <a href="$projectURL">$projectName</a> &nbsp&nbsp <div class="riskDateLabel"> $riskDateLabel $date</div><br>
+    </div>
+    <div class="matrixHeaderRow">
+        #if ($updateDate)
+        <div class="updatedLabel">$updatedLabel $updateDate (<a href="$updatedTaskUrl">$updatedTask</a>)</div> <div class="separator">|</div>
+        #end
+        <div class="redTasksLabel">$redTasksLabel</div> <div class="tasksValue">$redTasksValue</div> <div class="separator">|</div>
+        <div class="yellowTasksLabel">$yellowTasksLabel</div> <div class="tasksValue">$yellowTasksValue</div> <div class="separator">|</div>
+        <div class="greenTasksLabel">$greenTasksLabel</div> <div class="tasksValue">$greenTasksValue</div>
+    </div>
+    <div class="table">
+        <div class="ylabel">
+            <p class="prob-label">$probabilityLabel</p>
+        </div>
+        <table class="matrix">
+            #set ($counter = $matrixSize)
+            #foreach($row in $matrix)
+                <tr>
+                    <td class="y">$counter</td>
+                    #foreach($cell in $row.cells)
+                        <td class="$cell.risk">
+                            #set ($cellCounter = 0)
+                            #foreach($task in $cell.tasks)
+                                <a href="$task.url">$task.name</a><br>
+                                #set ($cellCounter = $cellCounter + 1)
+                                #if($cellCounter >= 2 && $cell.overload > 0)
+                                    #if($cell.overload == 1)
+                                        <a href="$cell.jqlQuery">+$cell.overload $overloadCommentSingle</a>
+                                        #elseif ($cell.overload < 5)
+                                        <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti</a>
+                                    #else
+                                    <a href="$cell.jqlQuery">+$cell.overload $overloadCommentMulti_2</a>
+                                    #end
+                                    #break($foreach)
+                                #end
+                            #end
+                        </td>
+                    #end
+                </tr>
+                #set ($counter = $counter - 1)
+            #end
+            <tr>
+                <td class="empty"></td>
+                #foreach($i in [1..$matrixSize])
+                    <td class="x">$i</td>
+                #end
+            </tr>
+            <tr>
+                <td class="empty"></td>
+                <td class="xlabel" colspan="$matrixSize">$consequenceLabel</td>
+            </tr>
+        </table>
+    </div>
+</div>

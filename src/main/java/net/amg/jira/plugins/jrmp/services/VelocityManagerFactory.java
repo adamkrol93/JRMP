@@ -1,5 +1,5 @@
 /*
- * Licensed to Author under one or more contributor license
+ * Licensed to Author or Authors under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
  *
@@ -18,14 +18,21 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
-import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
+import com.atlassian.velocity.DefaultVelocityManager;
+import com.atlassian.velocity.VelocityManager;
+import org.springframework.stereotype.Component;
 
 /**
- *
- * @author AugustynWilk@gmail.com
+ * Created by higashi on 21.07.15.
  */
+@Component
+public class VelocityManagerFactory {
+    private VelocityManager manager;
 
-public interface RenderTemplateService {
-    public String renderTemplate(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, RiskIssues riskIssues);
+    public VelocityManager getVelocityManager() {
+        if (manager == null) {
+            this.manager = new DefaultVelocityManager();
+        }
+        return manager;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Licensed to Author under one or more contributor license
+ * Licensed to Author or Authors under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
  *
@@ -18,14 +18,26 @@
  */
 package net.amg.jira.plugins.jrmp.services;
 
-import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
-import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
+import com.atlassian.jira.security.JiraAuthenticationContext;
+import com.atlassian.jira.util.JiraVelocityUtils;
+import org.apache.velocity.VelocityContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
- *
+ * Delegate Jira functionality to be able to easy tests classes
+ * Created by Augustyn Wilk on 29.07.2015.
  * @author AugustynWilk@gmail.com
  */
+@Component
+public class VelocityContextFactory {
+    @Autowired
+    private JiraAuthenticationContext authenticationContext;
 
-public interface RenderTemplateService {
-    public String renderTemplate(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, RiskIssues riskIssues);
+    //4Spring dependency injection:
+    public VelocityContextFactory() {}
+
+    public VelocityContext getDefaultContext() {
+        return new VelocityContext(JiraVelocityUtils.getDefaultVelocityParams(authenticationContext));
+    }
 }

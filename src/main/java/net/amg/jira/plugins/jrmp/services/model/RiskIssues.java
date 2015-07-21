@@ -28,6 +28,7 @@ import java.util.List;
  * Created by yahro01 on 7/6/15.
  */
 public class RiskIssues {
+    public static final int MATRIX_SIZE = 5;
     private List<Issue> issues;
     private List<Task> tasks;
     private List<Row> listOfRows;

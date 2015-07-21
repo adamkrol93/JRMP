@@ -24,9 +24,11 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
     </plugin-info>
 
+    <component key="resourceLoaderFactory" class="net.amg.jira.plugins.jrmp.services.ResourceLoaderFactory" />
     <!-- from our base plugin -->
-    <component key="renderTemplate" class="net.amg.jira.plugins.jrmp.services.RenderTemplateService" public="true" />
-    <component key="riskIssuesFinder" class="net.amg.jira.plugins.jrmp.services.RiskIssuesFinder" public="true" />
+    <component key="renderTemplate" interface="net.amg.jira.plugins.jrmp.services.RenderTemplateService"
+               class="net.amg.jira.plugins.jrmp.services.RenderTemplate" public="true" />
+    <component key="riskIssuesFinder" class="net.amg.jira.plugins.jrmp.services.RiskIssuesFinder" />
     <component-import key="matrixGenerator" interface="net.amg.jira.plugins.jrmp.services.MatrixGenerator"/>
     <component-import key="jrmpSearchService" interface="net.amg.jira.plugins.jrmp.services.JRMPSearchService"/>
 
