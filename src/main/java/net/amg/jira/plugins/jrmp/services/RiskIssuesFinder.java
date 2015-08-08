@@ -55,8 +55,6 @@ public class RiskIssuesFinder {
     @Autowired
     private SearchService searchService;
 
-    public static final int MATRIX_SIZE = 5;
-
     public RiskIssues fillAllFields(List<Issue> issues, Query query, DateModel dateModel)
     {
         RiskIssues riskIssues = new RiskIssues();
@@ -86,9 +84,9 @@ public class RiskIssuesFinder {
             int probability;
             try {
                 probability =  Integer.valueOf(issue.getCustomFieldValue(probabilityField).toString());
-                if(probability > MATRIX_SIZE)
+                if(probability > RiskIssues.MATRIX_SIZE)
                 {
-                    probability = MATRIX_SIZE;
+                    probability = RiskIssues.MATRIX_SIZE;
                 }
             } catch (Exception e){
                 probability = 1;
@@ -97,9 +95,9 @@ public class RiskIssuesFinder {
             int consequence;
             try {
                 consequence = Integer.valueOf(issue.getCustomFieldValue(consequenceField).toString());
-                if(consequence > MATRIX_SIZE)
+                if(consequence > RiskIssues.MATRIX_SIZE)
                 {
-                    consequence = MATRIX_SIZE;
+                    consequence = RiskIssues.MATRIX_SIZE;
                 }
             } catch (Exception e){
                 consequence = 1;
@@ -111,8 +109,8 @@ public class RiskIssuesFinder {
                     probability,
                     consequence);
 
-            listOfRows.get(MATRIX_SIZE -(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
-            switch (listOfRows.get(MATRIX_SIZE -(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
+            listOfRows.get(RiskIssues.MATRIX_SIZE -(task.getProbability())).getCells().get(task.getConsequence()-1).addTask(task);
+            switch (listOfRows.get(RiskIssues.MATRIX_SIZE -(task.getProbability())).getCells().get(task.getConsequence()-1).getRiskEnum()){
                 case RED:
                     redTasks++;
                     break;
@@ -136,13 +134,13 @@ public class RiskIssuesFinder {
 
     private List<Row> fillRowsContent(Query query, DateModel dateModel, String baseUrl) {
         List<Row> result = new ArrayList<Row>();
-        for(int i = 0; i < MATRIX_SIZE; i++){
+        for(int i = 0; i < RiskIssues.MATRIX_SIZE; i++){
             Row row = new Row();
-            for(int j = 0; j< MATRIX_SIZE; j++){
-                int probability = MATRIX_SIZE - i;
+            for(int j = 0; j< RiskIssues.MATRIX_SIZE; j++){
+                int probability = RiskIssues.MATRIX_SIZE - i;
                 int consequence = j + 1;
                 String jqlString = searchService.getJqlString(queryBuilder.buildFilterQuery(probability, consequence, query, dateModel));
-                Cell cell = new Cell((double) probability, (double) consequence, (double) MATRIX_SIZE, baseUrl, jqlString);
+                Cell cell = new Cell((double) probability, (double) consequence, (double) RiskIssues.MATRIX_SIZE, baseUrl, jqlString);
                 row.addCell(cell);
             }
             result.add(row);
