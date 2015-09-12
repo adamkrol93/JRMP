@@ -159,11 +159,13 @@
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>0.7-groovy-2.0</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy</artifactId>
             <version>2.0.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -173,7 +175,7 @@
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-tests</artifactId>
-            <version>6.1</version>
+            <version>${jira.tests.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -257,7 +259,8 @@
 
     <properties>
         <jdkLevel>1.6</jdkLevel>
-        <jira.version>6.1.7</jira.version>
+        <jira.tests.version>6.1</jira.tests.version>
+        <jira.version>${jira.tests.version}.7</jira.version>
         <amps.version>5.1.6</amps.version>
         <osgi.version>1.2.1</osgi.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
