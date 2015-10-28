@@ -30,7 +30,7 @@ There are two ways you can build plugins by yourself:
 2.
   - download [Atlassian SDK](https://developer.atlassian.com/docs/getting-started/downloads)
   - unpack or install it.
-  - copy ATLASSIAN_SDK/.m2/repository/jta/jta to your $HOME/.m2/repository/jta/jta
-  - copy ATLASSIAN_SDK/.m2/repository/jndi/jndi to your $HOME/.m2/repository/jndi/jndi
+  - copy ATLASSIAN_SDK/repository/jta/jta to your $HOME/.m2/repository/jta/jta
+  - copy ATLASSIAN_SDK/repository/jndi/jndi to your $HOME/.m2/repository/jndi/jndi
   - build as other maven project with:
   `mvn package`
