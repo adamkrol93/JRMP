@@ -1,0 +1,134 @@
+/*
+ * Licensed to AMG.net under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work
+ * for additional information regarding copyright ownership.
+ *
+ * AMG.net licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License.  You may obtain a
+ * copy of the License at the following location:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package net.amg.jira.plugins.jrmp.services;
+
+import com.atlassian.jira.issue.Issue;
+<<<<<<< Updated upstream
+=======
+import com.atlassian.jira.util.collect.MapBuilder;
+import com.atlassian.plugin.webresource.WebResourceUrlProvider;
+import com.atlassian.sal.api.message.I18nResolver;
+import com.atlassian.velocity.DefaultVelocityManager;
+import com.atlassian.velocity.VelocityManager;
+>>>>>>> Stashed changes
+import net.amg.jira.plugins.jrmp.services.model.DateModel;
+import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class MatrixGeneratorImpl implements MatrixGenerator {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private JRMPSearchService jrmpSearchService;
+    @Autowired
+    private RenderTemplateService renderTemplate;
+    @Autowired
+    private RiskIssuesFinder riskIssuesFinder;
+
+    @Override
+    public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel) {
+
+        logger.info("generateMatrix: Method start");
+
+        List<Issue> issues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(), dateModel);
+
+        logger.info("Found {} issues", issues);
+        RiskIssues riskIssues = riskIssuesFinder.fillAllFields(issues, projectOrFilter.getQuery(), dateModel);
+
+        return renderTemplate.renderTemplate(projectOrFilter, matrixTitle, matrixTemplate, riskIssues);
+    }
+
+    public void setJrmpSearchService(JRMPSearchService jrmpSearchService) {
+        this.jrmpSearchService = jrmpSearchService;
+    }
+
+<<<<<<< Updated upstream
+    public void setRenderTemplate(RenderTemplateService renderTemplate) {
+        this.renderTemplate = renderTemplate;
+    }
+
+    public void setRiskIssuesFinder(RiskIssuesFinder riskIssuesFinder) {
+        this.riskIssuesFinder = riskIssuesFinder;
+    }
+=======
+    @Override
+	public String generateMatrix(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, DateModel dateModel){
+		logger.info("generateMatrix: Method start");
+		List<Issue> listOfIssues = jrmpSearchService.getAllQualifiedIssues(projectOrFilter.getQuery(),dateModel);
+
+		RiskIssuesModel riskIssuesModel = new RiskIssuesModel(listOfIssues,webResourceUrlProvider,customFieldManager,
+				queryBuilder,projectOrFilter.getQuery(),dateModel,searchService);
+
+
+		MapBuilder params = MapBuilder.newBuilder();
+
+		String title = projectOrFilter.getName();
+		String url = "";
+
+		if(projectOrFilter.isFilter()){
+			url = webResourceUrlProvider.getBaseUrl() + "/browse/?filter=" + projectOrFilter.getId();
+		}
+
+		if(projectOrFilter.isProject()){
+			url = webResourceUrlProvider.getBaseUrl() + "/browse/?project=" + projectOrFilter.getId();
+		}
+
+		params.add(PROBABILITY_LABEL_STRING, i18nResolver.getText("risk.management.matrix.probability_label"));
+		params.add(CONSEQUENCE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.consequence_label"));
+		params.add(MATRIX_SIZE_STRING, RiskIssuesModel.MATRIX_SIZE);
+		params.add(PROJECT_NAME_STRING, title);
+		params.add(PROJECT_URL_STRING, url);
+		params.add(UPDATED_LABEL, i18nResolver.getText("risk.management.matrix.updated_label"));
+		params.add(RISK_DATE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.risk_date_label"));
+        params.add(PROJECT_LABEL_STRING, i18nResolver.getText("risk.management.matrix.project_label"));
+		params.add(RED_TASKS_VALUE_STRING, riskIssuesModel.getRedTasks());
+		params.add(GREEN_TASKS_VALUE_STRING, riskIssuesModel.getGreenTasks());
+		params.add(YELLOW_TASKS_VALUE_STRING, riskIssuesModel.getYellowTasks());
+		params.add(RED_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.red_tasks_label"));
+		params.add(GREEN_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.green_tasks_label"));
+        params.add(YELLOW_TASKS_LABEL_STRING, i18nResolver.getText("risk.management.matrix.yellow_tasks_label"));
+		params.add(DATE_STRING, DATE_FORMATTER.format(new Date()));
+		params.add(OVERLOAD_COMMENT_MULTI_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi"));
+		params.add(OVERLOAD_COMMENT_MULTI_2_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_multi_2"));
+		params.add(OVERLOAD_COMMENT_SINGLE_STRING, i18nResolver.getText("risk.management.matrix.overload_comment_single"));
+		params.add(MATRIX_STRING, riskIssuesModel.getListOfRows());
+		params.add(MATRIX_TITLE,matrixTitle);
+        params.add(MATRIX_TEMPLATE,matrixTemplate);
+		params.add(TITLE_LABEL_STRING, i18nResolver.getText("risk.management.matrix.title_label"));
+		Issue lastUpdatedIssue = riskIssuesModel.getLastUpdatedIssue();
+		if(lastUpdatedIssue != null) {
+			params.add(UPDATE_DATE_STRING, UPDATE_DATE_FORMATTER.format(new Date(lastUpdatedIssue.getUpdated().getTime())));
+			params.add(UPDATED_TASK_STRING, lastUpdatedIssue.getKey());
+			params.add(UPDATED_TASK_URL_STRING, webResourceUrlProvider.getBaseUrl() + "/browse/" + lastUpdatedIssue.getKey());
+		}
+		VelocityManager velocityManager = new DefaultVelocityManager();
+
+		logger.info("generateMatrix: Everything went okay. Returnung velocity Template.");
+		return velocityManager.getBody("templates/", "matrixTemplate.vm", "UTF-8", params.toMap());
+	}
+>>>>>>> Stashed changes
+}

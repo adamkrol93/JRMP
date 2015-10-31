@@ -84,7 +84,7 @@ public class ProjectOrFilter {
             isProject = true;
         }
 
-        if (!result.isEmpty()) {
+        if (result != null && !result.isEmpty()) {
             name = result.get(0).getString("name");
         } else {
             name = "";
@@ -125,5 +125,18 @@ public class ProjectOrFilter {
 
     public boolean isValid() {
         return valid;
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectOrFilter{" +
+                "query=" + query +
+                ", name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", isFilter=" + isFilter +
+                ", isProject=" + isProject +
+                ", valid=" + valid +
+                ", projectOrFilter='" + projectOrFilter + '\'' +
+                '}';
     }
 }

@@ -49,11 +49,10 @@
     <UserPref name="refresh" datatype="hidden" default_value="false"/>
 
 
-    <UserPref name="Template" datatype="hidden"/>
-    <UserPref name="Filter" datatype="hidden"/>
-    <UserPref name="Date" datatype="hidden" />
-    <UserPref name="Title"  datatype="hidden"/>
-    <UserPref name="RefreshInterval" datatype="hidden"/>
+    <UserPref name="template" datatype="hidden"/>
+    <UserPref name="filter" datatype="hidden"/>
+    <UserPref name="date" datatype="hidden" />
+    <UserPref name="title"  datatype="hidden"/>
     <Content type="html" view="profile,canvas">
         <![CDATA[
             #requireResource("jira.webresources:autocomplete")

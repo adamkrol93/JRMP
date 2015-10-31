@@ -88,6 +88,7 @@ public class PluginListener implements LifecycleAware  {
         logger.info("Starting JIRA Risk Management plugin configuration!");
 
         IssueType riskIssueType = null;
+
         IssueConstant risk = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
 
         if(risk != null) {
@@ -102,8 +103,8 @@ public class PluginListener implements LifecycleAware  {
             }
         }
 
-        final List<GenericValue> issueTypes = new ArrayList<GenericValue>();
-        issueTypes.add(riskIssueType.getGenericValue());
+        final List<IssueType> issueTypes = new ArrayList<>();
+        issueTypes.add(riskIssueType);
 
         final List<JiraContextNode> contexts = new ArrayList<JiraContextNode>();
         contexts.add(GlobalIssueContext.getInstance());
@@ -121,7 +122,7 @@ public class PluginListener implements LifecycleAware  {
                     FieldScreenTab firstTab = defaultScreen.getTab(0);
                     firstTab.addFieldScreenLayoutItem(riskConsequenceCustomField.getId());
                 }
-                for(int i = 1; i < 6; i++)
+                for(int i = 1; i <=  RiskIssues.MATRIX_SIZE; i++)
                 {
                     addOptionToCustomField(riskConsequenceCustomField,String.valueOf(i));
                 }

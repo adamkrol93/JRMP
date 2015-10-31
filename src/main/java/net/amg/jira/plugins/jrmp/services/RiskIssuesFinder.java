@@ -19,6 +19,9 @@
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.config.properties.APKeys;
+import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
@@ -47,13 +50,16 @@ public class RiskIssuesFinder {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private WebResourceUrlProvider webResourceUrlProvider;
+    private ApplicationProperties jiraProps;
     @Autowired
     private CustomFieldManager customFieldManager;
     @Autowired
     private QueryBuilder queryBuilder;
     @Autowired
     private SearchService searchService;
+
+    //4Spring dep injection:
+    public RiskIssuesFinder() {}
 
     public RiskIssues fillAllFields(List<Issue> issues, Query query, DateModel dateModel)
     {
@@ -63,7 +69,7 @@ public class RiskIssuesFinder {
         CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
         CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
 
-        String baseUrl = webResourceUrlProvider.getBaseUrl();
+        String baseUrl = jiraProps.getString(APKeys.JIRA_BASEURL);
         List<Row> listOfRows = fillRowsContent(query, dateModel, baseUrl);
         riskIssues.setListOfRows(listOfRows);
 
@@ -146,21 +152,5 @@ public class RiskIssuesFinder {
             result.add(row);
         }
         return result;
-    }
-
-    public void setWebResourceUrlProvider(WebResourceUrlProvider webResourceUrlProvider) {
-        this.webResourceUrlProvider = webResourceUrlProvider;
-    }
-
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
-    }
-
-    public void setQueryBuilder(QueryBuilder queryBuilder) {
-        this.queryBuilder = queryBuilder;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
     }
 }

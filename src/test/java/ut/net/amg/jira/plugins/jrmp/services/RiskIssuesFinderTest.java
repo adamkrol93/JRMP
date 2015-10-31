@@ -19,6 +19,7 @@
 package ut.net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
+import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.plugin.webresource.WebResourceUrlProvider;
@@ -58,6 +59,7 @@ public class RiskIssuesFinderTest {
     @Mock private CustomFieldManager customFieldManager;
     @Mock private QueryBuilder queryBuilder;
     @Mock private SearchService searchService;
+    @Mock private ApplicationProperties jiraProps;
     //required test fields
     private List<Issue> issues = new ArrayList<Issue>();
     @Mock private Issue issue;

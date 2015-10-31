@@ -23,9 +23,9 @@ package net.amg.jira.plugins.jrmp.rest.model;
  */
 public class GadgetFieldNames {
 
-    public static final String FILTER = "Filter";
-    public static final String DATE = "Date";
-    public static final String TITLE = "Title";
+    public static final String FILTER = "filter";
+    public static final String DATE = "date";
+    public static final String TITLE = "title";
     public static final String REFRESH = "refresh";
     public static final String TEMPLATE = "template";
 }

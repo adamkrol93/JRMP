@@ -61,15 +61,18 @@ public class MatrixRequest {
 
         if (StringUtils.isBlank(filter)) {
             errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_FILTER));
+            logger.info("Filter cannot be blank.");
         } else {
             projectOrFilter = ProjectOrFilter.createProjectOrFilter(filter,ofBizDelegator);
             if (!projectOrFilter.isValid()) {
                 errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
+                logger.info("Project of filter field is invalid for given field:" + projectOrFilter);
             } else {
                 if (projectOrFilter.getQuery() == null) {
                     errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
+                    logger.info("Cannot get filter for given ProjectOrFilter filed query: " + projectOrFilter.getQuery());
                 } else {
-                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
+                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getLoggedInUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
                         logger.warn("Query is invalid. Enable info for search errors list");
                         if (logger.isInfoEnabled()) {
@@ -90,16 +93,19 @@ public class MatrixRequest {
 
         if (StringUtils.isBlank(date)) {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_DATE));
+            logger.info("Date field is blank");
         }
 
         try {
             dateModel = DateModel.valueOf(date);
         } catch (NullPointerException e) {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.wrong_date"));
+            logger.info("Invalid date field: " + date);
         }
 
         if (StringUtils.isBlank(refreshRate)) {
             errorCollection.addError(GadgetFieldEnum.REFRESH.toString(), i18nResolver.getText("risk.management.validation.error.empty_refresh"));
+            logger.info("refresh rate field is blank");
         }
 
         return errorCollection;

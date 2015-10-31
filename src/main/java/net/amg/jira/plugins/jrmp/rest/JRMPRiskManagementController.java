@@ -20,6 +20,7 @@ package net.amg.jira.plugins.jrmp.rest;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
 import com.atlassian.jira.ofbiz.OfBizDelegator;
+import com.atlassian.jira.rest.api.util.ValidationError;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.sal.api.message.I18nResolver;
 import com.google.gson.Gson;
@@ -91,33 +92,48 @@ public class JRMPRiskManagementController {
 
     @Path("/matrix")
     @POST
-    @Produces({MediaType.TEXT_HTML})
-    @Consumes("application/json")
-    public Response getMatrix(MatrixRequest matrixRequest) {
-
-        logger.debug("getMatrix: Method start");
-
-        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService,ofBizDelegator);
-        if(!errorCollection.hasAnyErrors()){
-
-            try {
-                return Response.ok(matrixGenerator.generateMatrix(matrixRequest.getProjectOrFilter(),
-                        matrixRequest.getTitle(),
-                        matrixRequest.getTemplate(),
-                        matrixRequest.getDateModel()),
-                        MediaType.TEXT_HTML).build();
-            } catch(Exception e){
-                logger.error("getMatrix: The Matrix couldn't be generated because of: " + e.getMessage(),e);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-        }else{
-            logger.warn("getMatrix: Wrong parameters passed in matrixRequest. Returning BAD_REQUEST");
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-
+    @Produces({MediaType.TEXT_HTML, MediaType.TEXT_XML})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_HTML, MediaType.TEXT_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    public Response postMatrix(MatrixRequest matrixRequest) {
+        logger.debug("postMatrix: Method start, mode: POST");
+        return processMatrix(matrixRequest);
     }
 
+    @Path("/matrix")
+    @GET
+    @Produces({MediaType.TEXT_HTML, MediaType.TEXT_XML})
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_HTML, MediaType.TEXT_XML, MediaType.APPLICATION_FORM_URLENCODED})
+    public Response getMatrix(@QueryParam(GadgetFieldNames.FILTER) String filter, @QueryParam(GadgetFieldNames.DATE) String date,
+                              @QueryParam(GadgetFieldNames.REFRESH) String refresh, @QueryParam(GadgetFieldNames.TEMPLATE) String template,
+                              @QueryParam(GadgetFieldNames.TITLE) String title) {
+        MatrixRequest matrixRequest = new MatrixRequest();
+        matrixRequest.setFilter(filter);
+        matrixRequest.setDate(date);
+        matrixRequest.setTitle(title);
+        matrixRequest.setRefreshRate(refresh);
+        matrixRequest.setTemplate(template);
+        logger.debug("getMatrix: Method start mode: GET");
+        return processMatrix(matrixRequest);
+    }
+
+    private Response processMatrix(MatrixRequest matrixRequest) {
+        ErrorCollection errorCollection = matrixRequest.doValidation(i18nResolver,authenticationContext,searchService,ofBizDelegator);
+        if (errorCollection.hasAnyErrors()) {
+            logger.warn("getMatrix: Wrong parameters passed in matrixRequest. Returning BAD_REQUEST. Errors: "
+                    + errorCollection.getErrors().toString());
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        try {
+            return Response.ok(matrixGenerator.generateMatrix(matrixRequest.getProjectOrFilter(),
+                    matrixRequest.getTitle(),
+                    matrixRequest.getTemplate(),
+                    matrixRequest.getDateModel()),
+                    MediaType.TEXT_HTML).build();
+        } catch(Exception e){
+            logger.error("processMatrix: The Matrix couldn't be generated because of: " + e.getMessage(),e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     @GET
     @Path("{args : (.*)?}")
     public Response emptyGETResponse()
