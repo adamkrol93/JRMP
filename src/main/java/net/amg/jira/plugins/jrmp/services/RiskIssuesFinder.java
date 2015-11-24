@@ -19,13 +19,11 @@
 package net.amg.jira.plugins.jrmp.services;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.config.properties.APKeys;
 import com.atlassian.jira.config.properties.ApplicationProperties;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
-import com.atlassian.plugin.webresource.WebResourceUrlProvider;
 import com.atlassian.query.Query;
 import net.amg.jira.plugins.jrmp.listeners.PluginListener;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;

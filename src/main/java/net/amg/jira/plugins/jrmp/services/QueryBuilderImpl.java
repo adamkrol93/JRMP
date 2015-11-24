@@ -65,9 +65,11 @@ public class QueryBuilderImpl implements QueryBuilder {
 
     private JqlQueryBuilder getJqlQueryBuilder(Query query) {
 
-        query.getWhereClause().getClauses().stream().filter(clause -> QUERY_CLAUSES.contains(clause.getName())).forEach((Clause clause) -> {
-            query.getWhereClause().getClauses().remove(clause);//FIXME: unsupported operation?
-        });
+        for (Clause clause : query.getWhereClause().getClauses()) {
+            if (QUERY_CLAUSES.contains(clause.getName())) {
+                query.getWhereClause().getClauses().remove(clause);
+            }
+        }
 
         return JqlQueryBuilder.newBuilder(query);
     }

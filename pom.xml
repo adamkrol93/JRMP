@@ -263,9 +263,9 @@
         </pluginRepository>
     </pluginRepositories>
     <properties>
-        <jdkLevel>1.8</jdkLevel>
-        <jira.tests.version>7.0.0</jira.tests.version>
-        <jira.version>7.0.0</jira.version>
+        <jdkLevel>1.7</jdkLevel>
+        <jira.tests.version>6.4.12</jira.tests.version>
+        <jira.version>6.4.12</jira.version>
         <amps.version>6.1.0</amps.version>
         <osgi.version>1.2.1</osgi.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
