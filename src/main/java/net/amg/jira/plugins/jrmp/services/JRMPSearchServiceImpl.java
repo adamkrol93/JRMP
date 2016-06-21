@@ -79,7 +79,7 @@ public class JRMPSearchServiceImpl implements JRMPSearchService {
 
         SearchResults searchResults;
         try {
-            searchResults =  searchService.search(authenticationContext.getLoggedInUser(), query, PagerFilter.getUnlimitedFilter());
+            searchResults =  searchService.search(authenticationContext.getUser().getDirectoryUser(), query, PagerFilter.getUnlimitedFilter());
         } catch (SearchException e) {
             logger.info("getMatrixSize Error, searchResult are null : " + e.getMessage(),e);
             return Collections.emptyList();

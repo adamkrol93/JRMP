@@ -22,13 +22,12 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.jql.builder.JqlQueryBuilder;
 import com.atlassian.query.Query;
 import com.atlassian.query.clause.Clause;
-import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.listeners.PluginStartupListener;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,8 +38,8 @@ import java.util.List;
  */
 @Service
 public class QueryBuilderImpl implements QueryBuilder {
-    private static final List<String> QUERY_CLAUSES = Arrays.asList("created", "issuetype", PluginListener.RISK_CONSEQUENCE_TEXT_CF,
-            PluginListener.RISK_PROBABILITY_TEXT_CF);
+    private static final List<String> QUERY_CLAUSES = Arrays.asList("created", "issuetype", PluginStartupListener.RISK_CONSEQUENCE_TEXT_CF,
+            PluginStartupListener.RISK_PROBABILITY_TEXT_CF);
 
     @Autowired
     private CustomFieldManager customFieldManager;
@@ -52,9 +51,9 @@ public class QueryBuilderImpl implements QueryBuilder {
         JqlQueryBuilder builder = getJqlQueryBuilder(query);
 
 
-        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE).and()
-                .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
-                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
+        builder.where().and().issueType(PluginStartupListener.RISK_ISSUE_TYPE).and()
+                .sub().customField(customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).isNotEmpty()
+                .or().customField(customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).isNotEmpty().endsub();
 
         if(!dateModel.equals(DateModel.TODAY))
         {
@@ -80,9 +79,9 @@ public class QueryBuilderImpl implements QueryBuilder {
 
         JqlQueryBuilder builder = getJqlQueryBuilder(query);
 
-        builder.where().and().issueType(PluginListener.RISK_ISSUE_TYPE)
-                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).eq((long) riskConsequence)
-                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).eq((long) riskProbability);
+        builder.where().and().issueType(PluginStartupListener.RISK_ISSUE_TYPE)
+                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_CONSEQUENCE_TEXT_CF).getIdAsLong()).eq((long) riskConsequence)
+                .and().customField(customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_PROBABILITY_TEXT_CF).getIdAsLong()).eq((long) riskProbability);
 
         if(!dateModel.equals(DateModel.TODAY))
         {

@@ -25,7 +25,7 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.query.Query;
-import net.amg.jira.plugins.jrmp.listeners.PluginListener;
+import net.amg.jira.plugins.jrmp.listeners.PluginStartupListener;
 import net.amg.jira.plugins.jrmp.services.model.DateModel;
 import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
 import net.amg.jira.plugins.jrmp.velocity.Cell;
@@ -64,8 +64,8 @@ public class RiskIssuesFinder {
         RiskIssues riskIssues = new RiskIssues();
         riskIssues.setIssues(issues);
 
-        CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_PROBABILITY_TEXT_CF);
-        CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginListener.RISK_CONSEQUENCE_TEXT_CF);
+        CustomField probabilityField = customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_PROBABILITY_TEXT_CF);
+        CustomField consequenceField = customFieldManager.getCustomFieldObjectByName(PluginStartupListener.RISK_CONSEQUENCE_TEXT_CF);
 
         String baseUrl = jiraProps.getString(APKeys.JIRA_BASEURL);
         List<Row> listOfRows = fillRowsContent(query, dateModel, baseUrl);
