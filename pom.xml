@@ -201,9 +201,7 @@
 					</pluginArtifacts>
 					-->
                     <testInstructions>
-                        <Import-Package>
-                            net.amg.jira.plugins.jrmp;version="0.0.0";resolution=optional
-                        </Import-Package>
+                        <Import-Package>net.amg.jira.plugins.jrmp;version="0.0.0";resolution=optional</Import-Package>
                     </testInstructions>
                     <extractDependencies>false</extractDependencies>
                 </configuration>
@@ -266,7 +264,7 @@
         <jdkLevel>1.7</jdkLevel>
         <jira.tests.version>6.4.12</jira.tests.version>
         <jira.version>6.4.12</jira.version>
-        <amps.version>6.1.0</amps.version>
+        <amps.version>6.2.3</amps.version>
         <osgi.version>1.2.1</osgi.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <!-- TestKit version 5.x for JIRA 5.x, 6.x for JIRA 6.x -->

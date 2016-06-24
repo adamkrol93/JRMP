@@ -42,5 +42,5 @@
     <osgi:reference id="ofBizDelegator" interface="com.atlassian.jira.ofbiz.OfBizDelegator"/>
     <osgi:reference id="applicationProperties" interface="com.atlassian.jira.config.properties.ApplicationProperties" />
 
-    <osgi:service id="net.amg.jira.plugins.jrmp.listeners.PluginListener" interface="com.atlassian.sal.api.lifecycle.LifecycleAware" ref="pluginListener" />
+    <osgi:service id="net.amg.jira.plugins.jrmp.listeners.PluginListener" interface="com.atlassian.sal.api.lifecycle.LifecycleAware" ref="pluginStartupListener" />
 </beans>

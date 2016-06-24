@@ -37,6 +37,7 @@ import com.atlassian.plugin.PluginException;
 import com.atlassian.sal.api.lifecycle.LifecycleAware;
 import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
 import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +137,7 @@ public class PluginStartupListener implements LifecycleAware  {
             riskCustomField = customFieldManager.createCustomField(riskField, riskField,
                     customFieldManager.getCustomFieldType(CUSTOMFIELDTYPES_FLOAT),
                     customFieldManager.getCustomFieldSearcher(CUSTOMFIELDTYPES_EXACTNUMBER),
-                    contexts, issueTypes);
+                    contexts, convertToGenericValue(issueTypes));
             if (!defaultScreen.containsField(riskCustomField.getId())) {
                 FieldScreenTab firstTab = defaultScreen.getTab(0);
                 firstTab.addFieldScreenLayoutItem(riskCustomField.getId());
@@ -145,6 +146,13 @@ public class PluginStartupListener implements LifecycleAware  {
                 addOptionToCustomField(riskCustomField,String.valueOf(i));
             }
         }
+    }
+
+    private List<GenericValue> convertToGenericValue(List<IssueType> issueTypes) {
+        final IssueType issueTypeObject = constantsManager.getIssueTypeObject(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE).getId());
+        List<GenericValue> genericList = new ArrayList<>();
+        genericList.add(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, issueTypeObject.getName()).getGenericValue());
+        return genericList;
     }
 
 }
