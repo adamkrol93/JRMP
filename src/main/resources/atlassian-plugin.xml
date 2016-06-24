@@ -1,65 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!--
+        * Licensed to AMG.net under one or more contributor license
+        * agreements. See the NOTICE file distributed with this work
+        * for additional information regarding copyright ownership.
+        *
+        * AMG.net licenses this file to you under the Apache License,
+        * Version 2.0 (the "License"); you may not use this file
+        * except in compliance with the License.  You may obtain a
+        * copy of the License at the following location:
+        *
+        * http://www.apache.org/licenses/LICENSE-2.0
+        *
+        * Unless required by applicable law or agreed to in writing, software
+        * distributed under the License is distributed on an "AS IS" BASIS,
+        * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        * See the License for the specific language governing permissions and
+        * limitations under the License.
+        *-->
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
-  <plugin-info>
-    <description>${project.description}</description>
-    <version>${project.version}</version>
-    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-    <param name="plugin-icon">images/JRMPPluginIcon.png</param>
-    <param name="plugin-logo">images/JRMPPluginLogo.png</param>
-  </plugin-info>
-  <!-- add our i18n resource -->
-  <component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>
-  <resource type="download" name="screenshot.png" location="images/jrmpPreview.png"/>
-  <resource type="download" name="thumbnail.png" location="images/JRMPThumb.png"/>
-  <resource type="i18n" name="i18n" location="i18n.translations"/>
-  <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadgets/risk-management-gadget/gadget.xml"/>
-  <resource type="download" name="i18n/ALL_ALL.xml" location="gadgets/risk-management-gadget/i18n/ALL_ALL.xml">
-    <param name="content-type" value="text/xml; charset=UTF-8"/>
-  </resource>
-  <resource type="download" name="i18n/pl_PL.xml" location="gadgets/risk-management-gadget/i18n/pl_PL.xml">
-    <param name="content-type" value="text/xml; charset=UTF-8"/>
-  </resource>
-  <rest key="jira-risk-management-gadget-rest-resources" path="/jira-risk-management" version="1.0">
-    <description>Provides the REST resource for the project list.</description>
-  </rest>
-  <!-- add our web resources -->
-  <web-resource key="jira-risk-management-resources" name="jira risks management Web Resources">
-    <dependency>com.atlassian.auiplugin:ajs</dependency>
-    <dependency>com.atlassian.jira.gadgets:common</dependency>
-    <!--<dependency>com.atlassian.gadgets.publisher:ajs-gadgets</dependency>-->
-    <!--<dependency>com.atlassian.jira.gadgets:jira-global</dependency>-->
-    <dependency>jira.webresources:autocomplete</dependency>
-    <resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>
-    <resource type="download" name="matrixStyle.css" location="/css/matrixStyle.css"/>
-    <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
-    <resource type="download" name="images/" location="/images"/>
-    <context>jira-risk-management</context>
-  </web-resource>
-   <!--publish our component-->
-  <!--<component key="eventListener" class="net.amg.jira.plugins.jrmp.listeners.PluginListener" public="true">-->
-    <!--<description>A Listener for plugin lifecycle events</description>-->
-    <!--<interface>org.springframework.beans.factory.InitializingBean</interface>-->
-  <!--</component>-->
-  <!--<component key="impactProbability" class="net.amg.jira.plugins.jrmp.services.ImpactPropabilityImpl">-->
-    <!--<interface>net.amg.jira.plugins.jrmp.services.ImpactPropability</interface>-->
-  <!--</component>-->
-  <!--<component key="JRMPsearchService" class="net.amg.jira.plugins.jrmp.services.JRMPSearchServiceImpl">-->
-    <!--<interface>net.amg.jira.plugins.jrmp.services.JRMPSearchService</interface>-->
-  <!--</component>-->
-  <!--<component key="MatrixGenerator" class="net.amg.jira.plugins.jrmp.services.MatrixGeneratorImpl">-->
-    <!--<interface>net.amg.jira.plugins.jrmp.services.MatrixGenerator</interface>-->
-  <!--</component>-->
-  <!-- import from the product container -->
-  <!--<component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>-->
-  <!--<component-import key="i18nResolver" interface="com.atlassian.sal.api.message.I18nResolver"/>-->
-  <!--<component-import key="searchService" interface="com.atlassian.jira.bc.issue.search.SearchService"/>-->
-  <!--<component-import key="eventPublisher" interface="com.atlassian.event.api.EventPublisher"/>-->
-  <!--<component-import key="customFieldManager" interface="com.atlassian.jira.issue.CustomFieldManager"/>-->
-  <!--<component-import key="fieldScreenManager" interface="com.atlassian.jira.issue.fields.screen.FieldScreenManager"/>-->
-  <!--<component-import key="constansManager" interface="com.atlassian.jira.config.ConstantsManager"/>-->
-  <!--<component-import key="issueTypeSchemeManager" interface="com.atlassian.jira.issue.fields.config.manager.IssueTypeSchemeManager"/>-->
-  <!--<rest name="REST Risk Management Resource" i18n-name-key="rest-risk-management-resource.name" key="rest-risk-management-resource" path="/restcontroller" version="1.0">-->
-    <!--<description key="rest-risk-management-resource.description">The REST Risk Management Resource Plugin</description>-->
-  <!--</rest>-->
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="plugin-icon">images/JRMPPluginIcon.png</param>
+        <param name="plugin-logo">images/JRMPPluginLogo.png</param>
+    </plugin-info>
+    <!-- Add resources: -->
+    <resource type="download" name="screenshot.png" location="images/jrmpPreview.png"/>
+    <resource type="download" name="thumbnail.png" location="images/JRMPThumb.png"/>
+    <!-- and our i18n resources: -->
+    <resource type="i18n" name="i18n" location="i18n.translations"/>
+    <!-- add our web resources -->
+    <web-resource key="jira-risk-management-resources" name="jira risks management Web Resources">
+        <dependency>com.atlassian.jira.gadgets:common</dependency>
+        <dependency>jira.webresources:autocomplete</dependency>
+        <dependency>com.atlassian.gadgets.publisher:ajs-gadgets</dependency>
+        <resource type="download" name="jira-risk-management.js" location="/js/jira-risk-management.js"/>
+        <!--<resource type="download" name="jira-risk-management.css" location="/css/jira-risk-management.css"/>-->
+        <resource type="download" name="matrixStyle.css" location="/css/matrixStyle.css"/>
+        <resource type="download" name="images/" location="/images"/>
+    </web-resource>
+    <!-- Gadget definition: -->
+    <gadget key="jira-risk-management-gadget" name="JIRA Risk Management Gadget" location="gadgets/risk-management-gadget/gadget.xml"/>
+    <!-- Rest service definition: -->
+    <rest key="jira-risk-management-gadget-rest-resources" path="/jira-risk-management" version="1.0">
+        <description>Provides the REST resource for the project list.</description>
+    </rest>
 </atlassian-plugin>

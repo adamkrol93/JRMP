@@ -1,3 +1,21 @@
+/*
+ * Licensed to AMG.net under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work
+ * for additional information regarding copyright ownership.
+ *
+ * AMG.net licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License.  You may obtain a
+ * copy of the License at the following location:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package net.amg.jira.plugins.jrmp.rest.model;
 
 import com.atlassian.jira.bc.issue.search.SearchService;
@@ -19,6 +37,9 @@ import java.util.Map;
  */
 public class MatrixRequest {
 
+    public static final String BUNDLE_ERROR_EMPTY_FILTER = "risk.management.validation.error.empty_filter";
+    public static final String BUNDLE_ERROR_FILTER_IS_INCORRECT = "risk.management.validation.error.filter_is_incorrect";
+    public static final String BUNDLE_ERROR_EMPTY_DATE = "risk.management.validation.error.empty_date";
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String filter;
@@ -31,31 +52,38 @@ public class MatrixRequest {
 
     private String refreshRate;
 
-    ProjectOrFilter projectOrFilter;
+    private ProjectOrFilter projectOrFilter;
 
-    DateModel dateModel;
+    private DateModel dateModel;
 
     public ErrorCollection doValidation(I18nResolver i18nResolver, JiraAuthenticationContext authenticationContext, SearchService searchService, OfBizDelegator ofBizDelegator) {
         ErrorCollection errorCollection = new ErrorCollection();
 
         if (StringUtils.isBlank(filter)) {
-            errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.empty_filter"));
+            errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_FILTER));
+            logger.info("Filter cannot be blank.");
         } else {
             projectOrFilter = ProjectOrFilter.createProjectOrFilter(filter,ofBizDelegator);
             if (!projectOrFilter.isValid()) {
-                errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
+                logger.info("Project of filter field is invalid for given field:" + projectOrFilter);
             } else {
                 if (projectOrFilter.getQuery() == null) {
-                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                    errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
+                    logger.info("Cannot get filter for given ProjectOrFilter filed query: " + projectOrFilter.getQuery());
                 } else {
-                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getUser().getDirectoryUser(), projectOrFilter.getQuery());
+                    MessageSet messageSet = searchService.validateQuery(authenticationContext.getLoggedInUser(), projectOrFilter.getQuery());
                     if (messageSet.hasAnyErrors()) {
-                        logger.warn("Query is invalid. Errors listed below");
-                        for(String s : messageSet.getErrorMessagesInEnglish())
-                        {
-                            logger.warn(s);
+                        logger.warn("Query is invalid. Enable info for search errors list");
+                        if (logger.isInfoEnabled()) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("Search error messages: \n");
+                            for (String msg : messageSet.getErrorMessagesInEnglish()) {
+                                sb.append(msg +"\n");
+                            }
+                            logger.info(sb.toString());
                         }
-                        errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText("risk.management.validation.error.filter_is_incorrect"));
+                        errorCollection.addError(GadgetFieldEnum.FILTER.toString(), i18nResolver.getText(BUNDLE_ERROR_FILTER_IS_INCORRECT));
                     }
                 }
             }
@@ -64,17 +92,20 @@ public class MatrixRequest {
         }
 
         if (StringUtils.isBlank(date)) {
-            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.empty_date"));
+            errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText(BUNDLE_ERROR_EMPTY_DATE));
+            logger.info("Date field is blank");
         }
 
         try {
             dateModel = DateModel.valueOf(date);
         } catch (NullPointerException e) {
             errorCollection.addError(GadgetFieldEnum.DATE.toString(), i18nResolver.getText("risk.management.validation.error.wrong_date"));
+            logger.info("Invalid date field: " + date);
         }
 
         if (StringUtils.isBlank(refreshRate)) {
             errorCollection.addError(GadgetFieldEnum.REFRESH.toString(), i18nResolver.getText("risk.management.validation.error.empty_refresh"));
+            logger.info("refresh rate field is blank");
         }
 
         return errorCollection;

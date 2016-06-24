@@ -1,16 +1,20 @@
-/*Copyright 2015 AMG.net
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
- http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+/*
+ * Licensed to AMG.net under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work
+ * for additional information regarding copyright ownership.
+ *
+ * AMG.net licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License.  You may obtain a
+ * copy of the License at the following location:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package net.amg.jira.plugins.jrmp.listeners;
 
@@ -31,11 +35,12 @@ import com.atlassian.jira.issue.fields.screen.FieldScreenTab;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.plugin.PluginException;
 import com.atlassian.sal.api.lifecycle.LifecycleAware;
-import net.amg.jira.plugins.jrmp.services.model.RiskIssuesModel;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -47,7 +52,7 @@ import java.util.Map;
  * @author Adam Król
  */
 @Component
-public class PluginListener implements LifecycleAware  {
+public class PluginStartupListener implements LifecycleAware  {
     private Logger logger = LoggerFactory.getLogger(getClass());
     //Constants:
     private static final String CUSTOMFIELDTYPES_FLOAT = "com.atlassian.jira.plugin.system.customfieldtypes:select";
@@ -56,12 +61,13 @@ public class PluginListener implements LifecycleAware  {
     public static final String RISK_ISSUE_TYPE = "Risk";
     public static final String RISK_CONSEQUENCE_TEXT_CF = "Risk Consequence";
     public static final String RISK_PROBABILITY_TEXT_CF = "Risk Probability";
-
-    private ConstantsManager constantsManager;
-    private CustomFieldManager customFieldManager;
-    private FieldScreenManager fieldScreenManager;
-    private IssueTypeSchemeManager issueTypeSchemeManager;
-    private OptionsManager optionsManager;
+    //Dummy constructor required for Spring dependency injection.
+    public PluginStartupListener() {};
+    @Autowired private ConstantsManager constantsManager;
+    @Autowired private CustomFieldManager customFieldManager;
+    @Autowired private FieldScreenManager fieldScreenManager;
+    @Autowired private IssueTypeSchemeManager issueTypeSchemeManager;
+    @Autowired private OptionsManager optionsManager;
 
     public void addOptionToCustomField(CustomField customField, String value) {
         if (customField != null) {
@@ -72,7 +78,7 @@ public class PluginListener implements LifecycleAware  {
                 Map configs = sc.getConfigsByConfig();
                 if (configs != null && !configs.isEmpty()) {
                     FieldConfig config = (FieldConfig) configs.keySet().iterator().next();
-                    optionsManager.createOption(config, null, new Long(value), value);
+                    optionsManager.createOption(config, null, Long.valueOf(value), value);
                 }
             }
         }
@@ -82,7 +88,8 @@ public class PluginListener implements LifecycleAware  {
     public void onStart() {
         logger.info("Starting JIRA Risk Management plugin configuration!");
 
-        IssueType riskIssueType = null;
+        final IssueType riskIssueType;
+
         IssueConstant risk = constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE);
 
         if(risk != null) {
@@ -97,67 +104,55 @@ public class PluginListener implements LifecycleAware  {
             }
         }
 
-        final List<GenericValue> issueTypes = new ArrayList<GenericValue>();
-        issueTypes.add(riskIssueType.getGenericValue());
+        final List<IssueType> issueTypes = new ArrayList<>();
+        issueTypes.add(riskIssueType);
 
         final List<JiraContextNode> contexts = new ArrayList<JiraContextNode>();
         contexts.add(GlobalIssueContext.getInstance());
 
-        final CustomField riskConsequenceCustomField;
-        final CustomField riskProbabilityCustomField;
         try {
             FieldScreen defaultScreen = fieldScreenManager.getFieldScreen(FieldScreen.DEFAULT_SCREEN_ID);
-            if(customFieldManager.getCustomFieldObjectByName(RISK_CONSEQUENCE_TEXT_CF) == null) {
-                riskConsequenceCustomField = customFieldManager.createCustomField(RISK_CONSEQUENCE_TEXT_CF, RISK_CONSEQUENCE_TEXT_CF,
-                        customFieldManager.getCustomFieldType(CUSTOMFIELDTYPES_FLOAT),
-                        customFieldManager.getCustomFieldSearcher(CUSTOMFIELDTYPES_EXACTNUMBER),
-                        contexts, issueTypes);
-                if (!defaultScreen.containsField(riskConsequenceCustomField.getId())) {
-                    FieldScreenTab firstTab = defaultScreen.getTab(0);
-                    firstTab.addFieldScreenLayoutItem(riskConsequenceCustomField.getId());
-                }
-                for(int i = 1; i < 6; i++)
-                {
-                    addOptionToCustomField(riskConsequenceCustomField,String.valueOf(i));
-                }
-
-            }
-            if(customFieldManager.getCustomFieldObjectByName(RISK_PROBABILITY_TEXT_CF) == null) {
-                riskProbabilityCustomField = customFieldManager.createCustomField(RISK_PROBABILITY_TEXT_CF, RISK_PROBABILITY_TEXT_CF,
-                        customFieldManager.getCustomFieldType(CUSTOMFIELDTYPES_FLOAT),
-                        customFieldManager.getCustomFieldSearcher(CUSTOMFIELDTYPES_EXACTNUMBER),
-                        contexts, issueTypes);
-                if (!defaultScreen.containsField(riskProbabilityCustomField.getId())) {
-                    FieldScreenTab firstTab = defaultScreen.getTab(0);
-                    firstTab.addFieldScreenLayoutItem(riskProbabilityCustomField.getId());
-                }
-                for(int i = 1; i < RiskIssuesModel.MATRIX_SIZE + 1; i++)
-                {
-                    addOptionToCustomField(riskProbabilityCustomField,String.valueOf(i));
-                }
-            }
+            createRiskField(RISK_CONSEQUENCE_TEXT_CF, issueTypes, contexts, defaultScreen);
+            createRiskField(RISK_PROBABILITY_TEXT_CF, issueTypes, contexts, defaultScreen);
         } catch (GenericEntityException e) {
             logger.error("Couldn't create risk Custom fields : " + e.getMessage(), e);
-            throw new PluginException("GenericEntityException. Stopping plugin creation",e);
+            throw new PluginException("GenericEntityException. Failed plugin startup configuration",e);
         } catch (NullPointerException e) {
             logger.error("Couldn't create risk Custom fields:" + e.getMessage(), e);
-            throw new PluginException("NullPointerException. Stopping plugin creation",e);
+            throw new PluginException("NullPointerException. Failed plugin startup configuration",e);
         }
     }
 
-    public void setCustomFieldManager(CustomFieldManager customFieldManager) {
-        this.customFieldManager = customFieldManager;
+    /**
+     * Configures {@link #RISK_CONSEQUENCE_TEXT_CF} or {@link #RISK_PROBABILITY_TEXT_CF}, by adding their default values.
+     * @param riskField - risk customfield name.
+     * @param issueTypes - List of IssueTypes to be associated with. {@link #RISK_ISSUE_TYPE} by default.
+     * @param contexts - JIRA Context
+     * @param defaultScreen - default screen name. It is screen that CustomFields will be configured for.
+     * @throws GenericEntityException
+     */
+    private void createRiskField(final String riskField, List<IssueType> issueTypes, List<JiraContextNode> contexts, FieldScreen defaultScreen) throws GenericEntityException {
+        final CustomField riskCustomField;
+        if(customFieldManager.getCustomFieldObjectByName(riskField) == null) {
+            riskCustomField = customFieldManager.createCustomField(riskField, riskField,
+                    customFieldManager.getCustomFieldType(CUSTOMFIELDTYPES_FLOAT),
+                    customFieldManager.getCustomFieldSearcher(CUSTOMFIELDTYPES_EXACTNUMBER),
+                    contexts, convertToGenericValue(issueTypes));
+            if (!defaultScreen.containsField(riskCustomField.getId())) {
+                FieldScreenTab firstTab = defaultScreen.getTab(0);
+                firstTab.addFieldScreenLayoutItem(riskCustomField.getId());
+            }
+            for(int i = 1; i <= RiskIssues.MATRIX_SIZE; i++) {
+                addOptionToCustomField(riskCustomField,String.valueOf(i));
+            }
+        }
     }
-    public void setFieldScreenManager(FieldScreenManager fieldScreenManager) {
-        this.fieldScreenManager = fieldScreenManager;
+
+    private List<GenericValue> convertToGenericValue(List<IssueType> issueTypes) {
+        final IssueType issueTypeObject = constantsManager.getIssueTypeObject(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, RISK_ISSUE_TYPE).getId());
+        List<GenericValue> genericList = new ArrayList<>();
+        genericList.add(constantsManager.getConstantByNameIgnoreCase(ConstantsManager.ISSUE_TYPE_CONSTANT_TYPE, issueTypeObject.getName()).getGenericValue());
+        return genericList;
     }
-    public void setConstantsManager(ConstantsManager constantsManager) {
-        this.constantsManager = constantsManager;
-    }
-    public void setIssueTypeSchemeManager(IssueTypeSchemeManager issueTypeSchemeManager) {
-        this.issueTypeSchemeManager = issueTypeSchemeManager;
-    }
-    public void setOptionsManager(OptionsManager optionsManager) {
-        this.optionsManager = optionsManager;
-    }
+
 }

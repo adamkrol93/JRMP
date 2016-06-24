@@ -1,3 +1,21 @@
+/*
+ * Licensed to AMG.net under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work
+ * for additional information regarding copyright ownership.
+ *
+ * AMG.net licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License.  You may obtain a
+ * copy of the License at the following location:
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 jQuery.namespace("AMG.jrmp");
 AMG.jrmp.init = function (args) {
     var base = args.baseUrl;
@@ -8,16 +26,16 @@ AMG.jrmp.init = function (args) {
                 descriptor: function () {
                     var gadget = this;
                     var searchParam;
-                    if (/^jql-/.test(this.getPref("Filter")) || this.getPref("isPopup") === "true"){
+                    if (/^jql-/.test(this.getPref("filter")) || this.getPref("isPopup") === "true"){
                         searchParam =
                         {
-                            userpref: "Filter",
+                            userpref: "filter",
                             type: "hidden",
-                            value: gadgets.util.unescapeString(this.getPref("Filter"))
+                            value: gadgets.util.unescapeString(this.getPref("filter"))
                         };
                     }
                     else{
-                        searchParam = AJS.gadget.fields.projectOrFilterPicker(gadget,"Filter");
+                        searchParam = AJS.gadget.fields.projectOrFilterPicker(gadget,"filter");
                     }
 
                     return {
@@ -27,7 +45,7 @@ AMG.jrmp.init = function (args) {
                         theme: (function() { return gadgets.window.getViewportDimensions().width < 500 ? "top-label" : "long-label"; })(),
                         fields: [
                             {
-                                userpref: "Template",
+                                userpref: "template",
                                 "class": "numField",
                                 value: this.getPref("Template"),
                                 label: this.getMsg("risk.management.gadget.template.label"),
@@ -43,10 +61,10 @@ AMG.jrmp.init = function (args) {
                             jQuery.extend(true, {}, searchParam, {
                                 label: gadget.getMsg("risk.management.gadget.filter.label"),
                                 description: gadget.getMsg("risk.management.gadget.filter.default"),
-                                value: this.getPref("Filter")
+                                value: this.getPref("filter")
                             }),
                             {
-                                userpref: "Date",
+                                userpref: "date",
                                 value: this.getPref("Date"),
                                 label: this.getMsg("risk.management.gadget.relativeDate.label"),
                                 description: this.getMsg("risk.management.gadget.relativeDate.description"),
@@ -88,7 +106,7 @@ AMG.jrmp.init = function (args) {
                                 ]
                             },
                             {
-                                userpref: "Title",
+                                userpref: "title",
                                 "class": "numField",
                                 value: this.getPref("Title"),
                                 label: this.getMsg("risk.management.gadget.userTitle.label"),
@@ -116,17 +134,17 @@ AMG.jrmp.init = function (args) {
                     key: "matrix",
                     ajaxOptions: function() {
                         return {
-                            type: "POST",
+                            type: "GET",
                             url:"/rest/jira-risk-management/1.0/controller/matrix",
-                            contentType: "application/json",
+
                             dataType: "html",
-                            data: JSON.stringify({
-                                filter: this.getPref("Filter"),
-                                template: this.getPref("Template"),
-                                title: this.getPref("Title"),
-                                date: this.getPref("Date"),
-                                refreshRate: this.getPref("refresh")
-                            })
+                            data: {
+                                filter: this.getPref("filter"),
+                                template: this.getPref("template"),
+                                title: this.getPref("title"),
+                                date: this.getPref("date"),
+                                refresh: this.getPref("refresh")
+                            }
 
                         };
                     }

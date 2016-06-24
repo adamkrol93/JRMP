@@ -1,9 +1,9 @@
 /*
- * Licensed to AMG.net under one or more contributor license
+ * Licensed to Author under one or more contributor license
  * agreements. See the NOTICE file distributed with this work
  * for additional information regarding copyright ownership.
  *
- * AMG.net licenses this file to you under the Apache License,
+ * Author licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file
  * except in compliance with the License.  You may obtain a
  * copy of the License at the following location:
@@ -16,3 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package net.amg.jira.plugins.jrmp.services;
+
+import net.amg.jira.plugins.jrmp.services.model.ProjectOrFilter;
+import net.amg.jira.plugins.jrmp.services.model.RiskIssues;
+
+/**
+ *
+ * @author AugustynWilk@gmail.com
+ */
+
+public interface RenderTemplateService {
+    public String renderTemplate(ProjectOrFilter projectOrFilter, String matrixTitle, String matrixTemplate, RiskIssues riskIssues);
+}

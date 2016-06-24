@@ -1,0 +1,15 @@
+language: java
+jdk:
+  - oraclejdk8
+
+## Build on branches:
+# blacklist
+#branches:
+#    except:
+#       - development
+#       - experimental
+# whitelist
+branches:
+    only:
+      - master
+      - development

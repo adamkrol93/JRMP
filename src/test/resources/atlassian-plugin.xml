@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+        * Licensed to Augustyn under one or more contributor license
+        * agreements. See the NOTICE file distributed with this work
+        * for additional information regarding copyright ownership.
+        *
+        * AMG.net licenses this file to you under the Apache License,
+        * Version 2.0 (the "License"); you may not use this file
+        * except in compliance with the License.  You may obtain a
+        * copy of the License at the following location:
+        *
+        * http://www.apache.org/licenses/LICENSE-2.0
+        *
+        * Unless required by applicable law or agreed to in writing, software
+        * distributed under the License is distributed on an "AS IS" BASIS,
+        * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        * See the License for the specific language governing permissions and
+        * limitations under the License.
+        *-->
 <atlassian-plugin key="${project.groupId}.${project.artifactId}-tests" name="${project.name}" plugins-version="2">
     <plugin-info>
         <description>${project.description}</description>
@@ -5,10 +24,19 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}" />
     </plugin-info>
 
+    <component key="resourceLoaderFactory" class="net.amg.jira.plugins.jrmp.services.ResourceLoaderFactory" />
     <!-- from our base plugin -->
-    <component-import key="myComponent" interface="net.amg.jira.plugins.MyPluginComponent"/>
+    <component key="renderTemplate" interface="net.amg.jira.plugins.jrmp.services.RenderTemplateService"
+               class="net.amg.jira.plugins.jrmp.services.RenderTemplate" public="true" />
+    <component key="riskIssuesFinder" class="net.amg.jira.plugins.jrmp.services.RiskIssuesFinder" />
+    <component-import key="matrixGenerator" interface="net.amg.jira.plugins.jrmp.services.MatrixGenerator"/>
+    <component-import key="jrmpSearchService" interface="net.amg.jira.plugins.jrmp.services.JRMPSearchService"/>
+
+    <component-import key="matrixGenerator" interface="net.amg.jira.plugins.jrmp.services.MatrixGenerator"/>
+    <component-import key="matrixGenerator" interface="net.amg.jira.plugins.jrmp.services.MatrixGenerator"/>
 
     <!-- from the product container -->
-    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
-    
+    <component-import key="searchService" interface="com.atlassian.jira.bc.issue.search.SearchService"/>
+    <component-import key="authenticationContext" interface="com.atlassian.jira.security.JiraAuthenticationContext" />
+    <component-import key="queryBuilder" interface="net.amg.jira.plugins.jrmp.services.QueryBuilder" />
 </atlassian-plugin>

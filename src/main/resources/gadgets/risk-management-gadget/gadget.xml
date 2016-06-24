@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Licensed to AMG.net under one or more contributor license
+    agreements. See the NOTICE file distributed with this work
+    for additional information regarding copyright ownership.
+
+    AMG.net licenses this file to you under the Apache License,
+    Version 2.0 (the "License"); you may not use this file
+    except in compliance with the License.  You may obtain a
+    copy of the License at the following location:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
 <Module>
-    <ModulePrefs title="__MSG_risk.management.gadget.title__" directory_title="__MSG_risk.management.gadget.title__"
+    <ModulePrefs title="__MSG_risk.management.gadget.title__"
+                 directory_title="__MSG_risk.management.gadget.title__"
                  description="__MSG_risk.management.gadget.description__"
-                 author="Politechnika Lodzka" author_affiliation="AMG.net"
-                 author_location="Lodz, Poland"
+                 author="__MSG_risk.management.gadget.author__" author_affiliation="__MSG_risk.management.gadget.author_affiliation__"
+                 author_location="__MSG_risk.management.gadget.author.location__"
                  screenshot='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "screenshot.png")'
                  thumbnail='#staticResourceUrl("net.amg.jira.plugins.jira-risk-management:jira-risk-management-gadget", "thumbnail.png")'>
         <Optional feature="gadget-directory">
             <Param name="categories">
+                JIRA
+                Other
             </Param>
         </Optional>
         <Optional feature="atlassian.util" />
@@ -19,9 +40,7 @@
         <Require feature="views" />
         <Require feature="dynamic-height" />
         #oauth
-        <Locale messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/ALL_ALL.xml"/>
-        <Locale country="PL" lang="pl" messages="__ATLASSIAN_BASE_URL__/download/resources/net.amg.jira.plugins.jira-risk-management/i18n/pl_PL.xml"/>
-
+        #supportedLocales("gadget.common,risk.management")
     </ModulePrefs>
     <UserPref name="test" display_name="__MSG_gadget.title__" datatype="bool" default_value="true"/>
 
@@ -30,25 +49,23 @@
     <UserPref name="refresh" datatype="hidden" default_value="false"/>
 
 
-    <UserPref name="Template" datatype="hidden"/>
-    <UserPref name="Filter" datatype="hidden"/>
-    <UserPref name="Date" datatype="hidden" />
-    <UserPref name="Title"  datatype="hidden"/>
-    <UserPref name="RefreshInterval" datatype="hidden"/>
+    <UserPref name="template" datatype="hidden"/>
+    <UserPref name="filter" datatype="hidden"/>
+    <UserPref name="date" datatype="hidden" />
+    <UserPref name="title"  datatype="hidden"/>
     <Content type="html" view="profile,canvas">
         <![CDATA[
-        #requireResource("com.atlassian.jira.gadgets:common")
-        #requireResource("com.atlassian.auiplugin:ajs")
-        #requireResource("jira.webresources:autocomplete")
-        #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
-        #includeResources()
+            #requireResource("jira.webresources:autocomplete")
+            #requireResource("com.atlassian.jira.gadgets:common")
+            #requireResource("net.amg.jira.plugins.jira-risk-management:jira-risk-management-resources")
+            #includeResources()
             <script type="text/javascript">
                 var args = {};
                 args.baseUrl = "__ATLASSIAN_BASE_URL__";
                 try {
                    AMG.jrmp.init(args);
                 } catch (e) {
-                    AJS.log("Unable to initialize gadget."+e.stack);
+                    AJS.log("Unable to initialize JRMP gadget." + e.stack);
                 }
             </script>
         ]]>
